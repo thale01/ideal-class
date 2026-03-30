@@ -1,0 +1,204 @@
+{
+  "courses": [
+    {
+      "_id": "course102",
+      "name": "JEE Integrated 2026",
+      "description": "Advanced Physics & Maths for JEE Aspirants",
+      "icon": "🚀",
+      "category": "Competitive"
+    },
+    {
+      "name": "MATHS",
+      "description": "",
+      "icon": "📂",
+      "category": "",
+      "_id": "1774878597133"
+    }
+  ],
+  "subjects": [
+    {
+      "_id": "sub201",
+      "courseId": "course101",
+      "resources": {
+        "notes": [
+          {
+            "title": "Law of Motion Notes",
+            "chapter": "Chapter 1: Updated Motion",
+            "fileUrl": "/uploads/physics_ch1.pdf",
+            "uploadDate": "2026-03-25T14:30:00Z"
+          },
+          {
+            "title": "Energy Basics",
+            "chapter": "Chapter 2: Energy",
+            "fileUrl": "/uploads/physics_ch2.pdf",
+            "uploadDate": "2026-03-25T14:35:00Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "Motion in One Dimension",
+            "chapter": "Chapter 1: Updated Motion",
+            "url": "https://youtube.com/watch?v=123",
+            "type": "URL",
+            "uploadDate": "2026-03-25T14:40:00Z"
+          }
+        ]
+      }
+    },
+    {
+      "_id": "sub202",
+      "courseId": "course102",
+      "name": "Advanced Mathematics",
+      "category": "JEE Advanced",
+      "color": "#9333ea",
+      "icon": "📐",
+      "resources": {
+        "notes": [],
+        "videos": []
+      }
+    }
+  ],
+  "admissions": [
+    {
+      "email": "siddhi@gmail.com",
+      "studentClass": "10th",
+      "previousScore": "86",
+      "message": "",
+      "status": "approved",
+      "_id": "1774460556594"
+    },
+    {
+      "email": "siddhi@gmail.com",
+      "studentClass": "10th",
+      "previousScore": "86%",
+      "message": "",
+      "status": "pending",
+      "_id": "1774460570324"
+    },
+    {
+      "email": "siddhi@gmail.com",
+      "studentClass": "10th",
+      "previousScore": "86%",
+      "message": "",
+      "status": "pending",
+      "_id": "1774460577476"
+    },
+    {
+      "email": "siddhithale@gmail.com",
+      "studentClass": "10th",
+      "previousScore": "86%",
+      "message": "",
+      "status": "pending",
+      "_id": "1774461122829"
+    },
+    {
+      "email": "siddhithale@gmail.com",
+      "studentClass": "10th",
+      "previousScore": "86%",
+      "message": "",
+      "status": "pending",
+      "_id": "1774461127743"
+    },
+    {
+      "name": "ashutosh",
+      "email": "ash@gmail.com",
+      "phone": "4568565546",
+      "classApplied": "10th Grade",
+      "previousScore": "90%",
+      "message": "",
+      "batch": "Physics - April 2026",
+      "status": "pending",
+      "_id": "1774504470571"
+    },
+    {
+      "name": "ashutosh",
+      "email": "ash@gmail.com",
+      "phone": "8600236725",
+      "classApplied": "10th Grade",
+      "previousScore": "90%",
+      "message": "",
+      "batch": "Physics - April 2026",
+      "status": "approved",
+      "_id": "1774507701306"
+    },
+    {
+      "name": "ashutosh",
+      "email": "ash@gmail.com",
+      "phone": "8600236725",
+      "classApplied": "Diploma Engineering",
+      "previousScore": "90%",
+      "message": "",
+      "batch": "Diploma Engineering (Comp / IT / Civil / Mech / Elect / Chem / Inst)",
+      "status": "approved",
+      "_id": "1774511509409"
+    },
+    {
+      "name": "siddhi",
+      "email": "siddhi@gmail.com",
+      "phone": "7020789219",
+      "classApplied": "Diploma Engineering",
+      "previousScore": "80%",
+      "message": "",
+      "batch": "Diploma Engineering (Comp / IT / Civil / Mech / Elect / Chem / Inst)",
+      "status": "pending",
+      "_id": "1774586843164"
+    }
+  ],
+  "students": [
+    {
+      "_id": "st001",
+      "name": "Siddhi",
+      "email": "siddhi@gmail.com",
+      "phone": "9876543210",
+      "studentClass": "12th",
+      "assignedCourses": [
+        "course101"
+      ],
+      "role": "student"
+    }
+  ],
+  "fees": [
+    {
+      "studentName": "Siddhi",
+      "email": "siddhi@gmail.com",
+      "paidAmount": 15000,
+      "pendingFees": 5000,
+      "paymentMode": "UPI/Online"
+    },
+    {
+      "studentName": "SIDDHI",
+      "email": "siddhithale01@gmail.com",
+      "paidAmount": 2000,
+      "paymentMode": "Cash",
+      "_id": "1774517064851"
+    }
+  ],
+  "toppers": [
+    {
+      "_id": "top001",
+      "name": "Ananya Gupta",
+      "exam": "JEE MAINS 2025",
+      "marks": "99.8",
+      "photoUrl": "",
+      "achievement": "99.8 Percentile"
+    }
+  ],
+  "updates": [
+    {
+      "title": "Welcome to Ideal Cloud",
+      "message": "Access your courses and study materials from the new Resource Vault.",
+      "timestamp": "2026-03-25T14:30:00.000Z"
+    }
+  ],
+  "doubts": [],
+  "quizzes": [],
+  "announcements": [
+    {
+      "_id": "ann101",
+      "title": "Semester Exams 2026",
+      "content": "Final board examinations will begin from April 15th. Please download the detailed schedule from the resource vault.",
+      "type": "exam",
+      "createdAt": "2026-03-25T14:30:00.000Z"
+    }
+  ]
+}
