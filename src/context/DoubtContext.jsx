@@ -1,7 +1,8 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
 const DoubtContext = createContext();
-const API_URL = 'http://localhost:5000/api/doubts';
+import { API_URL as BASE_URL } from '../config/api';
+const API_URL = `${BASE_URL}/doubts`;
 
 export const useDoubt = () => useContext(DoubtContext);
 

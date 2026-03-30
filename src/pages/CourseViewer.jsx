@@ -3,6 +3,8 @@ import { useParams, Link } from 'react-router-dom';
 import { useCourse } from '../context/CourseContext';
 import { useAuth } from '../context/AuthContext';
 import { ChevronLeft, FileText, Play, Clock, Search, ExternalLink, Download, Folder, Filter, BookOpen } from 'lucide-react';
+import { API_URL as BASE_URL } from '../config/api';
+const API_BASE = BASE_URL.replace('/api', '');
 
 const CourseViewer = () => {
   const { id } = useParams();
@@ -131,10 +133,10 @@ const CourseViewer = () => {
                            <p className="text-[10px] font-black text-dim uppercase tracking-widest mt-1 opacity-70">Study Material • Secure PDF</p>
                         </div>
                         <div className="flex gap-3">
-                           <a href={`http://localhost:5000${note.fileUrl}`} target="_blank" rel="noreferrer" className="w-12 h-12 rounded-xl bg-alt flex items-center justify-center text-dim hover:text-primary transition-all border border-subtle">
+                           <a href={`${API_BASE}${note.fileUrl}`} target="_blank" rel="noreferrer" className="w-12 h-12 rounded-xl bg-alt flex items-center justify-center text-dim hover:text-primary transition-all border border-subtle">
                               <ExternalLink size={20}/>
                            </a>
-                           <a href={`http://localhost:5000${note.fileUrl}`} download className="w-12 h-12 rounded-xl bg-primary/10 text-primary flex items-center justify-center hover:bg-primary hover:text-white transition-all border border-primary/20">
+                           <a href={`${API_BASE}${note.fileUrl}`} download className="w-12 h-12 rounded-xl bg-primary/10 text-primary flex items-center justify-center hover:bg-primary hover:text-white transition-all border border-primary/20">
                               <Download size={20}/>
                            </a>
                         </div>

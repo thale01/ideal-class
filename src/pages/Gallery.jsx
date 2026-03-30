@@ -3,6 +3,8 @@ import { useGallery } from '../context/GalleryContext';
 import { Trophy, Award, Star, TrendingUp, GraduationCap, ChevronRight, Zap, Flame, LayoutGrid, Image as ImageIcon } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import Navbar from '../components/Navbar';
+import { API_URL as BASE_URL } from '../config/api';
+const API_BASE = BASE_URL.replace('/api', '');
 
 const Gallery = () => {
   const { toppers = [], achievements = [] } = useGallery() || {};
@@ -104,7 +106,7 @@ const Gallery = () => {
                     <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent opacity-60 group-hover:opacity-80 transition-opacity z-10"></div>
                     
                     {topper.photoUrl ? (
-                      <img src={`http://localhost:5000${topper.photoUrl}`} alt={topper.name} className="w-full h-full object-cover transition-all duration-1000 group-hover:scale-110 grayscale-[0.5] group-hover:grayscale-0" />
+                      <img src={`${API_BASE}${topper.photoUrl}`} alt={topper.name} className="w-full h-full object-cover transition-all duration-1000 group-hover:scale-110 grayscale-[0.5] group-hover:grayscale-0" />
                     ) : (
                       <div className="w-full h-full flex flex-col items-center justify-center text-primary/10 group-hover:text-primary/30 transition-all duration-700">
                         <ImageIcon size={64} strokeWidth={0.5}/>

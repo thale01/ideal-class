@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { FileText, Play, Clock, Trash2, Layers, CheckCircle, Edit2, Check } from 'lucide-react';
+import { API_URL as BASE_URL } from '../config/api';
+const API_BASE = BASE_URL.replace('/api', '');
 
 const ContentCard = ({ id, type, title, chapter, date, url, fileUrl, onDelete, onUpdate }) => {
   const [isEditing, setIsEditing] = useState(false);
@@ -52,7 +54,7 @@ const ContentCard = ({ id, type, title, chapter, date, url, fileUrl, onDelete, o
           {isEditing ? <Check size={20}/> : <Edit2 size={20} />}
         </button>
         <a 
-          href={isVideo ? (url.startsWith('http') ? url : `http://localhost:5000${url}`) : `http://localhost:5000${fileUrl}`} 
+          href={isVideo ? (url.startsWith('http') ? url : `${API_BASE}${url}`) : `${API_BASE}${fileUrl}`} 
           target="_blank" 
           rel="noreferrer" 
           className="w-10 h-10 rounded-xl bg-surface flex items-center justify-center text-dim hover:bg-alt hover:text-primary transition-all border border-subtle shadow-sm"

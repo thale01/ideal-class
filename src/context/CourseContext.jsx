@@ -1,7 +1,9 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
 const CourseContext = createContext();
-const API_URL = 'http://localhost:5000/api/subjects';
+import { API_URL as BASE_URL } from '../config/api';
+const API_URL = `${BASE_URL}/subjects`;
+const COURSES_URL = `${BASE_URL}/courses`;
 
 export const useCourse = () => useContext(CourseContext);
 
@@ -11,7 +13,7 @@ export const CourseProvider = ({ children }) => {
 
   const fetchCourses = async () => {
     try {
-      const res = await fetch('http://localhost:5000/api/courses');
+      const res = await fetch(COURSES_URL);
       if (res.ok) {
         const data = await res.json();
         setCourses(data);
@@ -49,7 +51,7 @@ export const CourseProvider = ({ children }) => {
   const addCourse = async (courseData) => {
     const token = localStorage.getItem('token');
     try {
-      const res = await fetch('http://localhost:5000/api/courses', {
+      const res = await fetch(COURSES_URL, {
         method: 'POST',
         headers: { 
           'Content-Type': 'application/json',
@@ -66,7 +68,7 @@ export const CourseProvider = ({ children }) => {
   const deleteCourse = async (id) => {
     const token = localStorage.getItem('token');
     try {
-      const res = await fetch(`http://localhost:5000/api/courses/${id}`, { 
+      const res = await fetch(`${COURSES_URL}/${id}`, { 
         method: 'DELETE',
         headers: { 'Authorization': `Bearer ${token}` }
       });
@@ -79,7 +81,7 @@ export const CourseProvider = ({ children }) => {
   const assignCourses = async (studentId, courseIds) => {
     const token = localStorage.getItem('token');
     try {
-      const res = await fetch(`http://localhost:5000/api/courses/assign/${studentId}`, {
+      const res = await fetch(`${COURSES_URL}/assign/${studentId}`, {
         method: 'POST',
         headers: { 
           'Content-Type': 'application/json',
@@ -218,7 +220,7 @@ export const CourseProvider = ({ children }) => {
   const updateCourse = async (id, data) => {
     const token = localStorage.getItem('token');
     try {
-      const res = await fetch(`http://localhost:5000/api/courses/${id}`, {
+      const res = await fetch(`${COURSES_URL}/${id}`, {
         method: 'PUT',
         headers: { 
           'Content-Type': 'application/json',

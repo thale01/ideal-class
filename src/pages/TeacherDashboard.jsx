@@ -18,6 +18,8 @@ import { useTheme } from '../context/ThemeContext';
 import { useAnnouncement } from '../context/AnnouncementContext';
 import { useNavigate, Link } from 'react-router-dom';
 import logo from '../assets/logo.png';
+import { API_URL as BASE_URL } from '../config/api';
+const API_BASE = BASE_URL.replace('/api', '');
 
 const TeacherDashboard = () => {
    const { user, logout } = useAuth();
@@ -552,7 +554,7 @@ const TeacherDashboard = () => {
                         </div>
                         <button
                            onClick={async () => {
-                              const res = await fetch('http://localhost:5000/api/students/export', {
+                              const res = await fetch(`${API_BASE}/api/students/export`, {
                                  headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
                               });
                               const blob = await res.blob();
@@ -828,7 +830,7 @@ const TeacherDashboard = () => {
                         {filteredItems(toppers).map((t, i) => (
                            <div key={i} className="card-premium group p-5">
                               <div className="h-56 bg-alt rounded-2xl mb-4 flex-center overflow-hidden border border-subtle group-hover:translate-y-[-5px] transition-all relative">
-                                 {t.photoUrl ? <img src={`http://localhost:5000${t.photoUrl}`} className="w-full h-full object-cover" /> : <Trophy size={64} className="text-dim opacity-10" />}
+                                 {t.photoUrl ? <img src={`${API_BASE}${t.photoUrl}`} className="w-full h-full object-cover" /> : <Trophy size={64} className="text-dim opacity-10" />}
                                  <div className="absolute top-3 right-3 badge-premium badge-primary">Ranker</div>
                               </div>
                               <h4 className="text-lg font-bold text-bright mb-1">{t.name}</h4>
