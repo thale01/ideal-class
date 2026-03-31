@@ -18,11 +18,16 @@ const AdmissionForm = () => {
       branch: '',
       batch: 'Diploma Engineering (Comp / IT / Civil / Mech / Elect / Chem / Inst)',
       previousScore: '',
-      message: ''
+      message: '',
+      agreedToPrivacy: false
    });
 
    const handleSubmit = async (e) => {
       e.preventDefault();
+      if (!formData.agreedToPrivacy) {
+         alert("Please agree to the privacy policy to proceed.");
+         return;
+      }
       const success = await submitApplication(formData);
       if (success) {
          setIsSubmitted(true);
@@ -163,6 +168,19 @@ const AdmissionForm = () => {
                   <div>
                      <label className="text-[10px] font-black text-dim uppercase tracking-widest block mb-2">Administrative Brief (Optional)</label>
                      <textarea className="input-premium min-h-[120px] resize-none pt-4 font-bold text-sm" placeholder="State any specific requests for the admin..." value={formData.message} onChange={(e) => setFormData({ ...formData, message: e.target.value })} />
+                  </div>
+
+                  <div className="flex items-start gap-4 p-4 rounded-2xl bg-primary/5 border border-primary/10">
+                     <input 
+                        type="checkbox" 
+                        id="privacy" 
+                        className="mt-1 w-5 h-5 rounded border-subtle transition-all cursor-pointer accent-primary"
+                        checked={formData.agreedToPrivacy}
+                        onChange={() => setFormData({ ...formData, agreedToPrivacy: !formData.agreedToPrivacy })}
+                     />
+                     <label htmlFor="privacy" className="text-xs font-bold text-dim cursor-pointer select-none leading-relaxed">
+                        I agree to the <Link to="/privacy" className="text-primary hover:underline">Privacy Policy</Link> and authorize Ideal Classes to contact me regarding my academic interests.
+                     </label>
                   </div>
                </div>
 

@@ -33,7 +33,41 @@ const IdealLogo = ({ className = "" }) => (
 );
 
 const LandingPage = () => {
+  const [deferredPrompt, setDeferredPrompt] = useState(null);
+  const [showInstallBtn, setShowInstallBtn] = useState(false);
+
+  React.useEffect(() => {
+    const handleBeforeInstallPrompt = (e) => {
+      // Prevent the mini-infobar from appearing on mobile
+      e.preventDefault();
+      // Stash the event so it can be triggered later.
+      setDeferredPrompt(e);
+      // Update UI notify the user they can install the PWA
+      setShowInstallBtn(true);
+    };
+
+    window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+
+    return () => {
+      window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+    };
+  }, []);
+
+  const handleInstallClick = async () => {
+    if (!deferredPrompt) return;
+    // Show the install prompt
+    deferredPrompt.prompt();
+    // Wait for the user to respond to the prompt
+    const { outcome } = await deferredPrompt.userChoice;
+    // Optionally, send analytics event with outcome of user choice
+    console.log(`User response to the install prompt: ${outcome}`);
+    // We've used the prompt, and can't use it again, throw it away
+    setDeferredPrompt(null);
+    setShowInstallBtn(false);
+  };
+
   const gallery = useGallery() || {};
+
   const toppers = (gallery.toppers && gallery.toppers.length > 0) ? gallery.toppers : [
     { id: 1, name: "Aryan K.", score: "99.4%", exam: "CBSE Boards", achievement: "District Topper" },
     { id: 2, name: "Sneha D.", score: "98.6%", exam: "SSC Boards", achievement: "School Rank #1" },
@@ -498,13 +532,31 @@ const LandingPage = () => {
                 <p className="text-slate-600 text-xs font-800 tracking-wider uppercase italic">Precise Academic Guidance For Engineering & Science Experts.</p>
              </div>
              <div className="flex gap-12">
-                <a href="#" className="text-slate-500 hover:text-white transition-colors text-[10px] font-black uppercase tracking-[0.4em] opacity-60 hover:opacity-100">Privacy Protocol</a>
-                <a href="#" className="text-slate-500 hover:text-white transition-colors text-[10px] font-black uppercase tracking-[0.4em] opacity-60 hover:opacity-100">Structural Terms</a>
+                <Link to="/privacy" className="text-slate-500 hover:text-white transition-colors text-[10px] font-black uppercase tracking-[0.4em] opacity-60 hover:opacity-100">Privacy Protocol</Link>
+                <Link to="/privacy" className="text-slate-500 hover:text-white transition-colors text-[10px] font-black uppercase tracking-[0.4em] opacity-60 hover:opacity-100">Structural Terms</Link>
              </div>
+
           </div>
         </div>
       </footer>
+
+      {/* Floating Smart Install UI */}
+      {showInstallBtn && (
+        <div className="fixed bottom-10 right-6 sm:right-10 z-[100] animate-fadeUp">
+          <button 
+            onClick={handleInstallClick}
+            className="flex items-center gap-3 px-6 py-4 bg-primary text-white rounded-2xl font-black shadow-[0_20px_50px_rgba(var(--primary-rgb),0.5)] border border-white/20 hover:scale-105 active:scale-95 transition-all group overflow-hidden relative"
+          >
+            <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
+            <Zap size={24} className="animate-pulse" />
+            <span className="hidden sm:inline">Install Android App</span>
+            <span className="sm:hidden">Install App</span>
+          </button>
+        </div>
+      )}
+
       <style>{`
+
         .landing-container {
           background: var(--bg-main);
           color: var(--text-main);

@@ -22,6 +22,8 @@ import Gallery from './pages/Gallery';
 import Courses from './pages/Courses';
 import Achievements from './pages/Achievements';
 import Navbar from './components/Navbar';
+import Privacy from './pages/Privacy';
+
 
 const ProtectedRoute = ({ children, role }) => {
   const { user, loading } = useAuth();
@@ -61,6 +63,7 @@ function App() {
                         <Route path="/gallery" element={<Gallery />} />
                         <Route path="/courses" element={<Courses />} />
                         <Route path="/achievements" element={<Achievements />} />
+                        <Route path="/privacy" element={<Privacy />} />
                         <Route
                           path="/admin"
                           element={

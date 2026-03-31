@@ -1,22 +1,43 @@
 {
+  "id": "com.idealclasses.academy",
   "name": "Ideal Classes",
   "short_name": "Ideal",
-  "description": "Inspiring Academic Excellence",
-  "start_url": "/",
+  "description": "Official portal for Ideal Classes students - Academic Excellence Since 2014.",
+  "start_url": "/?source=pwa",
   "display": "standalone",
   "background_color": "#020617",
   "theme_color": "#10b981",
+  "orientation": "portrait",
+  "scope": "/",
+  "categories": [
+    "education",
+    "productivity"
+  ],
   "icons": [
     {
       "src": "/pwa-192x192.png",
       "sizes": "192x192",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any"
+    },
+    {
+      "src": "/pwa-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
     },
     {
       "src": "/pwa-512x512.png",
       "sizes": "512x512",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/pwa-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
     }
   ]
 }
+
