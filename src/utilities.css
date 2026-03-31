@@ -300,6 +300,10 @@
 .md\:p-24 { padding: 6rem !important; }
 .md\:overflow-y-auto { overflow-y: auto !important; }
 .md\:flex-col { flex-direction: column !important; }
+.md\:relative { position: relative !important; }
+.md\:sticky { position: sticky !important; }
+.md\:w-24 { width: 6rem !important; }
+.md\:w-80 { width: 20rem !important; }
 }
 
 @media (min-width: 1024px) {

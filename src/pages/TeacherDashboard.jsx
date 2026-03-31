@@ -63,6 +63,7 @@ const TeacherDashboard = () => {
    const [showResetPassModal, setShowResetPassModal] = useState(false);
    const [adminPassData, setAdminPassData] = useState({ current: '', new: '', confirm: '' });
    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
    const [message, setMessage] = useState({ text: '', type: '' }); // { text: '', type: 'success' | 'error' }
 
    const filteredItems = (items, field = 'name') => {
@@ -125,17 +126,26 @@ const TeacherDashboard = () => {
    ];
 
    return (
-      <div className="min-h-screen bg-main flex flex-col md:flex-row transition-colors duration-500">
-         {/* Sidebar Navigation */}
-         <aside className={`fixed md:relative inset-y-0 left-0 w-72 sidebar-premium flex flex-col h-screen z-[10002] transition-transform duration-300 ease-in-out ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0 shadowed-float'}`}>
-            <div className="p-8">
+      <div className="min-h-screen bg-main flex flex-col md:flex-row transition-colors duration-500 overflow-x-hidden">
+         {/* Sidebar Nav */}
+         <aside className={`fixed inset-y-0 left-0 md:relative md:translate-x-0 sidebar-premium flex flex-col h-screen z-[10002] transition-all duration-300 ease-in-out ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} ${isSidebarCollapsed ? 'md:w-24' : 'md:w-80'} shrink-0 shadow-2xl md:shadow-none border-r border-subtle overflow-hidden`}>
+            <div className={`p-6 transition-all duration-300 ${isSidebarCollapsed ? 'px-4' : 'p-8'}`}>
                <div className="flex items-center justify-between mb-2">
-                  <div className="flex items-center gap-3">
-                     <img src={logo} alt="Ideal Classes Logo" className="h-10 w-auto object-contain" />
-                     <div>
-                        <h1 className="text-xl font-bold text-bright tracking-tight italic">IDEAL CLASSES</h1>
-                        <p className="badge-premium badge-primary text-[9px] font-black uppercase tracking-widest mt-1 px-3 py-0.5">Admin Central</p>
-                     </div>
+                  <div className="flex items-center gap-3 overflow-hidden">
+                     <button 
+                        onClick={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
+                        className="p-2.5 rounded-xl bg-alt/50 border border-subtle text-bright hover:bg-primary/10 hover:text-primary transition-all hidden md:flex items-center justify-center shrink-0"
+                        title={isSidebarCollapsed ? "Expand Sidebar" : "Collapse Sidebar"}
+                     >
+                        <Menu size={20} />
+                     </button>
+                     <img src={logo} alt="Ideal Classes Logo" className={`h-10 w-auto object-contain transition-all duration-500 ${isSidebarCollapsed ? 'scale-0 w-0' : 'scale-100'}`} />
+                     {!isSidebarCollapsed && (
+                        <div className="animate-fadeIn">
+                           <h1 className="text-xl font-bold text-bright tracking-tight italic whitespace-nowrap">IDEAL CLASSES</h1>
+                           <p className="badge-premium badge-primary text-[9px] font-black uppercase tracking-widest mt-1 px-3 py-0.5 whitespace-nowrap">Admin Central</p>
+                        </div>
+                     )}
                   </div>
                   <button onClick={() => setIsSidebarOpen(false)} className="md:hidden p-2 rounded-xl bg-alt/50 text-dim">
                      <X size={20} />
@@ -148,20 +158,21 @@ const TeacherDashboard = () => {
                   <button
                      key={item.id}
                      onClick={() => { setActiveTab(item.id); setSearchTerm(''); setIsSidebarOpen(false); }}
-                     className={`sidebar-item w-full group ${activeTab === item.id ? 'active bg-primary/10 text-primary' : 'text-dim hover:bg-alt/50 hover:text-bright'}`}
+                     className={`sidebar-item w-full group overflow-hidden ${activeTab === item.id ? 'active bg-primary/10 text-primary' : 'text-dim hover:bg-alt/50 hover:text-bright'}`}
+                     title={isSidebarCollapsed ? item.label : ""}
                   >
-                     <div className={`p-2 rounded-lg transition-all ${activeTab === item.id ? 'bg-primary text-white shadow-md shadow-primary/20' : 'bg-transparent text-dim group-hover:text-primary'}`}>
+                     <div className={`p-2 rounded-lg transition-all shrink-0 ${activeTab === item.id ? 'bg-primary text-white shadow-md shadow-primary/20' : 'bg-transparent text-dim group-hover:text-primary'}`}>
                         <item.icon size={18} />
                      </div>
-                     <span className="font-bold ml-3 text-sm">{item.label}</span>
+                     <span className={`font-bold ml-3 text-sm transition-all duration-300 ${isSidebarCollapsed ? 'opacity-0 -translate-x-10 pointer-events-none' : 'opacity-100 translate-x-0'}`}>{item.label}</span>
                   </button>
                ))}
             </nav>
 
-            <div className="p-6 border-t border-subtle">
-               <button onClick={logout} className="sidebar-item w-full transition-all group hover:bg-danger/10 text-danger">
-                  <LogOut size={18} />
-                  <span className="font-bold text-sm">Terminate Session</span>
+            <div className={`p-6 border-t border-subtle transition-all duration-300 ${isSidebarCollapsed ? 'px-4 text-center' : 'p-6'}`}>
+               <button onClick={logout} className="sidebar-item w-full transition-all group hover:bg-danger/10 text-danger" title={isSidebarCollapsed ? "Terminate Session" : ""}>
+                  <LogOut size={18} className="shrink-0" />
+                  <span className={`font-bold text-sm ml-3 transition-all duration-300 ${isSidebarCollapsed ? 'hidden' : 'inline'}`}>Terminate Session</span>
                </button>
             </div>
          </aside>
@@ -175,9 +186,11 @@ const TeacherDashboard = () => {
          )}
 
          {/* Main Main Area */}
-         <main className="flex-1 min-h-screen overflow-auto">
-            <header className="header-premium sticky top-0 bg-surface/80">
-               <div className="container-premium flex items-center justify-between">
+         <main className="flex-1 min-h-screen min-w-0 overflow-x-hidden">
+
+            <header className="header-premium border-b border-subtle sticky top-0 bg-surface/90 backdrop-blur-md z-[1000]">
+               <div className="px-6 lg:px-12 flex items-center justify-between w-full h-full">
+
                   <div>
                      <h2 className="text-2xl font-bold text-bright tracking-tight capitalize">{activeTab}</h2>
                      <p className="text-xs text-dim font-medium">Managing academic database & resources</p>
@@ -223,7 +236,8 @@ const TeacherDashboard = () => {
                </div>
             </header>
 
-            <div className="container-premium py-10 animate-fadeUp">
+            <div className="px-4 md:px-8 lg:px-12 py-10 animate-fadeUp max-w-[1800px] mx-auto">
+
                {activeTab === 'subjects' && (
                   <div className="space-y-8">
                      {/* Hierarchical Breadcrumb Navigation */}
