@@ -134,37 +134,34 @@ const LandingPage = () => {
               Welcome to Ideal Classes. We craft intuitive learning pathways and visually captivating academic experiences that help students stand out in their journey.
             </p>
 
-            <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 mt-6 sm:mt-10 mb-6 sm:mb-10 w-full justify-center px-4">
+            <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 mt-8 sm:mt-12 mb-8 sm:mb-12 w-full max-w-[600px] mx-auto px-4">
               <button 
                 onClick={() => navigate('/login', { state: { role: 'student' } })} 
-                className="px-8 sm:px-10 py-3 sm:py-5 rounded-full text-white font-black transition-all backdrop-blur-xl border flex items-center justify-center gap-3 hover:scale-105 active:scale-95 group overflow-hidden"
+                className="w-full sm:w-auto px-10 py-4 sm:py-5 rounded-2xl text-white font-black transition-all backdrop-blur-xl border flex items-center justify-center gap-3 hover:scale-105 active:scale-95 shadow-xl"
                 style={{ 
                   backgroundColor: 'rgba(255, 255, 255, 0.1)', 
-                  borderColor: 'rgba(255, 255, 255, 0.3)',
-                  fontSize: 'clamp(14px, 2vw, 17px)',
+                  borderColor: 'rgba(255, 255, 255, 0.25)',
+                  fontSize: '16px',
                   letterSpacing: 'tight',
-                  minWidth: 'clamp(180px, 45vw, 240px)',
-                  boxShadow: '0 15px 35px rgba(0,0,0,0.2)'
+                  flex: 1
                 }}
               >
-                <div className="absolute inset-0 bg-primary opacity-0 group-hover:opacity-20 transition-opacity"></div>
-                <User size={20} className="sm:w-6 sm:h-6" />
+                <User size={20} />
                 Student Portal
               </button>
               
               <button 
                 onClick={() => navigate('/login', { state: { role: 'admin' } })} 
-                className="px-8 sm:px-10 py-3 sm:py-5 rounded-full text-white font-black transition-all backdrop-blur-xl border flex items-center justify-center gap-3 hover:scale-105 active:scale-95 group overflow-hidden"
+                className="w-full sm:w-auto px-10 py-4 sm:py-5 rounded-2xl text-white font-black transition-all backdrop-blur-xl border flex items-center justify-center gap-3 hover:scale-105 active:scale-95 shadow-2xl"
                 style={{ 
-                  backgroundColor: 'rgba(255, 255, 255, 0.35)', 
-                  borderColor: 'rgba(255, 255, 255, 0.6)',
-                  fontSize: 'clamp(14px, 2vw, 17px)',
+                  backgroundColor: 'rgba(255, 255, 255, 0.25)', 
+                  borderColor: 'rgba(255, 255, 255, 0.4)',
+                  fontSize: '16px',
                   letterSpacing: 'tight',
-                  minWidth: 'clamp(180px, 45vw, 240px)',
-                  boxShadow: '0 25px 50px rgba(0,0,0,0.3)'
+                  flex: 1
                 }}
               >
-                <Lock size={20} className="sm:w-6 sm:h-6" />
+                <Lock size={20} />
                 Admin Portal
               </button>
             </div>
