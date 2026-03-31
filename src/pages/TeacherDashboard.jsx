@@ -61,6 +61,7 @@ const TeacherDashboard = () => {
    const [showEditStudentModal, setShowEditStudentModal] = useState(false);
    const [showResetPassModal, setShowResetPassModal] = useState(false);
    const [adminPassData, setAdminPassData] = useState({ current: '', new: '', confirm: '' });
+   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
    const [message, setMessage] = useState({ text: '', type: '' }); // { text: '', type: 'success' | 'error' }
 
    const filteredItems = (items, field = 'name') => {
@@ -125,40 +126,52 @@ const TeacherDashboard = () => {
    return (
       <div className="min-h-screen bg-main flex flex-col md:flex-row transition-colors duration-500">
          {/* Sidebar Navigation */}
-         <aside className="w-full md:w-72 sidebar-premium flex flex-col h-auto md:h-screen z-50">
-            <div className="p-8 hidden md:block">
-               <div className="flex items-center gap-3 mb-2">
-                  <img src={logo} alt="Ideal Classes Logo" className="h-10 w-auto object-contain" />
-                  <div>
-                     <h1 className="text-xl font-bold text-bright tracking-tight italic">IDEAL CLASSES</h1>
-                     <p className="badge-premium badge-primary text-[9px] font-black uppercase tracking-widest mt-1 px-3 py-0.5">Admin Central</p>
+         <aside className={`fixed md:relative inset-y-0 left-0 w-72 sidebar-premium flex flex-col h-screen z-[10002] transition-transform duration-300 ease-in-out ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0 shadowed-float'}`}>
+            <div className="p-8">
+               <div className="flex items-center justify-between mb-2">
+                  <div className="flex items-center gap-3">
+                     <img src={logo} alt="Ideal Classes Logo" className="h-10 w-auto object-contain" />
+                     <div>
+                        <h1 className="text-xl font-bold text-bright tracking-tight italic">IDEAL CLASSES</h1>
+                        <p className="badge-premium badge-primary text-[9px] font-black uppercase tracking-widest mt-1 px-3 py-0.5">Admin Central</p>
+                     </div>
                   </div>
+                  <button onClick={() => setIsSidebarOpen(false)} className="md:hidden p-2 rounded-xl bg-alt/50 text-dim">
+                     <X size={20} />
+                  </button>
                </div>
             </div>
 
-            <nav className="flex-1 p-2 md:p-4 space-y-1 overflow-x-auto md:overflow-y-auto flex md:flex-col no-scrollbar">
+            <nav className="flex-1 p-4 space-y-1 overflow-y-auto no-scrollbar">
                {menuItems.map(item => (
                   <button
                      key={item.id}
-                     onClick={() => { setActiveTab(item.id); setSearchTerm(''); }}
-                     className={`sidebar-item group ${activeTab === item.id ? 'active bg-primary/10 text-primary' : 'text-dim hover:bg-alt/50 hover:text-bright'}`}
+                     onClick={() => { setActiveTab(item.id); setSearchTerm(''); setIsSidebarOpen(false); }}
+                     className={`sidebar-item w-full group ${activeTab === item.id ? 'active bg-primary/10 text-primary' : 'text-dim hover:bg-alt/50 hover:text-bright'}`}
                   >
                      <div className={`p-2 rounded-lg transition-all ${activeTab === item.id ? 'bg-primary text-white shadow-md shadow-primary/20' : 'bg-transparent text-dim group-hover:text-primary'}`}>
                         <item.icon size={18} />
                      </div>
-                     <span className="hidden md:inline font-bold ml-3 text-sm">{item.label}</span>
-                     <span className="md:hidden text-[10px] mt-1 font-bold">{item.label}</span>
+                     <span className="font-bold ml-3 text-sm">{item.label}</span>
                   </button>
                ))}
             </nav>
 
-            <div className="p-6 border-t border-subtle hidden md:block">
+            <div className="p-6 border-t border-subtle">
                <button onClick={logout} className="sidebar-item w-full transition-all group hover:bg-danger/10 text-danger">
                   <LogOut size={18} />
                   <span className="font-bold text-sm">Terminate Session</span>
                </button>
             </div>
          </aside>
+
+         {/* Mobile Backdrop */}
+         {isSidebarOpen && (
+            <div 
+               className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[10001] md:hidden transition-opacity"
+               onClick={() => setIsSidebarOpen(false)}
+            ></div>
+         )}
 
          {/* Main Main Area */}
          <main className="flex-1 min-h-screen overflow-auto">
@@ -170,6 +183,12 @@ const TeacherDashboard = () => {
                   </div>
 
                   <div className="flex items-center gap-4">
+                     <button 
+                        onClick={() => setIsSidebarOpen(true)}
+                        className="md:hidden p-2.5 rounded-xl bg-alt/50 border border-subtle text-bright mr-2"
+                     >
+                        <Menu size={22} />
+                     </button>
                      <div className="relative group hidden sm:block">
                         <input
                            type="text"
