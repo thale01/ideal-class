@@ -417,7 +417,7 @@ const LandingPage = () => {
                     <p className="text-xs font-900 text-primary uppercase tracking-[0.4em] mt-3 opacity-60">Verified Excellence Since 2010</p>
                   </div>
                 </div>
-                <p className="text-slate-300 text-lg sm:text-xl font-600 leading-relaxed max-w-sm mb-12 sm:mb-16">
+                <p className="text-slate-300 text-lg sm:text-xl font-600 leading-relaxed max-w-sm mb-12 sm:mb-16 mt-12">
                   Nurturing academic precision and building a unified roadmap to engineering and science mastery for over a decade.
                 </p>
               </div>
@@ -437,12 +437,12 @@ const LandingPage = () => {
               
               <div className="relative z-10 w-full">
                 <h3 className="text-xs font-900 text-slate-500 uppercase tracking-[0.4em] mb-12 border-l-4 border-primary pl-6">Navigation</h3>
-                <ul className="space-y-8 list-none p-0 m-0">
+                <ul className="space-y-6 sm:space-y-8 list-none p-0 m-0">
                   {['Courses', 'Student Portal', 'Gallery', 'Achievements'].map((item) => (
                     <li key={item}>
                       <Link 
                         to={`/${item.toLowerCase().replace(' ', '')}`} 
-                        className="text-slate-400 hover:text-white transition-all duration-500 font-700 text-xl flex items-center group w-max"
+                        className="text-white/70 hover:text-white transition-all duration-500 font-700 text-lg sm:text-xl flex items-center group w-max"
                       >
                         <span className="w-0 h-0.5 bg-primary group-hover:w-8 transition-all duration-500 mr-0 group-hover:mr-6"></span>
                         {item}
@@ -460,23 +460,23 @@ const LandingPage = () => {
               <div className="relative z-10">
                 <h3 className="text-xs font-900 text-slate-500 uppercase tracking-[0.4em] mb-12 border-l-4 border-primary pl-6">Connect</h3>
                 <div className="space-y-12">
-                  <div className="flex gap-8 group cursor-pointer">
-                    <div className="w-14 h-14 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-all duration-500 group-hover:shadow-[0_0_30px_rgba(var(--primary-rgb),0.4)]">
+                  <div className="flex gap-6 sm:gap-8 group cursor-pointer">
+                    <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-all duration-500 group-hover:shadow-[0_0_30px_rgba(var(--primary-rgb),0.4)]">
                        <MapPin size={24} />
                     </div>
-                    <p className="text-slate-300 text-lg leading-relaxed font-700">
+                    <p className="text-white/80 text-base sm:text-lg leading-relaxed font-700">
                       Near Mumbai-Goa Highway,<br />Diploma College Rd, Ramwadi
                     </p>
                   </div>
-                  <div className="space-y-6 pt-12 border-t border-white/10">
-                    <a href="tel:+918793309230" className="flex items-center gap-6 text-slate-100 hover:text-primary transition-all duration-500 text-2xl font-black tracking-tight group w-max">
-                      <div className="w-14 h-14 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-all duration-500">
+                   <div className="space-y-4 sm:space-y-6 pt-12 border-t border-white/10">
+                    <a href="tel:+918793309230" className="flex items-center gap-4 sm:gap-6 text-white hover:text-primary transition-all duration-500 text-xl sm:text-2xl font-black tracking-tight group w-max">
+                      <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-all duration-500">
                          <Phone size={24} />
                       </div>
                       +91 87933 09230
                     </a>
-                    <a href="tel:+919028289230" className="flex items-center gap-6 text-slate-100 hover:text-primary transition-all duration-500 text-2xl font-black tracking-tight group w-max">
-                      <div className="w-14 h-14 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-all duration-500">
+                    <a href="tel:+919028289230" className="flex items-center gap-4 sm:gap-6 text-white hover:text-primary transition-all duration-500 text-xl sm:text-2xl font-black tracking-tight group w-max">
+                      <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-all duration-500">
                          <Phone size={24} />
                       </div>
                       +91 90282 89230
@@ -485,9 +485,9 @@ const LandingPage = () => {
                 </div>
               </div>
               
-              <div className="mt-auto pt-10 relative z-10">
-                 <a href="mailto:idealclasses@gmail.com" className="hover:text-primary transition-colors text-slate-400 font-900 text-lg tracking-widest flex items-center gap-4 group uppercase">
-                    <Zap size={20} className="text-primary group-hover:scale-125 transition-transform" /> idealclasses@gmail.com
+              <div className="mt-auto pt-10 relative z-10 w-full overflow-hidden">
+                 <a href="mailto:idealclasses@gmail.com" className="hover:text-primary transition-colors text-white/70 font-900 text-sm sm:text-lg tracking-wider flex items-center gap-3 sm:gap-4 group uppercase break-all">
+                    <Zap size={20} className="text-primary group-hover:scale-125 transition-transform flex-shrink-0" /> idealclasses@gmail.com
                  </a>
               </div>
             </div>

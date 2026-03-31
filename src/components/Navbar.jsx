@@ -68,7 +68,7 @@ const Navbar = () => {
         </div>
 
         {/* Navigation Actions */}
-        <div className="nav-actions flex items-center gap-2 sm:gap-4 md:gap-8">
+        <div className="nav-actions flex items-center gap-3 sm:gap-6 md:gap-8 flex-shrink-0">
           
           {/* Main Links (Desktop) */}
           <div className="hidden lg:flex items-center gap-8 mr-4">
