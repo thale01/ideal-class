@@ -13,7 +13,9 @@ import {
   Image,
   Search,
   Menu,
-  ChevronDown
+  ChevronDown,
+  User,
+  Lock
 } from 'lucide-react';
 import Navbar from '../components/Navbar';
 import logo from '../assets/logo.png';
@@ -132,20 +134,40 @@ const LandingPage = () => {
               Welcome to Ideal Classes. We craft intuitive learning pathways and visually captivating academic experiences that help students stand out in their journey.
             </p>
 
-            <button 
-              onClick={() => navigate('/login')} 
-              className="px-10 sm:px-16 py-4 sm:py-5 rounded-full text-white font-black transition-all backdrop-blur-xl border flex items-center justify-center"
-              style={{ 
-                backgroundColor: 'rgba(255, 255, 255, 0.35)', 
-                borderColor: 'rgba(255, 255, 255, 0.6)',
-                fontSize: 'clamp(16px, 2vw, 19px)',
-                letterSpacing: 'tight',
-                minWidth: 'clamp(200px, 60vw, 260px)',
-                boxShadow: '0 25px 50px rgba(0,0,0,0.3)'
-              }}
-            >
-              Learn more
-            </button>
+            <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 mt-6 sm:mt-10 mb-6 sm:mb-10 w-full justify-center px-4">
+              <button 
+                onClick={() => navigate('/login', { state: { role: 'student' } })} 
+                className="px-8 sm:px-10 py-3 sm:py-5 rounded-full text-white font-black transition-all backdrop-blur-xl border flex items-center justify-center gap-3 hover:scale-105 active:scale-95 group overflow-hidden"
+                style={{ 
+                  backgroundColor: 'rgba(255, 255, 255, 0.1)', 
+                  borderColor: 'rgba(255, 255, 255, 0.3)',
+                  fontSize: 'clamp(14px, 2vw, 17px)',
+                  letterSpacing: 'tight',
+                  minWidth: 'clamp(180px, 45vw, 240px)',
+                  boxShadow: '0 15px 35px rgba(0,0,0,0.2)'
+                }}
+              >
+                <div className="absolute inset-0 bg-primary opacity-0 group-hover:opacity-20 transition-opacity"></div>
+                <User size={20} className="sm:w-6 sm:h-6" />
+                Student Portal
+              </button>
+              
+              <button 
+                onClick={() => navigate('/login', { state: { role: 'admin' } })} 
+                className="px-8 sm:px-10 py-3 sm:py-5 rounded-full text-white font-black transition-all backdrop-blur-xl border flex items-center justify-center gap-3 hover:scale-105 active:scale-95 group overflow-hidden"
+                style={{ 
+                  backgroundColor: 'rgba(255, 255, 255, 0.35)', 
+                  borderColor: 'rgba(255, 255, 255, 0.6)',
+                  fontSize: 'clamp(14px, 2vw, 17px)',
+                  letterSpacing: 'tight',
+                  minWidth: 'clamp(180px, 45vw, 240px)',
+                  boxShadow: '0 25px 50px rgba(0,0,0,0.3)'
+                }}
+              >
+                <Lock size={20} className="sm:w-6 sm:h-6" />
+                Admin Portal
+              </button>
+            </div>
             
           </div>
         </div>

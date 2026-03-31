@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
 import { GraduationCap, Sun, Moon, Lock, Mail, ChevronRight, User, Phone, ShieldCheck } from 'lucide-react';
@@ -10,7 +10,8 @@ const Login = () => {
   const { theme, toggleTheme } = useTheme();
   const navigate = useNavigate();
 
-  const [role, setRole] = useState('student'); // admin, student
+  const location = useLocation();
+  const [role, setRole] = useState(location.state?.role || 'student'); // admin, student
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
