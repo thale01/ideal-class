@@ -207,13 +207,32 @@ button {
   transition: var(--transition);
 }
 
-.input-premium:focus {
-  background: var(--bg-surface);
-  border-color: var(--primary);
-  box-shadow: 0 0 0 4px var(--primary-glow);
+.sidebar-item {
+  display: flex;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  border-radius: 1rem;
+  transition: all 0.3s ease;
+  flex-shrink: 0;
 }
 
-/* Badges */
+@media (max-width: 768px) {
+  .sidebar-item {
+    flex-direction: column;
+    padding: 0.5rem;
+    min-width: 75px;
+    gap: 0.25rem;
+  }
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
 .badge-premium {
   padding: 0.3rem 0.75rem;
   border-radius: var(--radius-sm);
