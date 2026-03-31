@@ -4,7 +4,8 @@ import {
    Trash2, Plus, Search, LogOut, CheckCircle,
    TrendingUp, CreditCard, Award, UserPlus, BarChart,
    MessageSquareShare, AlertCircle, Send, CheckCircle2, ChevronRight, Layout, GraduationCap, Trophy, Sun, Moon,
-   Folder, ChevronLeft, Upload, Video, Monitor, MoreVertical, FolderPlus, FileText, Play, Filter, PlusCircle, ArrowLeft, Edit2, Check
+   Folder, ChevronLeft, Upload, Video, Monitor, MoreVertical, FolderPlus, FileText, Play, Filter, PlusCircle, ArrowLeft, Edit2, Check,
+   X, Menu
 } from 'lucide-react';
 
 import { useAuth } from '../context/AuthContext';
