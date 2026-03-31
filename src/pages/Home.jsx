@@ -137,10 +137,8 @@ const LandingPage = () => {
             <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 mt-8 sm:mt-12 mb-8 sm:mb-12 w-full max-w-[600px] mx-auto px-4">
               <button 
                 onClick={() => navigate('/login', { state: { role: 'student' } })} 
-                className="w-full sm:w-auto px-10 py-4 sm:py-5 rounded-2xl text-white font-black transition-all backdrop-blur-xl border-2 flex items-center justify-center gap-3 hover:scale-105 active:scale-95 shadow-xl"
+                className="portal-btn w-full sm:w-auto px-10 py-4 sm:py-5 rounded-2xl text-white font-black flex items-center justify-center gap-3 active:scale-95 shadow-xl"
                 style={{ 
-                  backgroundColor: 'rgba(255, 255, 255, 0.12)', 
-                  borderColor: 'rgba(255, 255, 255, 0.4)',
                   fontSize: '16px',
                   letterSpacing: 'tight',
                   flex: 1
@@ -152,10 +150,8 @@ const LandingPage = () => {
               
               <button 
                 onClick={() => navigate('/login', { state: { role: 'admin' } })} 
-                className="w-full sm:w-auto px-10 py-4 sm:py-5 rounded-2xl text-white font-black transition-all backdrop-blur-xl border-2 flex items-center justify-center gap-3 hover:scale-105 active:scale-95 shadow-2xl"
+                className="portal-btn admin w-full sm:w-auto px-10 py-4 sm:py-5 rounded-2xl text-white font-black flex items-center justify-center gap-3 active:scale-95 shadow-2xl"
                 style={{ 
-                  backgroundColor: 'rgba(255, 255, 255, 0.28)', 
-                  borderColor: 'rgba(255, 255, 255, 0.5)',
                   fontSize: '16px',
                   letterSpacing: 'tight',
                   flex: 1
