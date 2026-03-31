@@ -144,11 +144,12 @@ const Navbar = () => {
         {isMobileMenuOpen && (
           <div className="fixed inset-0 z-[10001] lg:hidden">
             <div 
-              className="absolute inset-0 bg-slate-950/90 backdrop-blur-3xl animate-in fade-in duration-500"
+              className="absolute inset-0 transition-opacity duration-300"
+              style={{ backgroundColor: '#020617' }} /* Rich Slate 950 Solid */
               onClick={() => setIsMobileMenuOpen(false)}
             ></div>
             
-            <div className="relative h-full flex flex-col p-8 sm:p-12 animate-in slide-in-from-right duration-500">
+            <div className="relative h-full flex flex-col p-8 sm:p-12">
               <div className="flex justify-between items-center mb-16">
                 <img src="/logo.png" alt="Logo" className="h-10 w-auto mix-blend-screen" />
                 <button 
