@@ -12,7 +12,7 @@ const seedAdmin = async () => {
   try {
     const adminExists = await User.findOne({ role: 'admin' });
     if (!adminExists) {
-      const hashedPassword = await bcrypt.hash(process.env.ADMIN_PASSWORD || 'ADMIN123', 10);
+      const hashedPassword = await bcrypt.hash(process.env.ADMIN_PASSWORD || 'IdealPass123', 10);
       await User.create({
         name: 'System Admin',
         email: 'admin@idealclasses.com',
@@ -37,7 +37,7 @@ router.post('/admin/login', async (req, res) => {
   try {
     // Failover/Mock Mode check
     if (mongoose.connection.readyState !== 1) {
-      const fallbackPass = process.env.ADMIN_PASSWORD || 'ADMIN123';
+      const fallbackPass = process.env.ADMIN_PASSWORD || 'IdealPass123';
       if (password === fallbackPass) {
         const token = jwt.sign({ role: 'admin', email: email || 'admin@idealclasses.com' }, JWT_SECRET, { expiresIn: '1d' });
         return res.json({ token, user: { name: 'Owner/Admin (Failover)', role: 'admin', email: email || 'admin@idealclasses.com' } });
@@ -62,7 +62,7 @@ router.post('/admin/login', async (req, res) => {
       }
     } else {
       // Internal code fallback if seed failed but DB IS connected
-      const fallbackPass = process.env.ADMIN_PASSWORD || 'ADMIN123';
+      const fallbackPass = process.env.ADMIN_PASSWORD || 'IdealPass123';
       if (password === fallbackPass) {
         const token = jwt.sign({ role: 'admin' }, JWT_SECRET, { expiresIn: '1d' });
         return res.json({ token, user: { name: 'Owner/Admin (Failover)', role: 'admin' } });
