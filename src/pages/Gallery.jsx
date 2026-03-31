@@ -46,16 +46,16 @@ const Gallery = () => {
         <div className="absolute bottom-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-white/5 to-transparent"></div>
       </div>
 
-      <div className="pt-40 pb-32 container mx-auto px-6 relative z-10">
+      <div className="pt-32 sm:pt-40 pb-20 sm:pb-32 container mx-auto px-6 relative z-10">
         {/* Cinematic Header */}
-        <header className="text-center mb-32 max-w-5xl mx-auto">
-          <div className="inline-flex items-center gap-3 px-6 py-2 rounded-full bg-primary/10 border border-primary/20 text-primary font-black tracking-[0.2em] text-[10px] uppercase mb-12 animate-fadeIn opacity-0" style={{ animationFillMode: 'forwards' }}>
-             <Trophy size={14} className="animate-bounce" /> The Absolute Elite
+        <header className="text-center mb-16 sm:mb-32 max-w-5xl mx-auto">
+          <div className="inline-flex items-center gap-3 px-6 py-2 rounded-full bg-primary/10 border border-primary/20 text-primary font-black tracking-[0.2em] text-[9px] sm:text-[10px] uppercase mb-8 sm:mb-12 animate-fadeIn opacity-0" style={{ animationFillMode: 'forwards' }}>
+             <Trophy size={12} className="animate-bounce" /> The Absolute Elite
           </div>
-          <h1 className="text-7xl md:text-9xl font-900 tracking-tighter leading-[0.9] mb-12 animate-fadeIn delay-100 opacity-0" style={{ animationFillMode: 'forwards' }}>
-             Hall of <br /><span className="text-gradient drop-shadow-[0_0_30px_rgba(99,102,241,0.3)]">Achievement</span>
+          <h1 className="text-5xl sm:text-7xl md:text-9xl font-900 tracking-tighter leading-[0.9] mb-8 sm:mb-12 animate-fadeIn delay-100 opacity-0" style={{ animationFillMode: 'forwards' }}>
+             Hall of <br className="hidden sm:block" /><span className="text-gradient drop-shadow-[0_0_30px_rgba(99,102,241,0.3)]">Achievement</span>
           </h1>
-          <p className="text-secondary text-xl md:text-2xl font-medium max-w-3xl mx-auto leading-relaxed animate-fadeIn delay-200 opacity-0" style={{ animationFillMode: 'forwards' }}>
+          <p className="text-secondary text-lg sm:text-xl md:text-2xl font-medium max-w-3xl mx-auto leading-relaxed animate-fadeIn delay-200 opacity-0" style={{ animationFillMode: 'forwards' }}>
              A visual testament to a decade of academic dominance. Celebrating the students who redefined excellence through precision and perseverance.
           </p>
           
@@ -176,19 +176,20 @@ const Gallery = () => {
         </section>
 
         {/* Global CTA */}
-        <section className="mt-56 relative overflow-hidden rounded-[60px] p-16 md:p-32 border border-white/10 group bg-slate-950 isolate">
+        <section className="mt-24 sm:mt-56 relative overflow-hidden rounded-[40px] sm:rounded-[60px] p-10 sm:p-16 md:p-32 border border-white/10 group bg-slate-950 isolate">
            <div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-transparent to-secondary/10 opacity-50"></div>
            <div className="absolute inset-0 opacity-[0.03] bg-[radial-gradient(#fff_1.5px,transparent_0)] bg-[size:40px_40px]"></div>
            <div className="absolute -top-24 -right-24 w-96 h-96 bg-primary/20 blur-[120px] rounded-full group-hover:scale-125 transition-transform duration-1000"></div>
            
            <div className="relative z-10 text-center flex flex-col items-center">
-              <div className="w-24 h-24 bg-primary text-white rounded-3xl flex items-center justify-center mb-16 shadow-[0_20px_40px_var(--primary-glow)] rotate-6 group-hover:rotate-12 transition-all duration-500">
-                 <GraduationCap size={48} />
+              <div className="w-16 h-16 sm:w-24 sm:h-24 bg-primary text-white rounded-2xl sm:rounded-3xl flex items-center justify-center mb-10 sm:mb-16 shadow-[0_20px_40px_var(--primary-glow)] rotate-6 group-hover:rotate-12 transition-all duration-500">
+                 <GraduationCap size={32} className="sm:hidden" />
+                 <GraduationCap size={48} className="hidden sm:block" />
               </div>
-              <h2 className="text-6xl md:text-8xl font-900 text-white tracking-tighter leading-[0.9] mb-12">
-                Join the <br /> <span className="text-gradient drop-shadow-[0_0_20px_var(--primary-glow)] italic">Elite Circle</span>
+              <h2 className="text-4xl sm:text-6xl md:text-8xl font-900 text-white tracking-tighter leading-[0.9] mb-8 sm:mb-12">
+                Join the <br className="hidden sm:block" /> <span className="text-gradient drop-shadow-[0_0_20px_var(--primary-glow)] italic">Elite Circle</span>
               </h2>
-              <p className="text-slate-400 text-xl md:text-2xl font-medium max-w-2xl mx-auto mb-20">Our next enrollment cycle for high-performers is now open. Secure your seat among the district's best.</p>
+              <p className="text-slate-400 text-lg sm:text-xl md:text-2xl font-medium max-w-2xl mx-auto mb-12 sm:mb-20">Our next enrollment cycle for high-performers is now open. Secure your seat among the district's best.</p>
               
               <div className="flex flex-col sm:flex-row gap-8">
                  <Link to="/admission" className="btn-premium btn-primary px-16 py-6 text-sm uppercase tracking-[0.2em]">Enrol Now</Link>

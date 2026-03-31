@@ -107,8 +107,8 @@ const LandingPage = () => {
           <div 
             className="rounded-full border-2 animate-pulse-glow backdrop-blur-lg" 
             style={{ 
-              width: 'clamp(300px, 85vw, 760px)', 
-              height: 'clamp(300px, 85vw, 760px)', 
+              width: 'clamp(280px, 90vw, 760px)', 
+              height: 'clamp(280px, 90vw, 760px)', 
               backgroundColor: 'rgba(255, 255, 255, 0.25)',
               borderColor: 'rgba(255, 255, 255, 0.4)',
               boxShadow: '0 0 120px rgba(255, 255, 255, 0.1), inset 0 10px 60px rgba(255, 255, 255, 0.3)',
@@ -124,23 +124,23 @@ const LandingPage = () => {
         <div className="container relative z-10 px-6 text-center" style={{ maxWidth: '1000px' }}>
           <div className="reveal-on-scroll flex flex-col items-center">
             
-            <h1 className="font-900 text-white tracking-tight mb-10" style={{ fontSize: 'clamp(3rem, 8vw, 110px)', lineHeight: '1.0', textShadow: '0 20px 40px rgba(0,0,0,0.35)' }}>
-              Advancing Academic <br /> Success. Forever.
+            <h1 className="text-4xl sm:text-7xl lg:text-8xl font-950 tracking-tighter mb-4 sm:mb-8 animate-fadeIn delay-200 opacity-0" style={{ animationFillMode: 'forwards' }}>
+              Advancing Academic <br className="hidden sm:block" /> Success. <span className="text-gradient">Forever.</span>
             </h1>
             
-            <p className="font-bold text-white mb-14 opacity-100" style={{ fontSize: 'clamp(1rem, 2vw, 22px)', lineHeight: '1.6', maxWidth: '800px', textShadow: '0 10px 20px rgba(0,0,0,0.4)' }}>
+            <p className="font-bold text-white mb-10 sm:mb-14 opacity-100 px-2" style={{ fontSize: 'clamp(0.95rem, 2.5vw, 22px)', lineHeight: '1.6', maxWidth: '800px', textShadow: '0 10px 20px rgba(0,0,0,0.4)' }}>
               Welcome to Ideal Classes. We craft intuitive learning pathways and visually captivating academic experiences that help students stand out in their journey.
             </p>
 
             <button 
               onClick={() => navigate('/login')} 
-              className="px-16 py-5 rounded-full text-white font-black transition-all backdrop-blur-xl border flex items-center justify-center"
+              className="px-10 sm:px-16 py-4 sm:py-5 rounded-full text-white font-black transition-all backdrop-blur-xl border flex items-center justify-center"
               style={{ 
                 backgroundColor: 'rgba(255, 255, 255, 0.35)', 
                 borderColor: 'rgba(255, 255, 255, 0.6)',
-                fontSize: '19px',
+                fontSize: 'clamp(16px, 2vw, 19px)',
                 letterSpacing: 'tight',
-                minWidth: '260px',
+                minWidth: 'clamp(200px, 60vw, 260px)',
                 boxShadow: '0 25px 50px rgba(0,0,0,0.3)'
               }}
             >
@@ -385,7 +385,7 @@ const LandingPage = () => {
           <div className="grid grid-cols-1 md:grid-cols-12 gap-8 lg:gap-12">
             
             {/* Elite Branding Panel */}
-            <div className="md:col-span-12 lg:col-span-5 p-12 bg-white/5 border border-white/10 rounded-[48px] backdrop-blur-3xl shadow-2xl flex flex-col justify-between group overflow-hidden relative">
+            <div className="md:col-span-12 lg:col-span-5 p-8 sm:p-12 bg-white/5 border border-white/10 rounded-[40px] sm:rounded-[48px] backdrop-blur-3xl shadow-2xl flex flex-col justify-between group overflow-hidden relative">
               <div className="absolute -top-24 -right-24 w-64 h-64 bg-primary/10 rounded-full blur-3xl group-hover:scale-150 transition-transform duration-1000"></div>
               
               <div className="relative z-10">
@@ -398,7 +398,7 @@ const LandingPage = () => {
                     <p className="text-xs font-900 text-primary uppercase tracking-[0.4em] mt-3 opacity-60">Verified Excellence Since 2010</p>
                   </div>
                 </div>
-                <p className="text-slate-300 text-xl font-600 leading-relaxed max-w-sm mb-16">
+                <p className="text-slate-300 text-lg sm:text-xl font-600 leading-relaxed max-w-sm mb-12 sm:mb-16">
                   Nurturing academic precision and building a unified roadmap to engineering and science mastery for over a decade.
                 </p>
               </div>
@@ -413,7 +413,7 @@ const LandingPage = () => {
             </div>
 
             {/* Tactical Navigation Panel */}
-            <div className="md:col-span-6 lg:col-span-3 p-12 bg-white/[0.03] border border-white/5 rounded-[48px] backdrop-blur-2xl flex flex-col justify-between overflow-hidden relative">
+            <div className="md:col-span-6 lg:col-span-3 p-8 sm:p-12 bg-white/[0.03] border border-white/5 rounded-[40px] sm:rounded-[48px] backdrop-blur-2xl flex flex-col justify-between overflow-hidden relative">
               <div className="absolute -bottom-24 -right-24 w-48 h-48 bg-indigo-500/5 rounded-full blur-3xl"></div>
               
               <div className="relative z-10 w-full">
@@ -435,7 +435,7 @@ const LandingPage = () => {
             </div>
 
             {/* Kinetic Contact Panel */}
-            <div className="md:col-span-6 lg:col-span-4 p-12 bg-white/[0.03] border border-white/5 rounded-[48px] backdrop-blur-2xl flex flex-col justify-between overflow-hidden relative">
+            <div className="md:col-span-6 lg:col-span-4 p-8 sm:p-12 bg-white/[0.03] border border-white/5 rounded-[40px] sm:rounded-[48px] backdrop-blur-2xl flex flex-col justify-between overflow-hidden relative">
               <div className="absolute -top-24 -left-24 w-48 h-48 bg-primary/5 rounded-full blur-3xl"></div>
 
               <div className="relative z-10">
@@ -476,7 +476,7 @@ const LandingPage = () => {
           </div>
 
           {/* Final Architectural Footnote */}
-          <div className="mt-16 p-12 bg-white/[0.02] border border-white/5 rounded-[40px] flex flex-col lg:flex-row justify-between items-center gap-10 relative z-10">
+          <div className="mt-8 sm:mt-16 p-8 sm:p-12 bg-white/[0.02] border border-white/5 rounded-[32px] sm:rounded-[40px] flex flex-col lg:flex-row justify-between items-center gap-10 relative z-10">
              <div className="flex flex-col lg:flex-row items-center gap-6 lg:gap-12">
                 <p className="text-slate-500 text-xs font-950 tracking-[0.2em] uppercase">© 2026 IDEAL CLASSES REGIME.</p>
                 <div className="h-6 w-px bg-white/10 hidden lg:block"></div>

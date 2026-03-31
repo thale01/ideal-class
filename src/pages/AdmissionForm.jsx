@@ -61,22 +61,22 @@ const AdmissionForm = () => {
    }
 
    return (
-      <div className="min-h-screen bg-main flex items-center justify-center p-6 relative transition-colors duration-500">
+       <div className="min-h-screen bg-main flex items-center justify-center p-3 sm:p-6 relative transition-colors duration-500">
 
-         <div className="card-premium w-full max-w-2xl animate-fadeUp my-10 relative overflow-hidden">
+          <div className="card-premium w-full max-w-2xl animate-fadeUp my-6 sm:my-10 relative overflow-hidden p-6 sm:p-10 md:p-12">
             <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full blur-3xl -mr-32 -mt-32"></div>
             <div className="absolute bottom-0 left-0 w-64 h-64 bg-success/5 rounded-full blur-3xl -ml-32 -mb-32"></div>
 
-            <header className="mb-10 relative z-10 flex items-start justify-between">
-               <div>
-                  <Link to="/login" className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-dim hover:text-primary transition-all mb-8">
+            <header className="mb-8 sm:mb-10 relative z-10 flex flex-col sm:flex-row items-start justify-between gap-6 sm:gap-4">
+               <div className="w-full sm:w-auto">
+                  <Link to="/login" className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-dim hover:text-primary transition-all mb-6 sm:mb-8">
                      <ArrowLeft size={16} /> Retreat to Login
                   </Link>
                   <div className="flex items-center gap-4">
-                     <img src={logo} alt="Ideal Classes Logo" className="h-14 w-auto object-contain" />
+                     <img src={logo} alt="Ideal Classes Logo" className="h-10 sm:h-14 w-auto object-contain" />
                       <div>
-                         <h1 className="text-3xl font-black text-bright tracking-tight italic">IDEAL<br />CLASSES</h1>
-                         <p className="badge-premium badge-primary text-[9px] font-black uppercase tracking-widest mt-2 px-3 py-0.5">Admission Entry</p>
+                         <h1 className="text-xl sm:text-3xl font-black text-bright tracking-tight italic">IDEAL<br className="sm:hidden" /> CLASSES</h1>
+                         <p className="badge-premium badge-primary text-[8px] sm:text-[9px] font-black uppercase tracking-widest mt-1 sm:mt-2 px-2 sm:px-3 py-0.5">Admission Entry</p>
                       </div>
                   </div>
                </div>

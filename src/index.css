@@ -107,10 +107,22 @@ button {
   padding: 0 2rem;
 }
 
+@media (max-width: 640px) {
+  .container {
+    padding: 0 1.25rem;
+  }
+}
+
 .container-premium {
   max-width: 1600px;
   margin: 0 auto;
   padding: 0 3rem;
+}
+
+@media (max-width: 640px) {
+  .container-premium {
+    padding: 0 1.5rem;
+  }
 }
 
 /* Premium Classes */
@@ -277,6 +289,13 @@ button {
 @media (max-width: 768px) {
   .grid-premium {
     grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .card-premium {
+    padding: 1.5rem;
   }
 }
 

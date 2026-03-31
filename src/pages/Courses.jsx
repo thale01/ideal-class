@@ -3,15 +3,15 @@ import Navbar from '../components/Navbar';
 import { GraduationCap, BookOpen, Trophy, ChevronRight } from 'lucide-react';
 
 const CourseCategory = ({ title, icon: Icon, courses, color, delay }) => (
-  <div className={`animate-fadeIn ${delay} p-8 lg:p-10 bg-white/5 border border-white/10 rounded-[32px] backdrop-blur-xl hover:bg-white/10 hover:border-white/20 transition-all duration-500 group flex flex-col h-full relative overflow-hidden`}>
+  <div className={`animate-fadeIn ${delay} p-6 sm:p-10 bg-white/5 border border-white/10 rounded-[32px] backdrop-blur-xl hover:bg-white/10 hover:border-white/20 transition-all duration-500 group flex flex-col h-full relative overflow-hidden`}>
     {/* Decorative Background Glow per card */}
     <div className={`absolute top-0 right-0 w-64 h-64 opacity-20 blur-[80px] rounded-full pointer-events-none transition-transform duration-700 group-hover:scale-150 ${color}`}></div>
 
-    <div className="mb-8 p-4 bg-white/5 rounded-2xl w-max border border-white/10 group-hover:scale-110 transition-transform duration-500">
-      <Icon size={32} className="text-white" />
+    <div className="mb-6 sm:mb-8 p-3 sm:p-4 bg-white/5 rounded-2xl w-max border border-white/10 group-hover:scale-110 transition-transform duration-500">
+      <Icon size={28} className="text-white sm:w-[32px] sm:h-[32px]" />
     </div>
     
-    <h2 className="text-3xl font-900 mb-8 tracking-tight">{title}</h2>
+    <h2 className="text-2xl sm:text-3xl font-900 mb-6 sm:mb-8 tracking-tight">{title}</h2>
     
     <ul className="space-y-4 m-0 p-0 list-none flex-grow relative z-10">
       {courses.map((course, index) => (
@@ -39,15 +39,15 @@ const Courses = () => {
         <div className="absolute bottom-[10%] left-[5%] w-[800px] h-[800px] bg-blue-600/10 blur-[150px] rounded-full mix-blend-screen"></div>
       </div>
 
-      <div className="pt-40 pb-32 container mx-auto px-6 relative z-10">
-        <div className="text-center mb-24 max-w-4xl mx-auto">
-           <div className="inline-block px-5 py-2 rounded-full bg-white/5 border border-white/10 text-emerald-400 font-bold tracking-widest text-xs uppercase mb-8 delay-100 animate-fadeIn opacity-0" style={{animationFillMode: 'forwards'}}>
+      <div className="pt-32 sm:pt-40 pb-20 sm:pb-32 container mx-auto px-6 relative z-10">
+        <div className="text-center mb-16 sm:mb-24 max-w-4xl mx-auto">
+           <div className="inline-block px-5 py-2 rounded-full bg-white/5 border border-white/10 text-emerald-400 font-bold tracking-widest text-[10px] sm:text-xs uppercase mb-6 sm:mb-8 delay-100 animate-fadeIn opacity-0" style={{animationFillMode: 'forwards'}}>
              Academic Structure
            </div>
-           <h1 className="text-6xl lg:text-7xl font-950 tracking-tighter mb-8 animate-fadeIn delay-200 opacity-0" style={{animationFillMode: 'forwards'}}>
+           <h1 className="text-4xl sm:text-6xl lg:text-7xl font-950 tracking-tighter mb-6 sm:mb-8 animate-fadeIn delay-200 opacity-0" style={{animationFillMode: 'forwards'}}>
              Start Learning 🚀
            </h1>
-           <p className="text-slate-400 text-xl font-500 leading-relaxed animate-fadeIn delay-300 opacity-0" style={{animationFillMode: 'forwards'}}>
+           <p className="text-slate-400 text-lg sm:text-xl font-500 leading-relaxed animate-fadeIn delay-300 opacity-0" style={{animationFillMode: 'forwards'}}>
              Access notes, videos & tests in one place
            </p>
         </div>
