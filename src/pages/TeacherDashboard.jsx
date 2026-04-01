@@ -335,11 +335,12 @@ const TeacherDashboard = () => {
                         {/* LEVEL 1: ALL COURSES */}
                         {!selectedCourseId && (
                            <>
-                               <div onClick={() => setShowCourseModal(true)} className="card-premium flex flex-col items-center justify-center border-dashed border-primary/20 hover:border-primary/60 cursor-pointer p-12 group bg-primary/5 hover:bg-primary/10 transition-all">
-                                  <div className="w-20 h-20 rounded-3xl bg-primary flex items-center justify-center text-white shadow-2xl shadow-primary/30 group-hover:scale-110 transition-all">
-                                     <Plus size={40} />
+                               <div onClick={() => setShowCourseModal(true)} className="card-premium flex flex-col items-center justify-center border-dashed border-primary/30 hover:border-primary/60 cursor-pointer p-12 group bg-primary/5 hover:bg-primary/10 transition-all duration-500 hover:-translate-y-2 shadow-sm hover:shadow-xl hover:shadow-primary/10">
+                                  <div className="w-20 h-20 rounded-[2.5rem] bg-primary flex items-center justify-center text-white shadow-2xl shadow-primary/40 group-hover:scale-110 group-hover:rotate-90 transition-all duration-500 relative">
+                                      <div className="absolute inset-0 rounded-[2.5rem] bg-primary animate-ping opacity-20 group-hover:opacity-40 transition-opacity"></div>
+                                     <Plus size={40} className="relative z-10" />
                                   </div>
-                                  <span className="text-[12px] font-bold text-primary mt-8 uppercase tracking-[0.25em]">Deploy&nbsp;&nbsp;&nbsp;New&nbsp;&nbsp;&nbsp;Batch</span>
+                                  <span className="text-[11px] font-bold text-primary mt-8 uppercase tracking-[0.4em] text-center w-full group-hover:text-bright transition-colors duration-300">Deploy New Batch</span>
                                </div>
                               {filteredItems(courses).map((course, i) => (
                                  <div
