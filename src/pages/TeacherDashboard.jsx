@@ -191,18 +191,24 @@ const TeacherDashboard = () => {
             <header className="header-premium border-b border-subtle sticky top-0 bg-surface/90 backdrop-blur-md z-[1000]">
                <div className="px-6 lg:px-12 flex items-center justify-between w-full h-full">
 
-                  <div className="py-2">
-                     <h2 className="text-xl font-bold text-bright tracking-tight capitalize">{activeTab}</h2>
-                     <p className="text-[10px] text-dim font-medium uppercase tracking-wider">Academic Asset Management</p>
-                  </div>
-
                   <div className="flex items-center gap-4">
                      <button 
                         onClick={() => setIsSidebarOpen(true)}
-                        className="md:hidden p-2.5 rounded-xl bg-alt/50 border border-subtle text-bright mr-2"
+                        className="md:hidden p-2.5 rounded-xl bg-alt/50 border border-subtle text-bright"
                      >
                         <Menu size={22} />
                      </button>
+                     <div className="flex items-center gap-3">
+                        <img src={logo} alt="Logo" className="h-8 md:hidden block object-contain" />
+                        <div className="py-2 hidden md:block">
+                           <h2 className="text-xl font-bold text-bright tracking-tight capitalize">{activeTab}</h2>
+                           <p className="text-[10px] text-dim font-medium uppercase tracking-wider">Academic Portal</p>
+                        </div>
+                     </div>
+                  </div>
+
+
+                   <div className="flex items-center gap-4">
                      <div className="relative group hidden sm:block">
                         <input
                            type="text"
