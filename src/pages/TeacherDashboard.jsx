@@ -400,11 +400,12 @@ const TeacherDashboard = () => {
                         {/* LEVEL 2: SUBJECTS IN COURSE */}
                         {selectedCourseId && !selectedSubjectId && (
                            <>
-                              <div onClick={() => setShowAddModal(true)} className="card-premium flex flex-col items-center justify-center border-dashed border-primary/20 hover:border-primary/50 cursor-pointer p-10 group bg-primary/5">
-                                 <div className="w-16 h-16 rounded-3xl bg-primary flex items-center justify-center text-white shadow-xl shadow-primary/30 group-hover:scale-110 transition-all">
-                                    <BookOpen size={32} />
+                              <div onClick={() => setShowAddModal(true)} className="card-premium flex flex-col items-center justify-center border-dashed border-primary/30 hover:border-primary/60 cursor-pointer p-10 group bg-primary/5 hover:bg-primary/10 transition-all duration-500 hover:-translate-y-2 shadow-sm hover:shadow-xl hover:shadow-primary/10">
+                                 <div className="w-16 h-16 rounded-[2rem] bg-primary flex items-center justify-center text-white shadow-xl shadow-primary/40 group-hover:scale-110 group-hover:rotate-6 transition-all duration-500 relative">
+                                    <div className="absolute inset-0 rounded-[2rem] bg-primary animate-ping opacity-20 group-hover:opacity-40 transition-opacity"></div>
+                                    <BookOpen size={32} className="relative z-10" />
                                  </div>
-                                 <span className="text-[10px] font-bold text-primary mt-6 uppercase tracking-[0.2em]">Add&nbsp;&nbsp;&nbsp;New&nbsp;&nbsp;&nbsp;Subject</span>
+                                 <span className="text-[10px] font-bold text-primary mt-6 uppercase tracking-[0.4em] text-center w-full group-hover:text-bright transition-colors duration-300">Add New Subject</span>
                               </div>
                               {filteredItems(subjects.filter(s => s.courseId === selectedCourseId)).map((sub, i) => (
                                  <div
@@ -529,11 +530,17 @@ const TeacherDashboard = () => {
                                     </div>
                                  ));
                               })()}
-                              <div onClick={() => navigate(`/manage-course/${selectedSubjectId}`)} className="card-premium flex flex-col items-center justify-center border-dashed border-primary/20 hover:border-primary/50 cursor-pointer p-10 group bg-primary/5">
-                                 <PlusCircle size={32} className="text-primary group-hover:scale-110 transition-transform mb-4" />
+                              <div 
+                                 onClick={() => navigate(`/manage-course/${selectedSubjectId}`)} 
+                                 className="card-premium flex flex-col items-center justify-center border-dashed border-primary/30 hover:border-primary/60 cursor-pointer p-10 group bg-primary/5 hover:bg-primary/10 transition-all duration-500 hover:-translate-y-2 shadow-sm hover:shadow-xl hover:shadow-primary/10"
+                              >
+                                 <div className="w-16 h-16 rounded-[2rem] bg-primary flex items-center justify-center text-white shadow-xl shadow-primary/40 group-hover:scale-110 group-hover:rotate-12 transition-all duration-500 relative mb-4">
+                                    <div className="absolute inset-0 rounded-[2rem] bg-primary animate-ping opacity-20 group-hover:opacity-40 transition-opacity"></div>
+                                    <PlusCircle size={32} className="relative z-10" />
+                                 </div>
                                  <div className="text-center">
-                                    <h4 className="text-sm font-bold text-primary uppercase tracking-widest">Add Notes & Videos</h4>
-                                    <p className="text-[9px] font-medium text-dim mt-1">Upload study materials for this subject</p>
+                                    <h4 className="text-sm font-bold text-primary uppercase tracking-[0.3em] group-hover:text-bright transition-colors">Add Materials</h4>
+                                    <p className="text-[9px] font-bold text-dim mt-1 uppercase tracking-widest opacity-60">Upload study assets</p>
                                  </div>
                               </div>
                            </>
@@ -575,10 +582,13 @@ const TeacherDashboard = () => {
                                        ))}
                                        <button
                                           onClick={() => navigate(`/manage-course/${selectedSubjectId}`)}
-                                          className="card-premium border-dashed border-primary/20 hover:border-primary/50 flex items-center justify-center gap-3 p-6 group transition-all"
+                                          className="card-premium border-dashed border-primary/30 hover:border-primary/60 flex items-center justify-center gap-4 p-6 group transition-all duration-500 hover:-translate-y-1 bg-surface/50 border-subtle hover:bg-primary/5"
                                        >
-                                          <div className="w-10 h-10 rounded-xl bg-primary/5 flex items-center justify-center text-primary group-hover:scale-110 transition-transform"><Plus size={18} /></div>
-                                          <span className="text-[9px] font-bold text-primary uppercase tracking-widest">Append Learning Asset</span>
+                                          <div className="w-10 h-10 rounded-[1.25rem] bg-primary/10 flex items-center justify-center text-primary group-hover:scale-110 group-hover:rotate-90 transition-all duration-500 relative">
+                                             <div className="absolute inset-0 rounded-[1.25rem] bg-primary/20 animate-ping opacity-0 group-hover:opacity-40 transition-opacity"></div>
+                                             <Plus size={18} className="relative z-10" />
+                                          </div>
+                                          <span className="text-[9px] font-bold text-primary uppercase tracking-[0.3em] group-hover:text-bright transition-colors">Append Asset</span>
                                        </button>
                                     </>
                                  );
