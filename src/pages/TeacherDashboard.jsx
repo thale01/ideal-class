@@ -139,11 +139,11 @@ const TeacherDashboard = () => {
                      >
                         <Menu size={20} />
                      </button>
-                     <img src={logo} alt="Ideal Classes Logo" className={`h-10 w-auto object-contain transition-all duration-500 ${isSidebarCollapsed ? 'scale-0 w-0' : 'scale-100'}`} />
+                      <img src={logo} alt="Ideal Classes Logo" className={`h-10 w-auto object-contain transition-all duration-500 hover:scale-105 ${isSidebarCollapsed ? 'scale-0 w-0' : 'scale-100'}`} />
                      {!isSidebarCollapsed && (
                         <div className="animate-fadeIn">
-                           <h1 className="text-xl font-bold text-bright tracking-tight italic whitespace-nowrap">IDEAL CLASSES</h1>
-                           <p className="badge-premium badge-primary text-[9px] font-black uppercase tracking-widest mt-1 px-3 py-0.5 whitespace-nowrap">Admin Central</p>
+                           <h1 className="text-xl font-bold text-bright tracking-tight whitespace-nowrap">Ideal Classes</h1>
+                           <p className="badge-premium badge-primary text-[8px] font-bold uppercase tracking-widest mt-0.5 px-2.5 py-0.5 whitespace-nowrap">Admin Portal</p>
                         </div>
                      )}
                   </div>
@@ -164,7 +164,7 @@ const TeacherDashboard = () => {
                      <div className={`p-2 rounded-lg transition-all shrink-0 ${activeTab === item.id ? 'bg-primary text-white shadow-md shadow-primary/20' : 'bg-transparent text-dim group-hover:text-primary'}`}>
                         <item.icon size={18} />
                      </div>
-                     <span className={`font-bold ml-3 text-sm transition-all duration-300 ${isSidebarCollapsed ? 'opacity-0 -translate-x-10 pointer-events-none' : 'opacity-100 translate-x-0'}`}>{item.label}</span>
+                     <span className={`font-semibold ml-3 text-sm transition-all duration-300 ${isSidebarCollapsed ? 'opacity-0 -translate-x-10 pointer-events-none' : 'opacity-100 translate-x-0'}`}>{item.label}</span>
                   </button>
                ))}
             </nav>
@@ -172,7 +172,7 @@ const TeacherDashboard = () => {
             <div className={`p-6 border-t border-subtle transition-all duration-300 ${isSidebarCollapsed ? 'px-4 text-center' : 'p-6'}`}>
                <button onClick={logout} className="sidebar-item w-full transition-all group hover:bg-danger/10 text-danger" title={isSidebarCollapsed ? "Terminate Session" : ""}>
                   <LogOut size={18} className="shrink-0" />
-                  <span className={`font-bold text-sm ml-3 transition-all duration-300 ${isSidebarCollapsed ? 'hidden' : 'inline'}`}>Terminate Session</span>
+                  <span className={`font-semibold text-sm ml-3 transition-all duration-300 ${isSidebarCollapsed ? 'hidden' : 'inline'}`}>Discard Session</span>
                </button>
             </div>
          </aside>
@@ -191,9 +191,9 @@ const TeacherDashboard = () => {
             <header className="header-premium border-b border-subtle sticky top-0 bg-surface/90 backdrop-blur-md z-[1000]">
                <div className="px-6 lg:px-12 flex items-center justify-between w-full h-full">
 
-                  <div>
-                     <h2 className="text-2xl font-bold text-bright tracking-tight capitalize">{activeTab}</h2>
-                     <p className="text-xs text-dim font-medium">Managing academic database & resources</p>
+                  <div className="py-2">
+                     <h2 className="text-xl font-bold text-bright tracking-tight capitalize">{activeTab}</h2>
+                     <p className="text-[10px] text-dim font-medium uppercase tracking-wider">Academic Asset Management</p>
                   </div>
 
                   <div className="flex items-center gap-4">
@@ -228,8 +228,8 @@ const TeacherDashboard = () => {
                            {user?.name?.charAt(0) || 'A'}
                         </div>
                          <div className="hidden xl:block">
-                            <p className="text-sm font-bold text-bright leading-none mb-1">{user?.name || 'Admin User'}</p>
-                            <span className="badge-premium badge-primary text-[9px] font-black uppercase tracking-widest px-3 py-0.5">Master Control</span>
+                            <p className="text-sm font-bold text-bright leading-none mb-1">{user?.name || 'Administrator'}</p>
+                            <span className="badge-premium badge-primary text-[8px] font-bold uppercase tracking-widest px-2.5 py-0.5">Verified Admin</span>
                          </div>
                      </div>
                   </div>
@@ -244,16 +244,16 @@ const TeacherDashboard = () => {
                      <div className="flex items-center gap-3 py-3 px-4 bg-alt/30 rounded-2xl border border-subtle backdrop-blur-sm">
                         <button
                            onClick={() => { setSelectedCourseId(null); setSelectedSubjectId(null); setSelectedChapterName(null); }}
-                           className={`text-[10px] font-black uppercase tracking-[0.15em] [word-spacing:0.15em] flex items-center gap-2 transition-all p-1.5 rounded-lg ${!selectedCourseId ? 'bg-primary text-white shadow-md shadow-primary/20' : 'text-dim hover:text-bright hover:bg-alt'}`}
+                           className={`text-[10px] font-bold uppercase tracking-[0.15em] [word-spacing:0.15em] flex items-center gap-2 transition-all p-1.5 rounded-lg ${!selectedCourseId ? 'bg-primary text-white shadow-md shadow-primary/20' : 'text-dim hover:text-bright hover:bg-alt'}`}
                         >
-                           <Layout size={14} /> BATCHES
+                           <Layout size={14} /> COURSES
                         </button>
                         {selectedCourseId && (
                            <>
                               <ChevronRight size={14} className="text-subtle" />
                               <button
                                  onClick={() => { setSelectedSubjectId(null); setSelectedChapterName(null); }}
-                                 className={`text-[10px] font-black uppercase tracking-[0.15em] [word-spacing:0.15em] flex items-center gap-2 transition-all p-1.5 rounded-lg ${selectedCourseId && !selectedSubjectId ? 'bg-primary text-white shadow-md shadow-primary/20' : 'text-dim hover:text-bright hover:bg-alt'}`}
+                                 className={`text-[10px] font-bold uppercase tracking-[0.15em] [word-spacing:0.15em] flex items-center gap-2 transition-all p-1.5 rounded-lg ${selectedCourseId && !selectedSubjectId ? 'bg-primary text-white shadow-md shadow-primary/20' : 'text-dim hover:text-bright hover:bg-alt'}`}
                               >
                                  <Folder size={14} /> {courses.find(c => c._id === selectedCourseId)?.name}
                               </button>
@@ -264,7 +264,7 @@ const TeacherDashboard = () => {
                               <ChevronRight size={14} className="text-subtle" />
                               <button
                                  onClick={() => { setSelectedChapterName(null); }}
-                                 className={`text-[10px] font-black uppercase tracking-[0.15em] [word-spacing:0.15em] flex items-center gap-2 transition-all p-1.5 rounded-lg ${selectedSubjectId && !selectedChapterName ? 'bg-primary text-white shadow-md shadow-primary/20' : 'text-dim hover:text-bright hover:bg-alt'}`}
+                                 className={`text-[10px] font-bold uppercase tracking-[0.15em] [word-spacing:0.15em] flex items-center gap-2 transition-all p-1.5 rounded-lg ${selectedSubjectId && !selectedChapterName ? 'bg-primary text-white shadow-md shadow-primary/20' : 'text-dim hover:text-bright hover:bg-alt'}`}
                               >
                                  <BookOpen size={14} /> {subjects.find(s => s._id === selectedSubjectId)?.name}
                               </button>
@@ -273,7 +273,7 @@ const TeacherDashboard = () => {
                         {selectedChapterName && (
                            <>
                               <ChevronRight size={14} className="text-subtle" />
-                              <span className="text-[10px] font-black uppercase tracking-[0.15em] [word-spacing:0.15em] bg-primary/10 text-primary flex items-center gap-2 p-1.5 rounded-lg border border-primary/20">
+                              <span className="text-[10px] font-bold uppercase tracking-[0.15em] [word-spacing:0.15em] bg-primary/10 text-primary flex items-center gap-2 p-1.5 rounded-lg border border-primary/20">
                                  <Filter size={14} /> {selectedChapterName}
                               </span>
                            </>
@@ -282,13 +282,13 @@ const TeacherDashboard = () => {
 
                      <div className="flex flex-col sm:flex-row items-center justify-between gap-12">
                         <div className="space-y-2">
-                           <h3 className="text-4xl font-black text-bright uppercase tracking-tight italic">
+                           <h3 className="text-3xl font-bold text-bright tracking-tight uppercase">
                               {selectedChapterName ? 'RESOURCE CATALOG' :
                                  selectedSubjectId ? 'CHAPTER HIERARCHY' :
                                     selectedCourseId ? 'SUBJECT REPOSITORY' :
                                        'INFRASTRUCTURE CATALOG'}
                            </h3>
-                           <p className="text-[12px] font-black text-dim uppercase tracking-[0.3em] [word-spacing:0.3em] opacity-70">
+                           <p className="text-[12px] font-bold text-dim uppercase tracking-[0.3em] [word-spacing:0.3em] opacity-70">
                               {selectedChapterName ? `Batch Content: ${selectedChapterName}` :
                                  selectedSubjectId ? `Strategic Folders within ${subjects.find(s => s._id === selectedSubjectId)?.name}` :
                                     selectedCourseId ? `Curated Modules for ${courses.find(c => c._id === selectedCourseId)?.name}` :
@@ -333,7 +333,7 @@ const TeacherDashboard = () => {
                                   <div className="w-20 h-20 rounded-3xl bg-primary flex items-center justify-center text-white shadow-2xl shadow-primary/30 group-hover:scale-110 transition-all">
                                      <Plus size={40} />
                                   </div>
-                                  <span className="text-[12px] font-black text-primary mt-8 uppercase tracking-[0.25em]">Deploy&nbsp;&nbsp;&nbsp;New&nbsp;&nbsp;&nbsp;Batch</span>
+                                  <span className="text-[12px] font-bold text-primary mt-8 uppercase tracking-[0.25em]">Deploy&nbsp;&nbsp;&nbsp;New&nbsp;&nbsp;&nbsp;Batch</span>
                                </div>
                               {filteredItems(courses).map((course, i) => (
                                  <div
@@ -358,7 +358,7 @@ const TeacherDashboard = () => {
                                     {editingId === course._id ? (
                                        <input 
                                           autoFocus
-                                          className="text-xl font-black text-bright mb-1 uppercase tracking-tight leading-tight bg-alt border border-primary px-2 py-1 rounded w-full outline-none"
+                                          className="text-xl font-bold text-bright mb-1 uppercase tracking-tight leading-tight bg-alt border border-primary px-2 py-1 rounded w-full outline-none"
                                           value={editValue}
                                           onChange={e => setEditValue(e.target.value)}
                                           onClick={e => e.stopPropagation()}
@@ -378,9 +378,9 @@ const TeacherDashboard = () => {
                                           }}
                                        />
                                     ) : (
-                                       <h4 className="text-xl font-black text-bright mb-1 uppercase tracking-tight leading-tight">{course.name}</h4>
+                                       <h4 className="text-xl font-bold text-bright mb-1 uppercase tracking-tight leading-tight">{course.name}</h4>
                                     )}
-                                    <p className="text-[10px] font-black text-dim uppercase tracking-widest opacity-80">{course.category || 'Strategic Area'}</p>
+                                    <p className="text-[10px] font-bold text-dim uppercase tracking-widest opacity-80">{course.category || 'Strategic Area'}</p>
                                     <div className="pt-6 mt-6 border-t border-subtle flex items-center justify-between">
                                        <span className="badge-premium badge-primary px-3 py-1">{subjects.filter(s => s.courseId === course._id).length} MODULES</span>
                                        <ChevronRight size={18} className="text-dim group-hover:text-primary transition-all" />
@@ -397,7 +397,7 @@ const TeacherDashboard = () => {
                                  <div className="w-16 h-16 rounded-3xl bg-primary flex items-center justify-center text-white shadow-xl shadow-primary/30 group-hover:scale-110 transition-all">
                                     <BookOpen size={32} />
                                  </div>
-                                 <span className="text-[10px] font-black text-primary mt-6 uppercase tracking-[0.2em]">Add&nbsp;&nbsp;&nbsp;New&nbsp;&nbsp;&nbsp;Subject</span>
+                                 <span className="text-[10px] font-bold text-primary mt-6 uppercase tracking-[0.2em]">Add&nbsp;&nbsp;&nbsp;New&nbsp;&nbsp;&nbsp;Subject</span>
                               </div>
                               {filteredItems(subjects.filter(s => s.courseId === selectedCourseId)).map((sub, i) => (
                                  <div
@@ -421,7 +421,7 @@ const TeacherDashboard = () => {
                                     {editingId === sub._id ? (
                                        <input 
                                           autoFocus
-                                          className="text-xl font-black text-bright mb-1 uppercase tracking-tight leading-tight bg-alt border border-primary px-2 py-1 rounded w-full outline-none"
+                                          className="text-xl font-bold text-bright mb-1 uppercase tracking-tight leading-tight bg-alt border border-primary px-2 py-1 rounded w-full outline-none"
                                           value={editValue}
                                           onChange={e => setEditValue(e.target.value)}
                                           onClick={e => e.stopPropagation()}
@@ -441,18 +441,18 @@ const TeacherDashboard = () => {
                                           }}
                                        />
                                     ) : (
-                                       <h4 className="text-xl font-black text-bright mb-1 uppercase tracking-tight leading-tight">{sub.name}</h4>
+                                       <h4 className="text-xl font-bold text-bright mb-1 uppercase tracking-tight leading-tight">{sub.name}</h4>
                                     )}
-                                    <p className="text-[10px] font-black text-dim uppercase tracking-widest">{sub.category}</p>
+                                    <p className="text-[10px] font-bold text-dim uppercase tracking-widest">{sub.category}</p>
                                     <div className="grid grid-cols-2 gap-3 mt-6 pt-6 border-t border-subtle">
-                                       <div className="p-3 rounded-xl bg-alt/50 border border-subtle text-center">
-                                          <p className="text-sm font-black text-bright">{sub.resources?.notes?.length || 0}</p>
-                                          <p className="text-[8px] font-black text-dim uppercase tracking-widest">Docs</p>
-                                       </div>
-                                       <div className="p-3 rounded-xl bg-alt/50 border border-subtle text-center">
-                                          <p className="text-sm font-black text-bright">{sub.resources?.videos?.length || 0}</p>
-                                          <p className="text-[8px] font-black text-dim uppercase tracking-widest">Mastery</p>
-                                       </div>
+                                       <button onClick={(e) => { e.stopPropagation(); navigate(`/manage-course/${sub._id}`, { state: { tab: 'notes' } }); }} className="p-3 rounded-xl bg-alt/50 border border-subtle text-center hover:bg-primary/5 transition-colors">
+                                          <p className="text-sm font-bold text-bright">{sub.resources?.notes?.length || 0}</p>
+                                          <p className="text-[8px] font-bold text-dim uppercase tracking-widest">Add Notes</p>
+                                       </button>
+                                       <button onClick={(e) => { e.stopPropagation(); navigate(`/manage-course/${sub._id}`, { state: { tab: 'videos' } }); }} className="p-3 rounded-xl bg-alt/50 border border-subtle text-center hover:bg-primary/5 transition-colors">
+                                          <p className="text-sm font-bold text-bright">{sub.resources?.videos?.length || 0}</p>
+                                          <p className="text-[8px] font-bold text-dim uppercase tracking-widest">Add Videos</p>
+                                       </button>
                                     </div>
                                  </div>
                               ))}
@@ -480,7 +480,7 @@ const TeacherDashboard = () => {
                                           {editingId === `chapter-${ch}` ? (
                                              <input 
                                                 autoFocus
-                                                className="text-lg font-black text-bright uppercase tracking-tight leading-tight bg-alt border border-primary px-2 py-1 rounded w-full outline-none"
+                                                className="text-lg font-bold text-bright uppercase tracking-tight leading-tight bg-alt border border-primary px-2 py-1 rounded w-full outline-none"
                                                 value={editValue}
                                                 onChange={e => setEditValue(e.target.value)}
                                                 onClick={e => e.stopPropagation()}
@@ -500,9 +500,9 @@ const TeacherDashboard = () => {
                                                 }}
                                              />
                                           ) : (
-                                             <h4 className="text-lg font-black text-bright uppercase tracking-tight leading-tight">{ch}</h4>
+                                             <h4 className="text-lg font-bold text-bright uppercase tracking-tight leading-tight">{ch}</h4>
                                           )}
-                                          <p className="text-[9px] font-black text-dim uppercase tracking-widest mt-0.5">
+                                          <p className="text-[9px] font-bold text-dim uppercase tracking-widest mt-0.5">
                                              {allResources.filter(r => (r.chapter || 'UNCATEGORIZED') === ch).length} Assets
                                           </p>
                                        </div>
@@ -522,9 +522,12 @@ const TeacherDashboard = () => {
                                     </div>
                                  ));
                               })()}
-                              <div onClick={() => navigate(`/manage-course/${selectedSubjectId}`)} className="card-premium flex flex-col items-center justify-center border-dashed border-primary/20 hover:border-primary/50 cursor-pointer p-8 group bg-primary/5">
-                                 <Plus size={24} className="text-primary group-hover:scale-125 transition-transform" />
-                                 <span className="text-[9px] font-black text-primary mt-3 uppercase tracking-widest">Add New Asset</span>
+                              <div onClick={() => navigate(`/manage-course/${selectedSubjectId}`)} className="card-premium flex flex-col items-center justify-center border-dashed border-primary/20 hover:border-primary/50 cursor-pointer p-10 group bg-primary/5">
+                                 <PlusCircle size={32} className="text-primary group-hover:scale-110 transition-transform mb-4" />
+                                 <div className="text-center">
+                                    <h4 className="text-sm font-bold text-primary uppercase tracking-widest">Add Notes & Videos</h4>
+                                    <p className="text-[9px] font-medium text-dim mt-1">Upload study materials for this subject</p>
+                                 </div>
                               </div>
                            </>
                         )}
@@ -543,8 +546,8 @@ const TeacherDashboard = () => {
                                           <div key={`n-${i}`} className="card-premium p-6 flex items-center gap-5 group hover:border-primary/30 transition-all bg-surface/50 border-subtle">
                                              <div className="w-12 h-12 rounded-xl bg-primary/10 text-primary flex items-center justify-center shadow-inner"><FileText size={20} /></div>
                                              <div className="flex-1 min-w-0">
-                                                <h5 className="font-black text-bright uppercase text-xs tracking-tight truncate">{note.title}</h5>
-                                                <p className="text-[9px] font-black text-dim uppercase tracking-widest truncate">{new Date(note.uploadDate).toLocaleDateString()} • PDF Document</p>
+                                                <h5 className="font-bold text-bright uppercase text-xs tracking-tight truncate">{note.title}</h5>
+                                                <p className="text-[9px] font-bold text-dim uppercase tracking-widest truncate">{new Date(note.uploadDate).toLocaleDateString()} • PDF Document</p>
                                              </div>
                                              <a href={`http://localhost:5000${note.fileUrl}`} target="_blank" rel="noreferrer" className="p-2.5 rounded-lg bg-alt text-dim hover:text-primary transition-colors border border-subtle">
                                                 <Upload size={14} />
@@ -555,8 +558,8 @@ const TeacherDashboard = () => {
                                           <div key={`v-${i}`} className="card-premium p-6 flex items-center gap-5 group hover:border-success/30 transition-all bg-surface/50 border-subtle">
                                              <div className="w-12 h-12 rounded-xl bg-success/10 text-success flex items-center justify-center shadow-inner"><Play size={20} /></div>
                                              <div className="flex-1 min-w-0">
-                                                <h5 className="font-black text-bright uppercase text-xs tracking-tight truncate">{vid.title}</h5>
-                                                <p className="text-[9px] font-black text-dim uppercase tracking-widest truncate">Secure Stream • {vid.type}</p>
+                                                <h5 className="font-bold text-bright uppercase text-xs tracking-tight truncate">{vid.title}</h5>
+                                                <p className="text-[9px] font-bold text-dim uppercase tracking-widest truncate">Secure Stream • {vid.type}</p>
                                              </div>
                                              <a href={vid.url} target="_blank" rel="noreferrer" className="p-2.5 rounded-lg bg-alt text-dim hover:text-success transition-colors border border-subtle">
                                                 <Video size={14} />
@@ -568,7 +571,7 @@ const TeacherDashboard = () => {
                                           className="card-premium border-dashed border-primary/20 hover:border-primary/50 flex items-center justify-center gap-3 p-6 group transition-all"
                                        >
                                           <div className="w-10 h-10 rounded-xl bg-primary/5 flex items-center justify-center text-primary group-hover:scale-110 transition-transform"><Plus size={18} /></div>
-                                          <span className="text-[9px] font-black text-primary uppercase tracking-widest">Append Mastery Asset</span>
+                                          <span className="text-[9px] font-bold text-primary uppercase tracking-widest">Append Learning Asset</span>
                                        </button>
                                     </>
                                  );

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useLocation } from 'react-router-dom';
 import { useCourse } from '../context/CourseContext';
 import { ChevronLeft, Search, FileText, Video } from 'lucide-react';
 import UploadPDF from '../components/UploadPDF';
@@ -11,7 +11,8 @@ const ManageCourse = () => {
   const { subjects, addResource, deleteResource, updateResource } = useCourse();
   const subject = subjects.find(s => s._id === id);
 
-  const [activeTab, setActiveTab] = useState('notes'); 
+  const location = useLocation();
+  const [activeTab, setActiveTab] = useState(location.state?.tab || 'notes'); 
   const [searchTerm, setSearchTerm] = useState('');
 
   const handleAddPDF = async (data) => {
@@ -40,9 +41,9 @@ const ManageCourse = () => {
 
   if (!subject) return (
     <div className="flex flex-col items-center justify-center h-screen gap-6 bg-main text-main">
-      <div className="w-24 h-24 bg-surface rounded-[32px] flex items-center justify-center text-5xl shadow-lg border border-subtle">🔍</div>
-      <h2 className="text-3xl font-black text-gradient uppercase tracking-widest">Subject Data Missing</h2>
-      <Link to="/admin" className="btn-premium btn-premium-primary rounded-2xl px-12 py-5 shadow-2xl">Return to Control Center</Link>
+      <div className="w-24 h-24 bg-surface rounded-2xl flex items-center justify-center text-5xl shadow-lg border border-subtle">🔍</div>
+      <h2 className="text-2xl font-bold text-bright tracking-tight uppercase">Subject Data Missing</h2>
+      <Link to="/admin" className="btn-premium btn-premium-primary rounded-xl px-10 py-4 shadow-xl">Return to Dashboard</Link>
     </div>
   );
 
@@ -57,22 +58,22 @@ const ManageCourse = () => {
             </Link>
             <div>
               <div className="flex items-center gap-4">
-                <span className="text-4xl shadow-glow rounded-xl p-2 bg-surface border border-subtle shadow-sm">{subject.icon}</span>
-                <h1 className="text-4xl font-black text-bright tracking-tight uppercase italic">{subject.name}</h1>
+                <span className="text-4xl rounded-xl p-2 bg-surface border border-subtle">{subject.icon}</span>
+                <h1 className="text-3xl font-bold text-bright tracking-tight uppercase">{subject.name}</h1>
               </div>
               <div className="flex items-center gap-3 mt-2">
-                 <span className="badge badge-purple">{subject.category}</span>
-                 <span className="text-dim text-[10px] font-black uppercase tracking-[0.2em] [word-spacing:0.2em]">• Total Assets: {subject.resources?.notes?.length + subject.resources?.videos?.length}</span>
+                 <span className="badge-premium badge-primary text-[10px] font-bold">{subject.category}</span>
+                 <span className="text-dim text-[10px] font-semibold uppercase tracking-widest">• Total Resources: {subject.resources?.notes?.length + subject.resources?.videos?.length}</span>
               </div>
             </div>
           </div>
           
           <div className="flex items-center gap-4">
-             <div className="glass-panel px-6 py-3 flex items-center gap-3 w-80 bg-surface border border-subtle shadow-sm border-subtle shadow-inner">
+             <div className="px-6 py-3 flex items-center gap-3 w-80 bg-surface border border-subtle rounded-2xl shadow-sm">
                 <Search size={18} className="text-dim"/>
                 <input 
                   placeholder="Filter resources..." 
-                  className="bg-transparent border-none outline-none text-sm font-bold w-full text-bright placeholder:text-bright/20"
+                  className="bg-transparent border-none outline-none text-sm font-semibold w-full text-bright placeholder:text-dim/50"
                   value={searchTerm}
                   onChange={e => setSearchTerm(e.target.value)}
                 />
@@ -86,22 +87,22 @@ const ManageCourse = () => {
         {/* Resource Creation Panel */}
         <div className="col-span-4 sticky top-36 h-fit animate-slideUp">
           <div className="flex gap-2 p-1.5 bg-surface border border-subtle shadow-lg rounded-3xl mb-8 border border-subtle shadow-2xl">
-            <button 
-              onClick={() => setActiveTab('notes')}
-              className={`flex-1 flex items-center justify-center gap-2 py-4 rounded-2xl font-black text-[10px] uppercase tracking-widest transition-all
-                ${activeTab === 'notes' ? 'bg-primary text-white shadow-xl translate-y-[-2px]' : 'text-dim hover:text-bright'}
-              `}
-            >
-              <FileText size={18}/> Study Notes
-            </button>
-            <button 
-              onClick={() => setActiveTab('videos')}
-              className={`flex-1 flex items-center justify-center gap-2 py-4 rounded-2xl font-black text-[10px] uppercase tracking-widest transition-all
-                ${activeTab === 'videos' ? 'bg-primary text-white shadow-xl translate-y-[-2px]' : 'text-dim hover:text-bright'}
-              `}
-            >
-              <Video size={18}/> Lectures
-            </button>
+             <button 
+               onClick={() => setActiveTab('notes')}
+               className={`flex-1 flex items-center justify-center gap-2 py-4 rounded-2xl font-bold text-[10px] uppercase tracking-widest transition-all
+                 ${activeTab === 'notes' ? 'bg-primary text-white shadow-lg' : 'text-dim hover:text-bright'}
+               `}
+             >
+               <FileText size={18}/> Study Notes
+             </button>
+             <button 
+               onClick={() => setActiveTab('videos')}
+               className={`flex-1 flex items-center justify-center gap-2 py-4 rounded-2xl font-bold text-[10px] uppercase tracking-widest transition-all
+                 ${activeTab === 'videos' ? 'bg-primary text-white shadow-lg' : 'text-dim hover:text-bright'}
+               `}
+             >
+               <Video size={18}/> Lectures
+             </button>
           </div>
 
           {activeTab === 'notes' ? (
@@ -116,15 +117,15 @@ const ManageCourse = () => {
           
           <section>
             <div className="flex items-center gap-4 mb-10">
-              <div className="w-14 h-14 rounded-[20px] bg-purple-500/10 text-purple-400 flex flex-center border border-purple-500/20 shadow-lg shadow-purple-500/10"><FileText size={28}/></div>
+              <div className="w-14 h-14 rounded-2xl bg-primary/10 text-primary flex items-center justify-center border border-primary/20 shadow-md shadow-primary/5"><FileText size={24}/></div>
               <div>
-                 <h3 className="text-2xl font-black text-bright uppercase italic tracking-widest">Library Access</h3>
-                 <p className="text-dim text-[10px] font-black tracking-[0.3em] mt-1 uppercase">PDF&nbsp;&nbsp;&nbsp;Documents&nbsp;&nbsp;&nbsp;Storage ({subject.resources?.notes?.length || 0})</p>
+                 <h3 className="text-xl font-bold text-bright tracking-tight">Study Materials</h3>
+                 <p className="text-dim text-[10px] font-semibold tracking-widest mt-0.5 uppercase">PDF Documents Registry ({subject.resources?.notes?.length || 0})</p>
               </div>
             </div>
             
             <div className="grid grid-cols-2 gap-6">
-              {filteredNotes.length === 0 && <div className="col-span-2 card-premium text-center py-24 bg-surface shadow-md border-subtle text-dim font-black italic tracking-widest opacity-40">No library assets found.</div>}
+              {filteredNotes.length === 0 && <div className="col-span-2 card-premium text-center py-24 bg-surface border-dashed border-subtle text-dim font-semibold uppercase tracking-widest opacity-50">Empty Archive • No PDF resources published</div>}
               {filteredNotes.map((n, i) => (
                 <ContentCard key={n._id || i} {...n} type="note" date={n.uploadDate} onDelete={() => deleteResource(id, n._id, 'note')} onUpdate={(data) => updateResource(id, n._id, 'note', data)} />
               ))}
@@ -133,15 +134,15 @@ const ManageCourse = () => {
 
           <section>
             <div className="flex items-center gap-4 mb-10">
-              <div className="w-14 h-14 rounded-[20px] bg-blue-500/10 text-blue-400 flex flex-center border border-blue-500/20 shadow-lg shadow-blue-500/10"><Video size={28}/></div>
+              <div className="w-14 h-14 rounded-2xl bg-success/10 text-success flex items-center justify-center border border-success/20 shadow-md shadow-success/5"><Video size={24}/></div>
               <div>
-                 <h3 className="text-2xl font-black text-bright uppercase italic tracking-widest">Digital Vault</h3>
-                 <p className="text-dim text-[10px] font-black tracking-[0.3em] mt-1 uppercase">Video&nbsp;&nbsp;&nbsp;Masterclass ({subject.resources?.videos?.length || 0})</p>
+                 <h3 className="text-xl font-bold text-bright tracking-tight">Lecture Videos</h3>
+                 <p className="text-dim text-[10px] font-semibold tracking-widest mt-0.5 uppercase">Video Masterclass Repository ({subject.resources?.videos?.length || 0})</p>
               </div>
             </div>
 
             <div className="grid grid-cols-1 gap-6">
-              {filteredVideos.length === 0 && <div className="card-premium text-center py-24 bg-surface shadow-md border-subtle text-dim font-black italic tracking-widest opacity-40">No lecture videos published.</div>}
+              {filteredVideos.length === 0 && <div className="card-premium text-center py-24 bg-surface border-dashed border-subtle text-dim font-semibold uppercase tracking-widest opacity-50">Secure Vault Empty • No video modules published</div>}
               {filteredVideos.map((v, i) => (
                 <ContentCard key={v._id || i} {...v} type="video" date={v.uploadDate} onDelete={() => deleteResource(id, v._id, 'video')} onUpdate={(data) => updateResource(id, v._id, 'video', data)} />
               ))}
