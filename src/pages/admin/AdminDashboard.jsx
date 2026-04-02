@@ -58,74 +58,42 @@ const AdminDashboard = () => {
 
   return (
     <AdminLayout 
-      title="Dashboard"
+      title="Curriculum Hub"
       headerActions={
-        <div className="flex items-center gap-3">
-          <button 
-            onClick={() => setShowAddModal(true)}
-            className="hidden md:flex items-center gap-2 px-5 py-2.5 bg-indigo-600 text-white rounded-xl font-bold text-xs hover:bg-indigo-700 transition-all shadow-[0_10px_15px_-3px_rgba(79,70,229,0.3)] hover:scale-[1.02] active:scale-[0.98]"
-          >
-            <Plus size={18} /> New Subject
-          </button>
-        </div>
+        <button 
+          onClick={() => setShowAddModal(true)}
+          className="flex items-center gap-2 px-5 py-2.5 bg-black text-white rounded-xl font-bold text-[10px] uppercase tracking-widest hover:bg-slate-800 transition-all shadow-lg"
+        >
+          <Plus size={16} /> New Subject
+        </button>
       }
     >
       <div className="mb-10">
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
-          <div className="space-y-1">
-            <h1 className="text-3xl md:text-4xl font-extrabold text-slate-900 tracking-tight">
-              Welcome back, <span className="text-indigo-600">{user?.name?.split(' ')[0] || 'Administrator'}</span>
-            </h1>
-            <p className="text-slate-500 font-medium text-sm md:text-base">
-              Manage your curriculum and student resources from one central hub.
-            </p>
-          </div>
-          
-          <div className="flex items-center gap-4 bg-white p-2 rounded-2xl border border-slate-100 shadow-sm">
-            <div className="px-4 py-2 text-center border-r border-slate-100">
-              <div className="text-lg font-bold text-slate-900">{subjects?.length || 0}</div>
-              <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Subjects</div>
-            </div>
-            <div className="px-4 py-2 text-center">
-              <div className="text-lg font-bold text-slate-900">
-                {subjects?.reduce((acc, s) => acc + (s.resources?.notes?.length || 0), 0)}
-              </div>
-              <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Total Notes</div>
-            </div>
-          </div>
-        </div>
-
         {user?.role !== 'admin' && (
-          <div className="bg-amber-50 border border-amber-200 p-4 rounded-2xl mt-8 flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full bg-amber-100 flex items-center justify-center text-amber-600 shrink-0">
-              <X size={20} />
-            </div>
-            <div>
-              <p className="text-amber-800 text-sm font-bold">Security Notice: Limited Access</p>
-              <p className="text-amber-700/70 text-xs">Your current role ({user?.role || 'Guest'}) has restricted administrative privileges.</p>
-            </div>
+          <div className="bg-red-500/10 border border-red-500/20 p-4 rounded-2xl mb-8">
+            <p className="text-red-500 text-xs font-black uppercase tracking-widest leading-none">Security Alert: Unauthorized Access Attempt Detected</p>
+            <p className="text-red-500/70 text-[10px] font-bold mt-2 font-mono">Principal Identity Masking: {user?.role || 'null'}</p>
           </div>
         )}
+        
+        <h1 className="text-4xl font-black text-slate-900 uppercase tracking-tight italic leading-tight mb-3">Welcome, {user?.name || 'Administrator'}</h1>
+        <p className="text-[12px] font-black text-slate-400 uppercase tracking-[0.3em]">Protocol Management & Curriculum Orchestration</p>
       </div>
 
       {!subjects || subjects.length === 0 ? (
-        <div className="flex flex-col items-center justify-center py-24 bg-white border border-slate-200 rounded-[32px] shadow-sm">
-          <div className="w-20 h-20 rounded-3xl bg-slate-50 flex items-center justify-center text-slate-300 mb-6 border border-slate-100">
-            <Plus size={40} />
-          </div>
-          <h3 className="text-xl font-bold text-slate-900">No subjects found</h3>
-          <p className="text-slate-500 text-sm mt-2 max-w-sm text-center">
-            You haven't added any subjects to your curriculum yet. Start by creating your first subject module.
-          </p>
+        <div className="flex flex-col items-center justify-center py-32 bg-white border-2 border-dashed border-slate-200 rounded-[3rem]">
+          <div className="w-16 h-16 rounded-full bg-slate-50 flex items-center justify-center text-slate-300 mb-6 font-bold text-3xl">!</div>
+          <h3 className="text-lg font-black text-slate-900 uppercase tracking-tight italic">No Active Protocols</h3>
+          <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-2">Initialize your curriculum structure to begin</p>
           <button 
              onClick={() => setShowAddModal(true)}
-             className="mt-8 px-8 py-3.5 bg-indigo-600 text-white rounded-xl font-bold text-sm hover:bg-indigo-700 transition-all shadow-lg hover:scale-105 active:scale-95"
+             className="mt-8 px-8 py-4 bg-black text-white rounded-2xl font-black uppercase text-[10px] tracking-widest hover:scale-105 active:scale-95 transition-all shadow-xl"
           >
-            Create First Subject
+            Establish First Subject
           </button>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 lg:gap-8">
           {subjects.map(subject => (
             <SubjectCard 
               key={subject._id || Math.random()} 
@@ -136,14 +104,6 @@ const AdminDashboard = () => {
           ))}
         </div>
       )}
-
-      {/* Floating Action Button for Mobile */}
-      <button 
-        onClick={() => setShowAddModal(true)}
-        className="fixed bottom-8 right-8 w-14 h-14 bg-indigo-600 text-white rounded-full shadow-2xl flex items-center justify-center md:hidden z-[100] active:scale-90 transition-transform"
-      >
-        <Plus size={28} />
-      </button>
 
       {/* Create Subject Modal */}
       {showAddModal && (
@@ -158,7 +118,7 @@ const AdminDashboard = () => {
               </div>
               <button 
                  onClick={() => setShowAddModal(false)} 
-                 className="w-10 h-10 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-center text-slate-400 hover:text-black hover:bg-slate-100 transition-all shadow-sm"
+                 className="w-12 h-12 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-center text-slate-400 hover:text-black hover:bg-slate-100 transition-all shadow-sm -mr-2 mt-px"
               >
                 <X size={20} />
               </button>
@@ -232,7 +192,7 @@ const AdminDashboard = () => {
               </div>
               <button 
                  onClick={() => setShowEditModal(false)} 
-                 className="w-10 h-10 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-center text-slate-400 hover:text-black hover:bg-slate-100 transition-all shadow-sm"
+                 className="w-12 h-12 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-center text-slate-400 hover:text-black hover:bg-slate-100 transition-all shadow-sm -mr-2 mt-px"
               >
                 <X size={20} />
               </button>

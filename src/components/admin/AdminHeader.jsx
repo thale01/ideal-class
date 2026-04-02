@@ -3,7 +3,7 @@ import { Search, Bell, User } from 'lucide-react';
 
 const AdminHeader = ({ title, actions }) => {
   return (
-    <header className="h-[80px] bg-white border-b border-slate-200 px-8 flex items-center justify-between sticky top-0 z-40">
+    <header className="h-[90px] bg-white border-b border-slate-200 px-8 flex items-center justify-between sticky top-0 z-40">
       <div className="flex items-center gap-6">
         <h2 className="text-xl font-bold tracking-tight text-slate-900 uppercase italic leading-none">{title}</h2>
         <div className="h-4 w-[1px] bg-slate-200 hidden md:block"></div>

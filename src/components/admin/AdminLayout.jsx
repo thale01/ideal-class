@@ -7,7 +7,7 @@ const AdminLayout = ({ children, title, headerActions }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   return (
-    <div className="flex min-h-screen bg-[var(--bg-main)]">
+    <div className="flex min-h-screen bg-slate-50">
       {/* Mobile Sidebar Overlay */}
       {isSidebarOpen && (
         <div 
@@ -25,25 +25,23 @@ const AdminLayout = ({ children, title, headerActions }) => {
       </div>
 
       <div className="flex-1 flex flex-col min-w-0">
-        <header className="h-[90px] bg-white/80 backdrop-blur-md border-b border-slate-200 px-4 lg:px-8 flex items-center justify-between sticky top-0 z-[90]">
-          <div className="flex items-center gap-4 overflow-hidden">
+        <header className="h-[90px] bg-white border-b border-slate-200 px-4 lg:px-8 flex items-center justify-between sticky top-0 z-[90]">
+          <div className="flex items-center gap-4">
             <button 
               onClick={() => setIsSidebarOpen(true)}
-              className="p-2 -ml-2 rounded-lg hover:bg-slate-50 text-slate-500 lg:hidden shrink-0"
+              className="p-2 -ml-2 rounded-lg hover:bg-slate-50 text-slate-500 lg:hidden"
             >
               <Menu size={24} />
             </button>
-            <h2 className="text-xl lg:text-2xl font-extrabold tracking-tight text-slate-900 truncate">
-              {title}
-            </h2>
+            <h2 className="text-xl lg:text-2xl font-bold tracking-tight text-slate-900 uppercase italic leading-none">{title}</h2>
           </div>
-          <div className="flex items-center gap-2 lg:gap-4 shrink-0">
+          <div className="flex items-center gap-2 lg:gap-4">
             {headerActions}
           </div>
         </header>
 
         <main className="flex-1 p-6 lg:p-10 animate-fadeIn">
-          <div className="max-w-7xl mx-auto">
+          <div className="max-w-7xl mx-auto space-y-10">
             {children}
           </div>
         </main>
