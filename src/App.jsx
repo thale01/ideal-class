@@ -89,6 +89,17 @@ function App() {
                             </ProtectedRoute>
                           }
                         />
+                        {/* Catch-all for other admin routes to prevent blank screens */}
+                        <Route
+                          path="/admin/*"
+                          element={
+                            <ProtectedRoute role="admin">
+                              <MainLayout>
+                                <TeacherDashboard />
+                              </MainLayout>
+                            </ProtectedRoute>
+                          }
+                        />
                         <Route
                           path="/manage-course/:id"
                           element={
@@ -129,6 +140,8 @@ function App() {
                             </ProtectedRoute>
                           }
                         />
+                        {/* Final Global Fallback */}
+                        <Route path="*" element={<Navigate to="/" replace />} />
                       </Routes>
                     </Router>
                   </DoubtProvider>

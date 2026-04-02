@@ -9,21 +9,17 @@ import {
   LogOut,
   Trophy,
   CreditCard,
-  MessageSquare
+  MessageSquare,
+  X
 } from 'lucide-react';
+import { useAuth } from '../../context/AuthContext';
 
 const Sidebar = ({ onClose }) => {
   const location = useLocation();
+  const { logout } = useAuth();
   
   const menuItems = [
     { icon: <LayoutDashboard size={20} />, label: 'Dashboard', path: '/admin' },
-    { icon: <BookOpen size={20} />, label: 'Subjects', path: '/admin/subjects' },
-    { icon: <Users size={20} />, label: 'Students', path: '/admin/students' },
-    { icon: <CreditCard size={20} />, label: 'Fees', path: '/admin/fees' },
-    { icon: <Bell size={20} />, label: 'Broadcast', path: '/admin/broadcast' },
-    { icon: <Trophy size={20} />, label: 'Hall of Fame', path: '/admin/hall-of-fame' },
-    { icon: <MessageSquare size={20} />, label: 'Doubts', path: '/admin/doubts' },
-    { icon: <Settings size={20} />, label: 'Settings', path: '/admin/settings' },
   ];
 
   const isActive = (path) => location.pathname === path;
@@ -60,7 +56,10 @@ const Sidebar = ({ onClose }) => {
       </nav>
       
       <div className="p-4 border-t border-slate-100 bg-white">
-        <button className="w-full flex items-center gap-3 px-4 py-3 rounded-xl font-semibold text-sm text-red-500 hover:bg-red-50 transition-all">
+        <button 
+          onClick={() => { logout(); onClose(); }}
+          className="w-full flex items-center gap-3 px-4 py-3 rounded-xl font-semibold text-sm text-red-500 hover:bg-red-50 transition-all font-black uppercase tracking-widest"
+        >
           <LogOut size={20} />
           Sign Out
         </button>

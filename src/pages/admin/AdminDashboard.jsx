@@ -1,10 +1,22 @@
+import React, { useState } from 'react';
 import AdminLayout from '../../components/admin/AdminLayout';
 import SubjectCard from '../../components/admin/SubjectCard';
 import { Plus, X } from 'lucide-react';
+import { useAuth } from '../../context/AuthContext';
+import { useCourse } from '../../context/CourseContext';
 
 const AdminDashboard = () => {
   const { subjects, addSubject, deleteSubject, updateSubject } = useCourse();
-  const { user } = useAuth();
+  const { user, loading: authLoading } = useAuth();
+  
+  // Debug mode for role verification
+  React.useEffect(() => {
+    console.group('Admin Access Diagnostics');
+    console.log('User Authenticated:', !!user);
+    console.log('User Role:', user?.role);
+    console.log('Auth Loading State:', authLoading);
+    console.groupEnd();
+  }, [user, authLoading]);
   
   const [showAddModal, setShowAddModal] = useState(false);
   const [newSubject, setNewSubject] = useState({ name: '', icon: '📘', category: '', color: '#000000' });
@@ -56,22 +68,42 @@ const AdminDashboard = () => {
         </button>
       }
     >
-      {/* Dashboard Hero/Stats snippet */}
       <div className="mb-4">
+        {user?.role !== 'admin' && (
+          <div className="bg-red-500/10 border border-red-500/20 p-4 rounded-2xl mb-8">
+            <p className="text-red-500 text-xs font-black uppercase tracking-widest leading-none">Security Alert: Unauthorized Access Attempt Detected</p>
+            <p className="text-red-500/70 text-[10px] font-bold mt-2 font-mono">Principal Identity Masking: {user?.role || 'null'}</p>
+          </div>
+        )}
+        
         <h1 className="text-3xl font-black text-slate-900 uppercase tracking-tight italic leading-none mb-2">Welcome, {user?.name || 'Administrator'}</h1>
         <p className="text-[11px] font-black text-slate-400 uppercase tracking-[0.3em]">Protocol Management & Curriculum Orchestration</p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 lg:gap-8">
-        {subjects.map(subject => (
-          <SubjectCard 
-            key={subject._id} 
-            subject={subject} 
-            onDelete={deleteSubject}
-            onEdit={(s) => { setEditingSubject(s); setShowEditModal(true); }}
-          />
-        ))}
-      </div>
+      {!subjects || subjects.length === 0 ? (
+        <div className="flex flex-col items-center justify-center py-32 bg-white border-2 border-dashed border-slate-200 rounded-[3rem]">
+          <div className="w-16 h-16 rounded-full bg-slate-50 flex items-center justify-center text-slate-300 mb-6 font-bold text-3xl">!</div>
+          <h3 className="text-lg font-black text-slate-900 uppercase tracking-tight italic">No Active Protocols</h3>
+          <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-2">Initialize your curriculum structure to begin</p>
+          <button 
+             onClick={() => setShowAddModal(true)}
+             className="mt-8 px-8 py-4 bg-black text-white rounded-2xl font-black uppercase text-[10px] tracking-widest hover:scale-105 active:scale-95 transition-all shadow-xl"
+          >
+            Establish First Subject
+          </button>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 lg:gap-8">
+          {subjects.map(subject => (
+            <SubjectCard 
+              key={subject._id || Math.random()} 
+              subject={subject} 
+              onDelete={deleteSubject}
+              onEdit={(s) => { setEditingSubject(s); setShowEditModal(true); }}
+            />
+          ))}
+        </div>
+      )}
 
       {/* Create Subject Modal */}
       {showAddModal && (
