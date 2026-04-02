@@ -191,15 +191,15 @@ const TeacherDashboard = () => {
             <header className="header-premium border-b border-subtle sticky top-0 bg-surface/90 backdrop-blur-md z-[1000]">
                <div className="px-6 lg:px-12 flex items-center justify-between w-full h-full">
 
-                  <div className="flex items-center gap-4">
+                  <div className="flex items-center gap-2 sm:gap-4">
                      <button 
                         onClick={() => setIsSidebarOpen(true)}
-                        className="md:hidden p-2.5 rounded-xl bg-alt/50 border border-subtle text-bright"
+                        className="md:hidden p-2 rounded-lg bg-alt/50 border border-subtle text-bright"
                      >
-                        <Menu size={22} />
+                        <Menu size={20} />
                      </button>
-                     <div className="flex items-center gap-3">
-                        <img src={logo} alt="Logo" className="h-8 md:hidden block object-contain" />
+                     <div className="flex items-center gap-2 sm:gap-3">
+                        <img src={logo} alt="Logo" className="h-7 sm:h-8 md:hidden block object-contain" />
                         <div className="py-2 hidden md:block">
                            <h2 className="text-xl font-bold text-bright tracking-tight capitalize">{activeTab}</h2>
                            <p className="text-[10px] text-dim font-medium uppercase tracking-wider">Academic Portal</p>
@@ -208,7 +208,7 @@ const TeacherDashboard = () => {
                   </div>
 
 
-                   <div className="flex items-center gap-4">
+                   <div className="flex items-center gap-2 sm:gap-4">
                      <div className="relative group hidden sm:block">
                         <input
                            type="text"
@@ -220,17 +220,17 @@ const TeacherDashboard = () => {
                         <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 text-dim group-focus-within:text-primary transition-colors" size={16} />
                      </div>
 
-                     <div className="flex items-center gap-2 pr-4 border-r border-subtle mr-2">
-                        <button onClick={toggleTheme} className="w-10 h-10 rounded-xl bg-alt border border-subtle flex-center text-white hover:text-primary transition-all">
-                           {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
+                     <div className="flex items-center gap-1.5 sm:gap-2 pr-2 sm:pr-4 border-r border-subtle mr-1 sm:mr-2">
+                        <button onClick={toggleTheme} className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-alt border border-subtle flex-center text-white hover:text-primary transition-all">
+                           {theme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
                         </button>
-                        <button className="w-10 h-10 rounded-xl bg-alt border border-subtle flex-center text-white hover:text-primary transition-all">
-                           <Bell size={18} />
+                        <button className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-alt border border-subtle flex-center text-white hover:text-primary transition-all">
+                           <Bell size={16} />
                         </button>
                      </div>
 
-                     <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-xl bg-grad-main flex items-center justify-center font-bold text-white shadow-md">
+                     <div className="flex items-center gap-2 sm:gap-3">
+                        <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-grad-main flex items-center justify-center font-bold text-white shadow-md text-xs sm:text-base">
                            {user?.name?.charAt(0) || 'A'}
                         </div>
                          <div className="hidden xl:block">
@@ -286,15 +286,15 @@ const TeacherDashboard = () => {
                         )}
                      </div>
 
-                     <div className="flex flex-col sm:flex-row items-center justify-between gap-12">
-                        <div className="space-y-2">
-                           <h3 className="text-3xl font-bold text-bright tracking-tight uppercase">
+                     <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 sm:gap-12">
+                        <div className="space-y-1 sm:space-y-2">
+                           <h3 className="text-xl sm:text-3xl font-bold text-bright tracking-tight uppercase leading-tight">
                               {selectedChapterName ? 'RESOURCE CATALOG' :
                                  selectedSubjectId ? 'CHAPTER HIERARCHY' :
                                     selectedCourseId ? 'SUBJECT REPOSITORY' :
                                        'INFRASTRUCTURE CATALOG'}
                            </h3>
-                           <p className="text-[12px] font-bold text-dim uppercase tracking-[0.3em] [word-spacing:0.3em] opacity-70">
+                           <p className="text-[10px] sm:text-[12px] font-bold text-dim uppercase tracking-[0.2em] sm:tracking-[0.3em] [word-spacing:0.3em] opacity-70">
                               {selectedChapterName ? `Batch Content: ${selectedChapterName}` :
                                  selectedSubjectId ? `Strategic Folders within ${subjects.find(s => s._id === selectedSubjectId)?.name}` :
                                     selectedCourseId ? `Curated Modules for ${courses.find(c => c._id === selectedCourseId)?.name}` :
@@ -302,30 +302,30 @@ const TeacherDashboard = () => {
                            </p>
                         </div>
 
-                        <div className="flex gap-4 w-full sm:w-auto">
-                           <div className="relative flex-1 sm:w-80">
+                        <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 w-full sm:w-auto">
+                           <div className="relative w-full sm:w-80">
                               <input
                                  type="text"
                                  placeholder="Dynamic filter..."
-                                 className="input-premium py-5 pl-12 text-sm bg-alt/40 border-subtle shadow-lg"
+                                 className="input-premium py-4 sm:py-5 pl-12 text-sm bg-alt/40 border-subtle shadow-sm"
                                  value={searchTerm}
                                  onChange={e => setSearchTerm(e.target.value)}
                               />
-                              <Search className="absolute left-5 top-1/2 -translate-y-1/2 text-dim" size={20} />
+                              <Search className="absolute left-5 top-1/2 -translate-y-1/2 text-dim" size={18} />
                            </div>
 
                            {/* Contextual Action Button */}
                            {!selectedCourseId ? (
-                              <button onClick={() => setShowCourseModal(true)} className="btn-premium btn-premium-primary px-10 py-5 flex items-center gap-3 shadow-xl">
-                                 <FolderPlus size={20} /> <span className="hidden sm:inline font-bold">NEW BATCH</span>
+                              <button onClick={() => setShowCourseModal(true)} className="btn-premium btn-premium-primary px-8 sm:px-10 py-4 sm:py-5 flex items-center gap-3 shadow-lg">
+                                 <FolderPlus size={18} /> <span className="font-bold">NEW BATCH</span>
                               </button>
                            ) : !selectedSubjectId ? (
-                              <button onClick={() => setShowAddModal(true)} className="btn-premium btn-premium-primary px-10 py-5 flex items-center gap-3 shadow-xl">
-                                 <PlusCircle size={20} /> <span className="hidden sm:inline font-bold">ADD SUBJECT</span>
+                              <button onClick={() => setShowAddModal(true)} className="btn-premium btn-premium-primary px-8 sm:px-10 py-4 sm:py-5 flex items-center gap-3 shadow-lg">
+                                 <PlusCircle size={18} /> <span className="font-bold">ADD SUBJECT</span>
                               </button>
                            ) : (
-                              <button onClick={() => navigate(`/manage-course/${selectedSubjectId}`)} className="btn-premium btn-premium-primary px-10 py-5 flex items-center gap-3 shadow-xl">
-                                 <Upload size={20} /> <span className="hidden sm:inline font-bold">POST ASSET</span>
+                              <button onClick={() => navigate(`/manage-course/${selectedSubjectId}`)} className="btn-premium btn-premium-primary px-8 sm:px-10 py-4 sm:py-5 flex items-center gap-3 shadow-lg">
+                                 <Upload size={18} /> <span className="font-bold">POST ASSET</span>
                               </button>
                            )}
                         </div>
@@ -400,12 +400,11 @@ const TeacherDashboard = () => {
                         {/* LEVEL 2: SUBJECTS IN COURSE */}
                         {selectedCourseId && !selectedSubjectId && (
                            <>
-                              <div onClick={() => setShowAddModal(true)} className="card-premium flex flex-col items-center justify-center border-dashed border-primary/30 hover:border-primary/60 cursor-pointer p-10 group bg-primary/5 hover:bg-primary/10 transition-all duration-500 hover:-translate-y-2 shadow-sm hover:shadow-xl hover:shadow-primary/10">
-                                 <div className="w-16 h-16 rounded-[2rem] bg-primary flex items-center justify-center text-white shadow-xl shadow-primary/40 group-hover:scale-110 group-hover:rotate-6 transition-all duration-500 relative">
-                                    <div className="absolute inset-0 rounded-[2rem] bg-primary animate-ping opacity-20 group-hover:opacity-40 transition-opacity"></div>
-                                    <BookOpen size={32} className="relative z-10" />
+                              <div onClick={() => setShowAddModal(true)} className="card-premium flex flex-col items-center justify-center border-dashed border-primary/20 hover:border-primary/50 cursor-pointer p-10 group bg-primary/5">
+                                 <div className="w-16 h-16 rounded-3xl bg-primary flex items-center justify-center text-white shadow-xl shadow-primary/30 group-hover:scale-110 transition-all">
+                                    <BookOpen size={32} />
                                  </div>
-                                 <span className="text-[10px] font-bold text-primary mt-6 uppercase tracking-[0.4em] text-center w-full group-hover:text-bright transition-colors duration-300">Add New Subject</span>
+                                 <span className="text-[10px] font-bold text-primary mt-6 uppercase tracking-[0.2em]">Add&nbsp;&nbsp;&nbsp;New&nbsp;&nbsp;&nbsp;Subject</span>
                               </div>
                               {filteredItems(subjects.filter(s => s.courseId === selectedCourseId)).map((sub, i) => (
                                  <div
@@ -530,17 +529,11 @@ const TeacherDashboard = () => {
                                     </div>
                                  ));
                               })()}
-                              <div 
-                                 onClick={() => navigate(`/manage-course/${selectedSubjectId}`)} 
-                                 className="card-premium flex flex-col items-center justify-center border-dashed border-primary/30 hover:border-primary/60 cursor-pointer p-10 group bg-primary/5 hover:bg-primary/10 transition-all duration-500 hover:-translate-y-2 shadow-sm hover:shadow-xl hover:shadow-primary/10"
-                              >
-                                 <div className="w-16 h-16 rounded-[2rem] bg-primary flex items-center justify-center text-white shadow-xl shadow-primary/40 group-hover:scale-110 group-hover:rotate-12 transition-all duration-500 relative mb-4">
-                                    <div className="absolute inset-0 rounded-[2rem] bg-primary animate-ping opacity-20 group-hover:opacity-40 transition-opacity"></div>
-                                    <PlusCircle size={32} className="relative z-10" />
-                                 </div>
+                              <div onClick={() => navigate(`/manage-course/${selectedSubjectId}`)} className="card-premium flex flex-col items-center justify-center border-dashed border-primary/20 hover:border-primary/50 cursor-pointer p-10 group bg-primary/5">
+                                 <PlusCircle size={32} className="text-primary group-hover:scale-110 transition-transform mb-4" />
                                  <div className="text-center">
-                                    <h4 className="text-sm font-bold text-primary uppercase tracking-[0.3em] group-hover:text-bright transition-colors">Add Materials</h4>
-                                    <p className="text-[9px] font-bold text-dim mt-1 uppercase tracking-widest opacity-60">Upload study assets</p>
+                                    <h4 className="text-sm font-bold text-primary uppercase tracking-widest">Add Notes & Videos</h4>
+                                    <p className="text-[9px] font-medium text-dim mt-1">Upload study materials for this subject</p>
                                  </div>
                               </div>
                            </>
@@ -582,13 +575,10 @@ const TeacherDashboard = () => {
                                        ))}
                                        <button
                                           onClick={() => navigate(`/manage-course/${selectedSubjectId}`)}
-                                          className="card-premium border-dashed border-primary/30 hover:border-primary/60 flex items-center justify-center gap-4 p-6 group transition-all duration-500 hover:-translate-y-1 bg-surface/50 border-subtle hover:bg-primary/5"
+                                          className="card-premium border-dashed border-primary/20 hover:border-primary/50 flex items-center justify-center gap-3 p-6 group transition-all"
                                        >
-                                          <div className="w-10 h-10 rounded-[1.25rem] bg-primary/10 flex items-center justify-center text-primary group-hover:scale-110 group-hover:rotate-90 transition-all duration-500 relative">
-                                             <div className="absolute inset-0 rounded-[1.25rem] bg-primary/20 animate-ping opacity-0 group-hover:opacity-40 transition-opacity"></div>
-                                             <Plus size={18} className="relative z-10" />
-                                          </div>
-                                          <span className="text-[9px] font-bold text-primary uppercase tracking-[0.3em] group-hover:text-bright transition-colors">Append Asset</span>
+                                          <div className="w-10 h-10 rounded-xl bg-primary/5 flex items-center justify-center text-primary group-hover:scale-110 transition-transform"><Plus size={18} /></div>
+                                          <span className="text-[9px] font-bold text-primary uppercase tracking-widest">Append Learning Asset</span>
                                        </button>
                                     </>
                                  );
@@ -1376,3 +1366,4 @@ const TeacherDashboard = () => {
 };
 
 export default TeacherDashboard;
+

@@ -102,14 +102,15 @@ button {
 
 /* Container */
 .container {
-  max-width: 1400px;
+  max-width: 1200px;
   margin: 0 auto;
   padding: 0 2rem;
+  width: 100%;
 }
 
-@media (max-width: 640px) {
+@media (max-width: 768px) {
   .container {
-    padding: 0 1.25rem;
+    padding: 0 16px;
   }
 }
 
@@ -117,11 +118,12 @@ button {
   max-width: 1600px;
   margin: 0 auto;
   padding: 0 3rem;
+  width: 100%;
 }
 
-@media (max-width: 640px) {
+@media (max-width: 768px) {
   .container-premium {
-    padding: 0 1.5rem;
+    padding: 0 16px;
   }
 }
 
@@ -138,10 +140,12 @@ button {
   gap: 1.5rem;
 }
 
-.card-premium:hover {
-  transform: translateY(-8px);
-  box-shadow: var(--shadow-lg);
-  border-color: var(--primary);
+@media (max-width: 768px) {
+  .card-premium {
+    padding: 1.5rem;
+    gap: 1rem;
+    border-radius: var(--radius-md);
+  }
 }
 
 .flex-center {
@@ -476,4 +480,33 @@ button {
 @keyframes zoomIn {
   from { transform: scale(0.95); opacity: 0; }
   to { transform: scale(1); opacity: 1; }
+}
+
+/* Global Responsive Fixes */
+@media (max-width: 768px) {
+  h1 { font-size: 2.5rem !important; }
+  h2 { font-size: 2rem !important; }
+  h3 { font-size: 1.5rem !important; }
+  h4 { font-size: 1.25rem !important; }
+  
+  .input-premium {
+    padding: 0.75rem 1rem;
+    font-size: 0.875rem;
+  }
+
+  .btn-premium {
+    padding: 0.75rem 1.25rem;
+    font-size: 0.85rem;
+  }
+
+  .gap-responsive {
+    gap: 1rem !important;
+  }
+  
+  /* Prevent horizontal scroll */
+  body, #root {
+    overflow-x: hidden;
+    width: 100%;
+    position: relative;
+  }
 }

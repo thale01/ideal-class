@@ -1,5 +1,4 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { CourseProvider } from './context/CourseContext';
 import { ThemeProvider } from './context/ThemeContext';
@@ -35,10 +34,15 @@ const ProtectedRoute = ({ children, role }) => {
 
 const MainLayout = ({ children }) => {
   const { user } = useAuth();
+  const location = useLocation();
+  const isDashboard = location.pathname.startsWith('/admin') || 
+                      location.pathname.startsWith('/student') || 
+                      location.pathname.startsWith('/manage-course');
+
   return (
     <div className="min-h-screen bg-main transition-colors duration-500">
-      {user && <Navbar />}
-      <main className="container py-8">{children}</main>
+      {user && !isDashboard && <Navbar />}
+      <main className={isDashboard ? "w-full" : "container py-8"}>{children}</main>
     </div>
   );
 };

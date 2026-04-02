@@ -56,71 +56,90 @@ const StudentDashboard = () => {
    };
 
    return (
-      <div className="min-h-screen bg-main flex flex-col md:flex-row transition-colors duration-500">
-         {/* Sidebar Navigation */}
-         <aside className="w-full md:w-72 sidebar-premium flex flex-col h-auto md:h-screen z-50">
-            <div className="p-8 hidden md:block">
+      <div className="min-h-screen bg-main flex flex-col md:flex-row transition-colors duration-500 overflow-x-hidden">
+         {/* Sidebar Navigation - Fixed on Desktop */}
+         <aside className={`fixed inset-y-0 left-0 z-[100] w-72 sidebar-premium bg-surface border-r border-subtle transition-transform duration-500 md:translate-x-0 ${activeTab === 'menu-open' ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}`}>
+            <div className="p-8">
                <div className="flex items-center gap-3">
                   <img src={logo} alt="Ideal Classes Logo" className="h-10 w-auto object-contain" />
                   <div>
-                     <h1 className="text-xl font-bold text-bright tracking-tight italic">IDEAL CLASSES</h1>
-                     <p className="badge-premium badge-primary text-[9px] font-black uppercase tracking-widest mt-1 px-3 py-0.5">Learner Hub</p>
+                     <h1 className="text-xl font-bold text-bright tracking-tight italic leading-tight">IDEAL CLASSES</h1>
+                     <p className="badge-premium badge-primary text-[8px] font-black uppercase tracking-widest mt-1 px-3 py-0.5">Learner Hub</p>
                   </div>
                </div>
             </div>
 
-            <nav className="flex-1 p-2 md:p-4 space-y-1 overflow-x-auto md:overflow-y-auto flex md:flex-col no-scrollbar">
+            <nav className="flex-1 px-4 space-y-1.5 overflow-y-auto no-scrollbar">
                {menuItems.map(item => (
                   <button
                      key={item.id}
-                     onClick={() => setActiveTab(item.id)}
-                     className={`sidebar-item group ${activeTab === item.id ? 'active bg-primary/10 text-primary' : 'text-dim hover:bg-alt/50 hover:text-bright'}`}
+                     onClick={() => { setActiveTab(item.id); }}
+                     className={`sidebar-item w-full group ${activeTab === item.id ? 'active bg-primary/10 text-primary' : 'text-dim hover:bg-alt/50 hover:text-bright'}`}
                   >
                      <div className={`p-2 rounded-lg transition-all ${activeTab === item.id ? 'bg-primary text-white shadow-md shadow-primary/20' : 'bg-transparent text-dim group-hover:text-primary'}`}>
                         <item.icon size={18} />
                      </div>
-                     <span className="hidden md:inline font-bold ml-3 text-sm">{item.label}</span>
-                     <span className="md:hidden text-[10px] mt-1 font-bold">{item.label}</span>
+                     <span className="font-bold ml-3 text-sm">{item.label}</span>
                   </button>
                ))}
             </nav>
 
-            <div className="p-6 border-t border-subtle hidden md:block">
+            <div className="p-6 border-t border-subtle">
                <button onClick={logout} className="sidebar-item w-full transition-all group hover:bg-danger/10 text-danger">
                   <LogOut size={18} />
-                  <span className="font-bold text-sm">Log Out</span>
+                  <span className="font-bold text-sm ml-3">Log Out</span>
                </button>
             </div>
          </aside>
 
-         {/* Main Main Area */}
-         <main className="flex-1 min-h-screen overflow-auto">
-            <header className="header-premium sticky top-0 bg-surface/80">
-               <div className="container-premium flex items-center justify-between">
-                  <div>
-                     <h2 className="text-2xl font-bold text-bright tracking-tight capitalize">{activeTab}</h2>
-                     <p className="text-xs text-dim font-medium">Synced Cloud: {new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</p>
+         {/* Backdrop for mobile sidebar */}
+         {activeTab === 'menu-open' && (
+            <div 
+               className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[90] md:hidden animate-fadeIn"
+               onClick={() => setActiveTab('courses')}
+            ></div>
+         )}
+
+         {/* Main content area */}
+         <main className="flex-1 min-h-screen md:ml-72 min-w-0 transition-all duration-300">
+            <header className="header-premium sticky top-0 z-[80] bg-surface/80 backdrop-blur-xl border-b border-subtle">
+               <div className="container-premium py-3 flex items-center justify-between gap-4">
+                  <div className="flex items-center gap-4">
+                     <button 
+                        onClick={() => setActiveTab('menu-open')}
+                        className="md:hidden w-10 h-10 rounded-xl bg-alt border border-subtle flex items-center justify-center text-dim"
+                     >
+                        <Layout size={20} />
+                     </button>
+                     <div className="hidden sm:block">
+                        <h2 className="text-xl font-bold text-bright tracking-tight capitalize leading-none mb-1">{activeTab}</h2>
+                        <p className="text-[10px] text-dim font-bold uppercase tracking-widest italic">Scholar Portal</p>
+                     </div>
+                     <div className="sm:hidden flex items-center gap-2">
+                        <img src={logo} alt="L" className="h-6 w-auto" />
+                        <span className="text-xs font-black italic">IDEAL</span>
+                     </div>
                   </div>
 
-                  <div className="flex items-center gap-4">
-                     <div className="flex items-center gap-2 pr-4 border-r border-subtle mr-2">
-                        <button onClick={toggleTheme} className="w-10 h-10 rounded-xl bg-alt border border-subtle flex items-center justify-center text-white hover:text-primary transition-all">
-                           {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
+                  <div className="flex items-center gap-3 sm:gap-6">
+                     <div className="flex items-center gap-2 pr-3 sm:pr-6 border-r border-subtle">
+                        <button onClick={toggleTheme} className="w-9 h-9 sm:w-11 sm:h-11 rounded-lg sm:rounded-xl bg-alt border border-subtle flex items-center justify-center text-bright hover:text-primary transition-all">
+                           {theme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
                         </button>
-                        <button className="w-10 h-10 rounded-xl bg-alt border border-subtle flex items-center justify-center text-white hover:text-primary transition-all relative">
-                           <Bell size={18} />
-                           <div className="absolute top-2 right-2 w-2 h-2 bg-primary rounded-full shadow-lg"></div>
+                        <button className="w-9 h-9 sm:w-11 sm:h-11 rounded-lg sm:rounded-xl bg-alt border border-subtle flex items-center justify-center text-bright hover:text-primary transition-all relative">
+                           <Bell size={16} />
+                           <div className="absolute top-2.5 right-2.5 w-1.5 h-1.5 bg-primary rounded-full ring-2 ring-surface"></div>
                         </button>
                      </div>
 
                      <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-xl bg-grad-main flex items-center justify-center font-bold text-white shadow-md">
+                        <div className="w-9 h-9 sm:w-11 sm:h-11 rounded-lg sm:rounded-xl bg-grad-main flex items-center justify-center font-black text-white text-xs sm:text-sm shadow-md">
                            {user?.name?.charAt(0) || 'S'}
                         </div>
-                         <div className="hidden xl:block">
-                            <p className="text-sm font-bold text-bright leading-none mb-1">{user?.name || 'Scholar Name'}</p>
-                            <span className="badge-premium badge-primary text-[9px] font-black uppercase tracking-widest px-3 py-0.5">Scholar Account</span>
-                         </div>
+                        <div className="hidden lg:block">
+                           <p className="text-sm font-bold text-bright leading-none mb-1 truncate max-w-[120px]">{user?.name || 'Scholar'}</p>
+                           <span className="badge-premium badge-primary text-[8px] font-black uppercase tracking-widest px-2 py-0.5">Scholar</span>
+                        </div>
                      </div>
                   </div>
                </div>
