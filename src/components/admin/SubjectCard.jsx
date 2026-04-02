@@ -8,49 +8,57 @@ const SubjectCard = ({ subject, onEdit, onDelete }) => {
   return (
     <div 
       onClick={() => navigate(`/admin/subject/${subject._id}`)}
-      className="group bg-white border border-slate-200 rounded-2xl p-6 hover:shadow-xl hover:border-slate-300 transition-all cursor-pointer relative overflow-hidden flex flex-col justify-between h-[220px]"
+      className="group bg-white border border-slate-200 rounded-[20px] p-5 hover:shadow-[0_20px_25px_-5px_rgba(0,0,0,0.05),0_10px_10px_-5px_rgba(0,0,0,0.02)] hover:border-indigo-100 transition-all duration-300 cursor-pointer relative flex flex-col gap-4"
     >
-      <div className="absolute top-0 right-0 w-24 h-24 bg-slate-50 rounded-bl-[48px] -mr-8 -mt-8 transition-all group-hover:bg-slate-100/50"></div>
-      
-      <div>
-        <div className="flex items-start justify-between relative z-10 mb-4">
-          <div className="w-14 h-14 rounded-2xl bg-white border border-slate-100 flex items-center justify-center text-3xl shadow-sm">
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-4">
+          <div className="w-14 h-14 rounded-2xl bg-indigo-50/50 border border-indigo-100 flex items-center justify-center text-2xl shadow-sm group-hover:scale-110 transition-transform duration-300">
             {subject.icon || '📚'}
           </div>
-          <div className="flex gap-1">
-            <button 
-              onClick={(e) => { e.stopPropagation(); onEdit(subject); }}
-              className="p-2 rounded-xl text-slate-400 hover:text-black hover:bg-slate-50 transition-all opacity-0 group-hover:opacity-100"
-            >
-              <Edit2 size={16} />
-            </button>
-            <button 
-              onClick={(e) => { e.stopPropagation(); onDelete(subject._id); }}
-              className="p-2 rounded-xl text-slate-400 hover:text-red-500 hover:bg-red-50 transition-all opacity-0 group-hover:opacity-100"
-            >
-              <Trash2 size={16} />
-            </button>
+          <div className="flex flex-col min-w-0">
+            <h3 className="text-lg font-bold text-slate-900 leading-tight truncate group-hover:text-indigo-600 transition-colors">
+              {subject.name || 'Untitled Subject'}
+            </h3>
+            <p className="text-[11px] font-semibold text-slate-400 tracking-wide uppercase mt-0.5">
+              {subject.category || 'Standard Board'}
+            </p>
           </div>
         </div>
-
-        <h3 className="text-lg font-black text-slate-900 uppercase tracking-tight leading-tight group-hover:text-blue-600 transition-colors">{subject.name}</h3>
-        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1.5">{subject.category || 'Standard Board'}</p>
+        <div className="flex items-center gap-1.5 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-x-2 group-hover:translate-x-0">
+          <button 
+            onClick={(e) => { e.stopPropagation(); onEdit(subject); }}
+            className="p-2 rounded-lg text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 transition-all"
+            title="Edit Subject"
+          >
+            <Edit2 size={16} />
+          </button>
+          <button 
+            onClick={(e) => { e.stopPropagation(); onDelete(subject._id); }}
+            className="p-2 rounded-lg text-slate-400 hover:text-red-500 hover:bg-red-50 transition-all"
+            title="Delete Subject"
+          >
+            <Trash2 size={16} />
+          </button>
+        </div>
       </div>
 
-      <div className="flex items-center justify-between mt-6 pt-4 border-t border-slate-50 relative z-10">
+      <div className="flex items-center justify-between pt-4 border-t border-slate-50 mt-auto">
         <div className="flex items-center gap-4">
-          <div className="flex flex-col">
-            <span className="text-[10px] font-black text-slate-900">{subject.resources?.notes?.length || 0}</span>
-            <span className="text-[8px] font-bold text-slate-400 uppercase tracking-tighter">Notes</span>
+          <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-50 border border-slate-100">
+            <BookOpen size={12} className="text-slate-400" />
+            <span className="text-[11px] font-bold text-slate-600">
+              {subject.resources?.notes?.length || 0} Notes
+            </span>
           </div>
-          <div className="w-[1px] h-6 bg-slate-100"></div>
-          <div className="flex flex-col">
-            <span className="text-[10px] font-black text-slate-900">{subject.resources?.videos?.length || 0}</span>
-            <span className="text-[8px] font-bold text-slate-400 uppercase tracking-tighter">Videos</span>
+          <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-50 border border-slate-100">
+            <ChevronRight size={12} className="text-slate-400" />
+            <span className="text-[11px] font-bold text-slate-600">
+              {subject.resources?.videos?.length || 0} Videos
+            </span>
           </div>
         </div>
-        <div className="flex items-center gap-1 text-[10px] font-black text-slate-900 uppercase tracking-widest group-hover:translate-x-1 transition-transform">
-          Manage <ChevronRight size={14} />
+        <div className="w-8 h-8 rounded-full bg-slate-50 flex items-center justify-center text-slate-400 group-hover:bg-indigo-600 group-hover:text-white transition-all duration-300">
+          <ChevronRight size={16} />
         </div>
       </div>
     </div>
