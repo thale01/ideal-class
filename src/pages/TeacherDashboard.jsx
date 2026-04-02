@@ -65,6 +65,18 @@ const TeacherDashboard = () => {
    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
    const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
    const [message, setMessage] = useState({ text: '', type: '' }); // { text: '', type: 'success' | 'error' }
+   const [isModalOpen, setIsModalOpen] = useState(false);
+
+   React.useEffect(() => {
+      const anyModalOpen = showAddModal || showCourseModal || showAssignModal || showAnnounceModal || showFeeModal || showEditStudentModal || showResetPassModal;
+      setIsModalOpen(anyModalOpen);
+      if (anyModalOpen) {
+         document.body.style.overflow = 'hidden';
+      } else {
+         document.body.style.overflow = 'unset';
+      }
+      return () => { document.body.style.overflow = 'unset'; };
+   }, [showAddModal, showCourseModal, showAssignModal, showAnnounceModal, showFeeModal, showEditStudentModal, showResetPassModal]);
 
    const filteredItems = (items, field = 'name') => {
       if (!items) return [];
@@ -1103,36 +1115,74 @@ const TeacherDashboard = () => {
 
          {/* Add Course Modal */}
          {showCourseModal && (
-            <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 sm:p-8 bg-black/60 backdrop-blur-md animate-fadeIn">
-               <div className="w-full max-w-lg card-premium shadow-2xl animate-fadeUp border-primary/20">
-                  <div className="flex items-center justify-between mb-8">
-                     <h2 className="text-2xl font-bold text-bright tracking-tight">Create Folder/Course</h2>
-                     <button onClick={() => setShowCourseModal(false)} className="w-9 h-9 rounded-lg bg-alt flex items-center justify-center text-dim hover:text-bright transition-all">✕</button>
+            <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 sm:p-8 bg-black/80 backdrop-blur-xl animate-fadeIn">
+               <div className="w-full max-w-lg card-premium shadow-[0_0_50px_rgba(0,0,0,0.5)] animate-fadeUp p-8 sm:p-10 border border-primary/20 relative">
+                  <button 
+                     onClick={() => setShowCourseModal(false)} 
+                     className="absolute top-6 right-6 w-10 h-10 rounded-xl bg-alt flex items-center justify-center text-dim hover:text-bright hover:bg-danger/10 hover:text-danger transition-all border border-subtle group"
+                  >
+                     <X size={20} className="group-hover:scale-110 transition-transform"/>
+                  </button>
+                  
+                  <div className="mb-10 text-left">
+                     <h2 className="text-3xl font-black text-bright tracking-tight uppercase italic leading-none mb-2">Create Folder/Course</h2>
+                     <p className="text-[10px] text-dim font-black uppercase tracking-widest opacity-60">Initialize new academic structure</p>
                   </div>
-                  <form onSubmit={handleAddCourse} className="space-y-6">
-                     <div>
-                        <label className="text-[10px] font-bold text-dim uppercase tracking-widest mb-2 block">Course Branding</label>
-                        <input className="input-premium" placeholder="e.g. 10th SCIENCE BATCH 2026" value={newCourse.name} onChange={e => setNewCourse({ ...newCourse, name: e.target.value })} required />
-                     </div>
-                     <div>
-                        <label className="text-[10px] font-bold text-dim uppercase tracking-widest mb-2 block">Folder Description</label>
-                        <textarea className="input-premium min-h-[100px] py-4" placeholder="Briefly describe the contents of this folder..." value={newCourse.description} onChange={e => setNewCourse({ ...newCourse, description: e.target.value })} />
-                     </div>
-                     <div className="grid grid-cols-2 gap-6">
+
+                  <form onSubmit={handleAddCourse} className="space-y-8">
+                     <div className="space-y-6">
                         <div>
-                           <label className="text-[10px] font-bold text-dim uppercase tracking-widest mb-2 block">Folder Icon</label>
-                           <select className="input-premium h-14" value={newCourse.icon} onChange={e => setNewCourse({ ...newCourse, icon: e.target.value })}>
-                              <option>📂</option><option>📁</option><option>🚀</option><option>🎓</option><option>🔬</option>
-                           </select>
+                           <label className="text-[9px] font-black text-dim uppercase tracking-widest mb-2.5 block">Course Branding</label>
+                           <input 
+                              className="input-premium py-4" 
+                              placeholder="e.g. 10th SCIENCE BATCH 2026" 
+                              value={newCourse.name} 
+                              onChange={e => setNewCourse({ ...newCourse, name: e.target.value })} 
+                              required 
+                           />
                         </div>
                         <div>
-                           <label className="text-[10px] font-bold text-dim uppercase tracking-widest mb-2 block">Parent Category</label>
-                           <input className="input-premium h-14" placeholder="e.g. High School" value={newCourse.category} onChange={e => setNewCourse({ ...newCourse, category: e.target.value })} />
+                           <label className="text-[9px] font-black text-dim uppercase tracking-widest mb-2.5 block">Folder Description</label>
+                           <textarea 
+                              className="input-premium min-h-[120px] py-4" 
+                              placeholder="Briefly describe the contents of this folder..." 
+                              value={newCourse.description} 
+                              onChange={e => setNewCourse({ ...newCourse, description: e.target.value })} 
+                           />
+                        </div>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                           <div className="relative">
+                              <label className="text-[9px] font-black text-dim uppercase tracking-widest mb-2.5 block">Folder Icon</label>
+                              <div className="relative group">
+                                 <select 
+                                    className="input-premium h-14 pl-12 font-bold cursor-pointer appearance-none" 
+                                    value={newCourse.icon} 
+                                    onChange={e => setNewCourse({ ...newCourse, icon: e.target.value })}
+                                 >
+                                    <option value="📂">Folder 📂</option>
+                                    <option value="📁">Archive 📁</option>
+                                    <option value="🚀">Mission 🚀</option>
+                                    <option value="🎓">Academy 🎓</option>
+                                    <option value="🔬">Science 🔬</option>
+                                 </select>
+                                 <div className="absolute left-4 top-1/2 -translate-y-1/2 text-xl pointer-events-none">{newCourse.icon}</div>
+                              </div>
+                           </div>
+                           <div>
+                              <label className="text-[9px] font-black text-dim uppercase tracking-widest mb-2.5 block">Parent Category</label>
+                              <input 
+                                 className="input-premium h-14 font-black" 
+                                 placeholder="e.g. High School" 
+                                 value={newCourse.category} 
+                                 onChange={e => setNewCourse({ ...newCourse, category: e.target.value })} 
+                              />
+                           </div>
                         </div>
                      </div>
-                     <div className="flex gap-3 mt-8 pt-6 border-t border-subtle">
-                        <button type="button" onClick={() => setShowCourseModal(false)} className="flex-1 btn-premium btn-premium-secondary py-3">Cancel</button>
-                        <button type="submit" className="flex-1 btn-premium btn-premium-primary py-3">Establish Folder</button>
+                     
+                     <div className="flex gap-4 mt-10 pt-8 border-t border-subtle">
+                        <button type="button" onClick={() => setShowCourseModal(false)} className="flex-1 btn-premium btn-premium-secondary py-4 font-black text-[10px] uppercase tracking-widest hover:bg-danger/10 hover:text-danger">Cancel</button>
+                        <button type="submit" className="flex-1 btn-premium btn-premium-primary py-4 font-black text-[10px] uppercase tracking-widest shadow-xl shadow-primary/20">Establish Folder</button>
                      </div>
                   </form>
                </div>
