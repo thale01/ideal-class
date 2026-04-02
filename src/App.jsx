@@ -12,7 +12,8 @@ import { DoubtProvider } from './context/DoubtContext';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import Admission from './pages/AdmissionForm';
-import TeacherDashboard from './pages/TeacherDashboard';
+import TeacherDashboard from './pages/admin/AdminDashboard';
+import SubjectPage from './pages/admin/SubjectPage';
 import ManageCourse from './pages/ManageCourse';
 import StudentDashboard from './pages/StudentDashboard';
 import CourseViewer from './pages/CourseViewer';
@@ -74,6 +75,16 @@ function App() {
                             <ProtectedRoute role="admin">
                               <MainLayout>
                                 <TeacherDashboard />
+                              </MainLayout>
+                            </ProtectedRoute>
+                          }
+                        />
+                        <Route
+                          path="/admin/subject/:id"
+                          element={
+                            <ProtectedRoute role="admin">
+                              <MainLayout>
+                                <SubjectPage />
                               </MainLayout>
                             </ProtectedRoute>
                           }

@@ -152,91 +152,130 @@ const StudentDashboard = () => {
 
             <div className="container-premium py-10 animate-fadeUp">
                {activeTab === 'courses' && (
-                  <div className="space-y-8">
-                     <div className="flex items-center justify-between">
-                        {selectedCourseId ? (
-                           <div className="flex items-center gap-4">
-                              <button onClick={() => setSelectedCourseId(null)} className="w-12 h-12 rounded-2xl bg-surface border border-subtle flex items-center justify-center text-dim hover:text-primary transition-all shadow-sm">
-                                 <ChevronLeft size={24} />
-                              </button>
-                              <div>
-                                 <h3 className="text-2xl font-bold text-bright">{courses.find(c => c._id === selectedCourseId)?.name} Resources</h3>
-                                 <p className="text-sm text-dim font-medium">Inside Vault • {subjects.filter(s => s.courseId === selectedCourseId).length} Subjects</p>
-                              </div>
-                           </div>
-                        ) : (
+                  <>
+                     {!selectedCourseId ? (
+                        <div className="space-y-8 animate-fadeIn">
                            <div>
-                              <h3 className="text-2xl font-bold text-bright">My Learning Vault</h3>
-                              <p className="text-sm text-dim font-medium">Access your assigned academic batches</p>
+                              <h3 className="text-2xl font-black text-bright tracking-tight uppercase italic leading-none mb-2">My Learning Vault</h3>
+                              <p className="text-[10px] text-dim font-black uppercase tracking-[0.3em] opacity-60">Access your assigned academic batches</p>
                            </div>
-                        )}
-                        <div className="relative group hidden sm:block">
-                           <input
-                              type="text"
-                              placeholder="Filter content..."
-                              className="input-premium py-2.5 pl-10 w-64 bg-alt/50 border-subtle text-sm"
-                              value={searchTerm}
-                              onChange={e => setSearchTerm(e.target.value)}
-                           />
-                           <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 text-dim group-focus-within:text-primary transition-all" size={16} />
-                        </div>
-                     </div>
 
-                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                        {!selectedCourseId ? (
-                           courses.filter(c => user?.assignedCourses?.includes(c._id)).map((course, i) => (
-                              <div key={course._id || i} onClick={() => setSelectedCourseId(course._id)} className="card-premium group cursor-pointer hover:border-primary/30 hover:translate-y-[-8px] transition-all">
-                                 <div className="flex items-center justify-between mb-8">
-                                    <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center text-4xl shadow-sm border border-primary/20 group-hover:bg-primary group-hover:text-white transition-all">
-                                       {course.icon || '📂'}
+                           <div className="relative group w-full max-w-md">
+                              <input
+                                 type="text"
+                                 placeholder="Filter batches..."
+                                 className="input-premium py-4 pl-12 bg-alt/40 border-subtle text-sm"
+                                 value={searchTerm}
+                                 onChange={e => setSearchTerm(e.target.value)}
+                              />
+                              <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-dim group-focus-within:text-primary transition-all" size={18} />
+                           </div>
+
+                           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-responsive">
+                              {courses.filter(c => user?.assignedCourses?.includes(c._id)).map((course, i) => (
+                                 <div 
+                                    key={course._id || i} 
+                                    onClick={() => setSelectedCourseId(course._id)} 
+                                    className="card-premium group cursor-pointer hover:border-primary/40 hover:-translate-y-2 transition-all p-8 relative overflow-hidden"
+                                 >
+                                    <div className="flex items-center justify-between mb-8 relative z-10">
+                                       <div className="w-16 h-16 rounded-2xl bg-surface border border-subtle flex items-center justify-center text-4xl shadow-sm group-hover:scale-110 transition-transform">
+                                          {course.icon || '📂'}
+                                       </div>
+                                       <div className="w-10 h-10 rounded-full border border-subtle flex items-center justify-center text-dim group-hover:bg-primary group-hover:text-white transition-all">
+                                          <ChevronRight size={18} />
+                                       </div>
                                     </div>
-                                    <div className="w-10 h-10 rounded-full border border-subtle flex items-center justify-center text-dim group-hover:text-primary group-hover:border-primary transition-all">
-                                       <ChevronRight size={18} />
+                                    <h4 className="text-xl font-black text-bright mb-1 uppercase tracking-tight italic">{course.name}</h4>
+                                    <p className="text-[10px] font-black text-dim uppercase tracking-widest opacity-80">{course.category || 'Active Batch'}</p>
+                                    <div className="pt-6 mt-6 border-t border-subtle flex items-center justify-between">
+                                       <span className="badge-premium badge-primary px-3 py-1 font-black text-[9px] uppercase tracking-widest">{subjects.filter(s => s.courseId === course._id).length} MODULES</span>
                                     </div>
                                  </div>
-                                 <h4 className="text-xl font-bold text-bright mb-1 tracking-tight">{course.name}</h4>
-                                 <p className="text-xs text-dim font-medium mb-6">{course.description}</p>
-                                 <div className="pt-6 border-t border-subtle flex items-center justify-between">
-                                    <span className="text-[10px] font-black text-dim uppercase tracking-widest">{subjects.filter(s => s.courseId === course._id).length} Modules</span>
-                                    <span className="badge-premium badge-success">{course.category || 'Active'}</span>
+                              ))}
+                           </div>
+                        </div>
+                     ) : (
+                        <div className="folder-isolated-view">
+                           <div className="max-w-7xl mx-auto w-full px-6 py-12 md:py-20 animate-fadeIn">
+                              {/* Header Section */}
+                              <div className="flex flex-col md:flex-row md:items-center justify-between gap-10 mb-20 px-2">
+                                 <div className="flex flex-col items-start gap-8">
+                                    <button 
+                                       onClick={() => setSelectedCourseId(null)}
+                                       className="btn-back px-6 py-4"
+                                    >
+                                       <ChevronLeft size={18} />
+                                       <span className="font-black">BACK TO VAULT</span>
+                                    </button>
+                                    <div>
+                                       <h2 className="text-4xl md:text-6xl font-black text-black uppercase tracking-tighter leading-none mb-4 italic">
+                                          {courses.find(c => c._id === selectedCourseId)?.name}
+                                       </h2>
+                                       <div className="flex items-center gap-3">
+                                          <div className="w-3 h-3 rounded-full bg-blue-600"></div>
+                                          <p className="text-[11px] font-black uppercase tracking-[0.3em] text-slate-400">
+                                             SECURE REPOSITORY ACCESS • {subjects.filter(s => s.courseId === selectedCourseId).length} MODULES
+                                          </p>
+                                       </div>
+                                    </div>
+                                 </div>
+                                 
+                                 <div className="relative w-full sm:w-80">
+                                    <input
+                                       type="text"
+                                       placeholder="Search modules..."
+                                       className="w-full bg-slate-50 border border-slate-200 rounded-[1.5rem] py-5 pl-14 pr-6 text-black font-black placeholder:text-slate-300 focus:bg-white focus:ring-4 focus:ring-blue-50 transition-all outline-none"
+                                       value={searchTerm}
+                                       onChange={e => setSearchTerm(e.target.value)}
+                                    />
+                                    <Search className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-400" size={20} />
                                  </div>
                               </div>
-                           ))
-                        ) : (
-                           subjects.filter(s => s.courseId === selectedCourseId && s.name.toLowerCase().includes(searchTerm.toLowerCase())).map((sub, i) => (
-                              <Link key={sub._id || i} to={`/student/course/${sub._id}`} className="card-premium group decoration-none hover:translate-y-[-8px] transition-all">
-                                 <div className="flex items-center justify-between mb-8">
-                                    <div className="w-16 h-16 rounded-2xl bg-alt flex items-center justify-center text-4xl shadow-sm border border-subtle group-hover:scale-110 group-hover:bg-primary/5 transition-all">
-                                       {sub.icon || '📘'}
-                                    </div>
-                                    <div className="w-10 h-10 rounded-full border border-subtle flex items-center justify-center text-dim group-hover:text-primary group-hover:border-primary transition-all">
-                                       <ChevronRight size={18} />
-                                    </div>
+
+                              {/* Content Grid */}
+                              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
+                                 {subjects.filter(s => s.courseId === selectedCourseId && s.name.toLowerCase().includes(searchTerm.toLowerCase())).map((sub, i) => (
+                                    <Link 
+                                       key={sub._id || i} 
+                                       to={`/student/course/${sub._id}`} 
+                                       className="card-clean group cursor-pointer border-slate-100 hover:border-black p-10 flex flex-col gap-8 transition-transform hover:-translate-y-2 decoration-none no-underline"
+                                    >
+                                       <div className="flex items-center justify-between">
+                                          <div className="w-20 h-20 rounded-3xl bg-slate-50 flex items-center justify-center text-5xl group-hover:scale-110 transition-transform shadow-sm">{sub.icon || '📘'}</div>
+                                          <div className="w-12 h-12 rounded-full border border-slate-100 flex items-center justify-center group-hover:bg-black group-hover:text-white transition-all">
+                                             <ChevronRight size={24} />
+                                          </div>
+                                       </div>
+                                       <div>
+                                          <h4 className="text-2xl font-black text-black uppercase mb-1 tracking-tight italic no-underline decoration-none">{sub.name}</h4>
+                                          <p className="text-[11px] font-black text-slate-400 uppercase tracking-widest">{sub.category}</p>
+                                       </div>
+                                       <div className="flex gap-4 mt-2">
+                                          <div className="flex-1 bg-slate-50 py-4 rounded-2xl text-center border border-slate-100">
+                                             <p className="text-lg font-black text-black">{sub.resources?.notes?.length || 0}</p>
+                                             <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Documents</p>
+                                          </div>
+                                          <div className="flex-1 bg-slate-50 py-4 rounded-2xl text-center border border-slate-100">
+                                             <p className="text-lg font-black text-black">{sub.resources?.videos?.length || 0}</p>
+                                             <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Videos</p>
+                                          </div>
+                                       </div>
+                                    </Link>
+                                 ))}
+                              </div>
+
+                              {subjects.filter(s => s.courseId === selectedCourseId).length === 0 && (
+                                 <div className="py-20 text-center border-2 border-dashed border-slate-100 rounded-[2.5rem]">
+                                    <BookOpen size={48} className="mx-auto text-slate-200 mb-6" />
+                                    <h4 className="text-xl font-black text-slate-300 uppercase tracking-[0.2em]">No Modules Published</h4>
+                                    <p className="text-slate-400 text-sm mt-2 font-bold uppercase tracking-widest opacity-60">Educational content is being finalized</p>
                                  </div>
-                                 <h4 className="text-xl font-bold text-bright mb-1">{sub.name}</h4>
-                                 <span className="badge-premium badge-primary">{sub.category}</span>
-                                 <div className="grid grid-cols-2 gap-3 mt-8 pt-6 border-t border-subtle">
-                                    <div className="p-3 rounded-xl bg-alt/50 group-hover:bg-primary/5 transition-colors text-center">
-                                       <FileText size={16} className="mx-auto text-dim group-hover:text-primary mb-1" />
-                                       <p className="text-xs font-bold text-bright">{sub.resources?.notes?.length || 0} Docs</p>
-                                    </div>
-                                    <div className="p-3 rounded-xl bg-alt/50 group-hover:bg-primary/5 transition-colors text-center">
-                                       <Play size={16} className="mx-auto text-dim group-hover:text-primary mb-1" />
-                                       <p className="text-xs font-bold text-bright">{sub.resources?.videos?.length || 0} Class</p>
-                                    </div>
-                                 </div>
-                              </Link>
-                           ))
-                        )}
-                     </div>
-                     {(!selectedCourseId && courses.filter(c => user?.assignedCourses?.includes(c._id)).length === 0) && (
-                        <div className="card-premium py-20 text-center animate-fadeIn border-dashed border-dim/20">
-                           <Layout size={48} className="mx-auto text-dim opacity-20 mb-4" />
-                           <h4 className="text-lg font-bold text-dim mb-2 uppercase tracking-widest italic">No Courses Designated</h4>
-                           <p className="text-sm text-dim/60 font-medium">Contact your administrator at Ideal Classes for batch assignment.</p>
+                              )}
+                           </div>
                         </div>
                      )}
-                  </div>
+                  </>
                )}
 
                {activeTab === 'queries' && (
