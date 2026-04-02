@@ -116,7 +116,12 @@ const StudentDashboard = () => {
                         <p className="text-[10px] text-dim font-bold uppercase tracking-widest italic">Scholar Portal</p>
                      </div>
                      <div className="sm:hidden flex items-center gap-2">
-                        <img src={logo} alt="L" className="h-6 w-auto" />
+                        <img 
+                           src={logo} 
+                           alt="Logo" 
+                           className="object-contain" 
+                           style={{ height: '24px', maxWidth: '80px' }} 
+                        />
                         <span className="text-xs font-black italic">IDEAL</span>
                      </div>
                   </div>

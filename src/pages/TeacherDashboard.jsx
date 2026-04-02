@@ -199,7 +199,12 @@ const TeacherDashboard = () => {
                         <Menu size={20} />
                      </button>
                      <div className="flex items-center gap-2 sm:gap-3">
-                        <img src={logo} alt="Logo" className="h-7 sm:h-8 md:hidden block object-contain" />
+                        <img 
+                          src={logo} 
+                          alt="Logo" 
+                          className="md:hidden block object-contain" 
+                          style={{ height: '28px', maxWidth: '100px' }} 
+                        />
                         <div className="py-2 hidden md:block">
                            <h2 className="text-xl font-bold text-bright tracking-tight capitalize">{activeTab}</h2>
                            <p className="text-[10px] text-dim font-medium uppercase tracking-wider">Academic Portal</p>
