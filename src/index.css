@@ -510,3 +510,24 @@ button {
     position: relative;
   }
 }
+
+/* Dashboard Header Styles */
+.header-premium {
+  background: var(--glass-bg);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--glass-border);
+  height: 80px;
+  display: flex;
+  align-items: center;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  overflow: hidden;
+}
+
+@media (max-width: 768px) {
+  .header-premium {
+    height: 64px;
+    padding: 0 16px;
+  }
+}
