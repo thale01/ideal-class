@@ -41,10 +41,14 @@ export const AdmissionProvider = ({ children }) => {
   };
 
   const updateAppStatus = async (id, status) => {
+    const token = localStorage.getItem('token');
     try {
       const res = await fetch(`${API_URL}/${id}/approve`, {
         method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json', 
+          'Authorization': `Bearer ${token}` 
+        },
         body: JSON.stringify({ status })
       });
       if (res.ok) fetchApplications();
@@ -54,8 +58,12 @@ export const AdmissionProvider = ({ children }) => {
   };
 
   const removeApplication = async (id) => {
+    const token = localStorage.getItem('token');
     try {
-      const res = await fetch(`${API_URL}/${id}`, { method: 'DELETE' });
+      const res = await fetch(`${API_URL}/${id}`, { 
+        method: 'DELETE',
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
       if (res.ok) fetchApplications();
     } catch (err) {
       console.error("Delete failed", err);
