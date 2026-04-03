@@ -103,10 +103,14 @@ export const CourseProvider = ({ children }) => {
     // Optimistic Update
     setSubjects(prev => [...prev, optimisticSubject]);
 
+    const token = localStorage.getItem('token');
     try {
       const res = await fetch(API_URL, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
         body: JSON.stringify(subjectData)
       });
       if (res.ok) {
@@ -134,8 +138,10 @@ export const CourseProvider = ({ children }) => {
         }
       });
       
+      const token = localStorage.getItem('token');
       const res = await fetch(`${API_URL}/${subjectId}/resource`, {
         method: 'POST',
+        headers: { 'Authorization': `Bearer ${token}` },
         body: formData
       });
       if (res.ok) {
@@ -153,8 +159,12 @@ export const CourseProvider = ({ children }) => {
     const originalSubjects = [...subjects];
     setSubjects(prev => prev.filter(s => s._id !== id));
 
+    const token = localStorage.getItem('token');
     try {
-      const res = await fetch(`${API_URL}/${id}`, { method: 'DELETE' });
+      const res = await fetch(`${API_URL}/${id}`, { 
+        method: 'DELETE',
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
       if (!res.ok) setSubjects(originalSubjects);
     } catch (err) {
       console.error("Delete subject failed", err);
@@ -163,9 +173,11 @@ export const CourseProvider = ({ children }) => {
   };
 
   const deleteResource = async (id, resourceId, type) => {
+    const token = localStorage.getItem('token');
     try {
       const res = await fetch(`${API_URL}/${id}/resource?resourceId=${resourceId}&type=${type}`, {
-        method: 'DELETE'
+        method: 'DELETE',
+        headers: { 'Authorization': `Bearer ${token}` }
       });
       if (res.ok) fetchSubjects();
     } catch (err) {
@@ -183,9 +195,13 @@ export const CourseProvider = ({ children }) => {
         r._id === resourceId ? { ...r, ...updatedData } : r
       );
 
+      const token = localStorage.getItem('token');
       const res = await fetch(`${API_URL}/${subjectId}`, {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
         body: JSON.stringify({ 
           resources: { 
             ...subject.resources,
@@ -211,9 +227,13 @@ export const CourseProvider = ({ children }) => {
         (v.chapter || 'UNCATEGORIZED') === oldName ? { ...v, chapter: newName } : v
       );
 
+      const token = localStorage.getItem('token');
       const res = await fetch(`${API_URL}/${subjectId}`, {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
         body: JSON.stringify({ 
           resources: { 
             notes: updatedNotes, 
@@ -228,10 +248,14 @@ export const CourseProvider = ({ children }) => {
   };
   
   const updateSubject = async (id, data) => {
+    const token = localStorage.getItem('token');
     try {
       const res = await fetch(`${API_URL}/${id}`, {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
         body: JSON.stringify(data)
       });
       if (res.ok) fetchSubjects();
