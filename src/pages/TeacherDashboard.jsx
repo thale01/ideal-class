@@ -33,7 +33,7 @@ const TeacherDashboard = () => {
    } = useCourse();
    const { applications, removeApplication, updateAppStatus } = useAdmission();
    const { fees, addFeeEntry, deleteFeeEntry } = useFee();
-   const { toppers, deleteTopper } = useGallery();
+   const { toppers, deleteTopper, addTopper } = useGallery();
    const { updates } = useUpdate();
    const { doubts, replyToDoubt } = useDoubt();
    const { students, deleteStudent, updateStudent, resetStudentPassword, changeAdminPassword } = useAuth();
@@ -71,9 +71,11 @@ const TeacherDashboard = () => {
    const [activeResourceTab, setActiveResourceTab] = useState('notes');
    const [showResourceForm, setShowResourceForm] = useState(false);
    const [newResource, setNewResource] = useState({ title: '', chapter: 'General', type: 'note', file: null, url: '', videoType: 'youtube' });
+   const [showGalleryModal, setShowGalleryModal] = useState(false);
+   const [newTopper, setNewTopper] = useState({ name: '', exam: '', marks: '', photo: null });
 
    React.useEffect(() => {
-      const anyModalOpen = showAddModal || showCourseModal || showAssignModal || showAnnounceModal || showFeeModal || showEditStudentModal || showResetPassModal || showResourceForm;
+      const anyModalOpen = showAddModal || showCourseModal || showAssignModal || showAnnounceModal || showFeeModal || showEditStudentModal || showResetPassModal || showResourceForm || showGalleryModal;
       setIsModalOpen(anyModalOpen);
       if (anyModalOpen) {
          document.body.style.overflow = 'hidden';
@@ -81,7 +83,7 @@ const TeacherDashboard = () => {
          document.body.style.overflow = 'unset';
       }
       return () => { document.body.style.overflow = 'unset'; };
-   }, [showAddModal, showCourseModal, showAssignModal, showAnnounceModal, showFeeModal, showEditStudentModal, showResetPassModal, showResourceForm]);
+   }, [showAddModal, showCourseModal, showAssignModal, showAnnounceModal, showFeeModal, showEditStudentModal, showResetPassModal, showResourceForm, showGalleryModal]);
 
    const filteredItems = (items, field = 'name') => {
       if (!items) return [];
@@ -166,6 +168,22 @@ const TeacherDashboard = () => {
       });
       setShowFeeModal(false);
       setNewFee({ studentName: '', email: '', paidAmount: '', pendingFees: '', paymentMode: 'UPI/Online' });
+   };
+
+   const handleAddTopper = async (e) => {
+      e.preventDefault();
+      setIsLoading(true);
+      try {
+         await addTopper(newTopper);
+         setMessage({ text: 'Excellence record archived', type: 'success' });
+         setShowGalleryModal(false);
+         setNewTopper({ name: '', exam: '', marks: '', photo: null });
+         setTimeout(() => setMessage({ text: '', type: '' }), 3000);
+      } catch (err) {
+         setMessage({ text: 'Link failure during transmission', type: 'error' });
+      } finally {
+         setIsLoading(false);
+      }
    };
 
    const menuItems = [
@@ -871,25 +889,84 @@ const TeacherDashboard = () => {
                )}
 
                {activeTab === 'halloffame' && (
-                  <div className="space-y-8">
-                     <h3 className="text-2xl font-bold text-bright">Scholar Hall of Fame</h3>
-                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                        <div className="card-premium flex flex-col items-center justify-center border-dashed border-dim/20 p-10 bg-transparent shadow-none hover:shadow-lg cursor-pointer group">
-                           <Plus size={32} className="text-dim group-hover:text-primary transition-all mb-4" />
-                           <span className="text-xs font-bold text-dim group-hover:text-primary transition-all uppercase tracking-widest">Add Topper</span>
+                  <div className="space-y-12 bg-cosmic min-h-[80vh] rounded-[3rem] p-8 md:p-16 relative overflow-hidden">
+                     {/* Starfield Background */}
+                     <div className="starfield"></div>
+                     
+                     <div className="relative z-10 flex items-center justify-between">
+                        <div>
+                           <h3 className="text-3xl font-black text-white italic tracking-tighter uppercase leading-none">Scholar Hall of Fame</h3>
+                           <p className="text-[10px] font-black text-cyan-400 uppercase tracking-[0.4em] mt-2">Zero-G Academic Orbit</p>
                         </div>
-                        {filteredItems(toppers).map((t, i) => (
-                           <div key={i} className="card-premium group p-5">
-                              <div className="h-56 bg-alt rounded-2xl mb-4 flex-center overflow-hidden border border-subtle group-hover:translate-y-[-5px] transition-all relative">
-                                 {t.photoUrl ? <img src={`${API_BASE}${t.photoUrl}`} className="w-full h-full object-cover" /> : <Trophy size={64} className="text-dim opacity-10" />}
-                                 <div className="absolute top-3 right-3 badge-premium badge-primary">Ranker</div>
+                     </div>
+
+                     <div 
+                        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-12 relative z-10"
+                        onMouseMove={(e) => {
+                           const cards = e.currentTarget.querySelectorAll('.antigravity-card');
+                           cards.forEach(card => {
+                              const rect = card.getBoundingClientRect();
+                              const centerX = rect.left + rect.width / 2;
+                              const centerY = rect.top + rect.height / 2;
+                              const distance = Math.hypot(e.clientX - centerX, e.clientY - centerY);
+                              
+                              if (distance < 300) {
+                                 const angle = Math.atan2(centerY - e.clientY, centerX - e.clientX);
+                                 const force = (300 - distance) / 10;
+                                 const translateX = Math.cos(angle) * force;
+                                 const translateY = Math.sin(angle) * force;
+                                 card.style.transform = `translate(${translateX}px, ${translateY}px) scale(1.02)`;
+                              } else {
+                                 card.style.transform = 'translate(0px, 0px) scale(1)';
+                              }
+                           });
+                        }}
+                        onMouseLeave={(e) => {
+                           const cards = e.currentTarget.querySelectorAll('.antigravity-card');
+                           cards.forEach(card => card.style.transform = 'translate(0px, 0px) scale(1)');
+                        }}
+                     >
+                        <div 
+                           onClick={() => setShowGalleryModal(true)} 
+                           className="glass-card antigravity-card antigravity-float glow-neon-blue flex flex-col items-center justify-center p-12 cursor-pointer group transition-all animate-vacuum-pop"
+                           style={{ animationDelay: '0.1s' }}
+                        >
+                           <div className="w-20 h-20 rounded-full bg-cyan-500/10 flex items-center justify-center text-cyan-400 border border-cyan-500/20 group-hover:scale-110 group-hover:bg-cyan-500/20 transition-all shadow-[0_0_30px_rgba(34,211,238,0.2)]">
+                              <Plus size={32} />
+                           </div>
+                           <span className="text-[10px] font-black text-cyan-400 mt-8 uppercase tracking-[0.3em] group-hover:text-white transition-colors">Add Topper</span>
+                        </div>
+
+                        {toppers.map((t, i) => (
+                           <div 
+                              key={t._id || i} 
+                              className="glass-card antigravity-card antigravity-float glow-neon-violet group p-6 animate-vacuum-pop"
+                              style={{ animationDelay: `${(i + 2) * 0.15}s` }}
+                           >
+                              <div className="h-64 bg-slate-900/40 rounded-3xl mb-6 flex items-center justify-center overflow-hidden border border-white/5 relative group-hover:border-violet-500/30 transition-all">
+                                 {t.photoUrl ? (
+                                    <img src={`${API_BASE}${t.photoUrl}`} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
+                                 ) : (
+                                    <Trophy size={80} className="text-white/10" />
+                                 )}
+                                 <div className="absolute top-4 right-4 bg-violet-600 text-white font-black text-[9px] px-4 py-1.5 rounded-full uppercase tracking-widest shadow-xl">Ranker</div>
                               </div>
-                              <h4 className="text-lg font-bold text-bright mb-1">{t.name}</h4>
-                              <div className="flex items-center justify-between text-[10px] font-bold text-dim uppercase tracking-widest mb-4">
-                                 <span>{t.exam}</span>
-                                 <span className="text-primary font-black">DR: {t.marks}%</span>
+                              
+                              <div className="text-center mb-6">
+                                 <h4 className="text-xl font-black text-white italic truncate uppercase">{t.name}</h4>
+                                 <div className="flex items-center justify-center gap-4 mt-2">
+                                    <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{t.exam}</span>
+                                    <div className="w-1 h-1 rounded-full bg-slate-700"></div>
+                                    <span className="text-[11px] font-black text-violet-400 uppercase tracking-widest">{t.marks}% Score</span>
+                                 </div>
                               </div>
-                              <button onClick={() => deleteTopper(t._id)} className="w-full py-2.5 rounded-xl bg-danger/5 text-danger font-bold text-[10px] uppercase tracking-widest border border-danger/10 hover:bg-danger/10 transition-all">Remove Portfolio</button>
+
+                              <button 
+                                 onClick={() => deleteTopper(t._id)} 
+                                 className="w-full py-4 rounded-2xl bg-white/5 text-white/40 font-black text-[9px] uppercase tracking-widest border border-white/5 hover:bg-red-500/10 hover:text-red-500 hover:border-red-500/20 transition-all opacity-0 group-hover:opacity-100"
+                              >
+                                 Expel Record
+                              </button>
                            </div>
                         ))}
                      </div>
@@ -1418,6 +1495,59 @@ const TeacherDashboard = () => {
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .flex-center { display: flex; align-items: center; justify-content: center; }
       `}</style>
+         {/* Add Topper Modal */}
+         {showGalleryModal && (
+            <div className="fixed inset-0 z-[10001] flex items-center justify-center p-6 sm:p-8 bg-black/60 backdrop-blur-md animate-fadeIn">
+               <div className="w-full max-w-lg glass-card p-10 sm:p-12 animate-vacuum-pop relative border-white/20 shadow-[0_0_50px_rgba(138,43,226,0.3)]">
+                  <div className="flex items-start justify-between gap-8 mb-10">
+                     <div className="text-left flex-1">
+                        <h2 className="text-3xl font-black text-white tracking-tighter uppercase leading-none mb-2 italic">Archive Excellence</h2>
+                        <p className="text-[10px] text-violet-400 font-black uppercase tracking-[0.3em]">Scholar Data Input</p>
+                     </div>
+                     <button 
+                        onClick={() => setShowGalleryModal(false)} 
+                        className="w-11 h-11 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-white/40 hover:bg-white/10 hover:text-white transition-all shadow-sm shrink-0"
+                     >
+                        <X size={20} />
+                     </button>
+                  </div>
+                  <form onSubmit={handleAddTopper} className="space-y-8">
+                     <div className="space-y-6">
+                        <div>
+                           <label className="text-[10px] font-black text-white/40 uppercase tracking-widest mb-3 block">Scholar Name</label>
+                           <input className="w-full bg-white/5 border border-white/10 rounded-2xl py-5 px-6 text-white font-black focus:bg-white/10 transition-all outline-none" placeholder="e.g. ARYAN SHARMA" value={newTopper.name} onChange={e => setNewTopper({ ...newTopper, name: e.target.value })} required />
+                        </div>
+                        <div className="grid grid-cols-2 gap-6">
+                           <div>
+                              <label className="text-[10px] font-black text-white/40 uppercase tracking-widest mb-3 block">Exam Category</label>
+                              <input className="w-full bg-white/5 border border-white/10 rounded-2xl py-5 px-6 text-white font-black focus:bg-white/10 transition-all outline-none" placeholder="CBSE XII" value={newTopper.exam} onChange={e => setNewTopper({ ...newTopper, exam: e.target.value })} required />
+                           </div>
+                           <div>
+                              <label className="text-[10px] font-black text-white/40 uppercase tracking-widest mb-3 block">Score (%)</label>
+                              <input className="w-full bg-white/5 border border-white/10 rounded-2xl py-5 px-6 text-white font-black focus:bg-white/10 transition-all outline-none" placeholder="98.5" value={newTopper.marks} onChange={e => setNewTopper({ ...newTopper, marks: e.target.value })} required />
+                           </div>
+                        </div>
+                        <div>
+                           <label className="text-[10px] font-black text-white/40 uppercase tracking-widest mb-3 block">Digital Portrait</label>
+                           <div className="relative group cursor-pointer">
+                              <input type="file" className="absolute inset-0 opacity-0 cursor-pointer z-10" onChange={e => setNewTopper({ ...newTopper, photo: e.target.files[0] })} required />
+                              <div className="w-full bg-white/5 border border-dashed border-white/10 rounded-2xl py-6 px-6 text-center group-hover:border-violet-500/50 transition-all">
+                                 <Plus className="mx-auto text-white/20 mb-2" size={24} />
+                                 <p className="text-[10px] font-black text-white/40 uppercase tracking-widest">{newTopper.photo ? newTopper.photo.name : 'Select JPG/PNG'}</p>
+                              </div>
+                           </div>
+                        </div>
+                     </div>
+                     <div className="flex gap-4 pt-4">
+                        <button type="button" onClick={() => setShowGalleryModal(false)} className="flex-1 bg-white/5 text-white/40 py-5 rounded-2xl font-black uppercase text-[10px] tracking-widest">Abort</button>
+                        <button type="submit" disabled={isLoading} className="flex-1 bg-violet-600 text-white py-5 rounded-2xl font-black uppercase text-[10px] tracking-widest shadow-[0_0_30px_rgba(138,43,226,0.3)] disabled:opacity-50">
+                           {isLoading ? 'Uploading...' : 'Finalize Archive'}
+                        </button>
+                     </div>
+                  </form>
+               </div>
+            </div>
+         )}
       </div>
    );
 };

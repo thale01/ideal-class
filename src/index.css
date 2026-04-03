@@ -636,3 +636,89 @@ button {
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
   background: #94a3b8;
 }
+/* Antigravity / Cosmic Theme Styles */
+.bg-cosmic {
+  background: radial-gradient(circle at center, #1a1a2e 0%, #0a0a12 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+.starfield {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 200%;
+  height: 200%;
+  background-image: 
+    radial-gradient(2px 2px at 20px 30px, #ffffff, rgba(0,0,0,0)),
+    radial-gradient(2px 2px at 40px 70px, #ffffff, rgba(0,0,0,0)),
+    radial-gradient(1.5px 1.5px at 50px 160px, #ffffff, rgba(0,0,0,0)),
+    radial-gradient(2px 2px at 90px 40px, #ffffff, rgba(0,0,0,0)),
+    radial-gradient(2px 2px at 130px 80px, #ffffff, rgba(0,0,0,0));
+  background-repeat: repeat;
+  background-size: 200px 200px;
+  animation: starMove 100s linear infinite;
+  opacity: 0.3;
+  pointer-events: none;
+}
+
+@keyframes starMove {
+  from { transform: translate(0, 0); }
+  to { transform: translate(-100px, -100px); }
+}
+
+.glass-card {
+  background: rgba(255, 255, 255, 0.05); /* 10% opacity roughly if var is 0.1 */
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-xl);
+  transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.6s ease;
+}
+
+.glow-neon-blue {
+  box-shadow: 0 0 20px rgba(0, 191, 255, 0.2), inset 0 0 10px rgba(0, 191, 255, 0.1);
+  animation: neonPulseBlue 4s infinite alternate;
+}
+
+.glow-neon-violet {
+  box-shadow: 0 0 20px rgba(138, 43, 226, 0.2), inset 0 0 10px rgba(138, 43, 226, 0.1);
+  animation: neonPulseViolet 4s infinite alternate;
+}
+
+@keyframes neonPulseBlue {
+  from { box-shadow: 0 0 15px rgba(0, 191, 255, 0.2); }
+  to { box-shadow: 0 0 30px rgba(0, 191, 255, 0.4); }
+}
+
+@keyframes neonPulseViolet {
+  from { box-shadow: 0 0 15px rgba(138, 43, 226, 0.2); }
+  to { box-shadow: 0 0 30px rgba(138, 43, 226, 0.4); }
+}
+
+.antigravity-float {
+  animation: drift 8s ease-in-out infinite alternate;
+}
+
+@keyframes drift {
+  0% { transform: translate(0, 0) rotate(0deg); }
+  33% { transform: translate(10px, -15px) rotate(1deg); }
+  66% { transform: translate(-12px, 10px) rotate(-1deg); }
+  100% { transform: translate(5px, 12px) rotate(0.5deg); }
+}
+
+/* Vacuum Pop Animation */
+@keyframes vacuumPop {
+  0% { transform: scale(0); opacity: 0; filter: blur(20px); }
+  50% { transform: scale(1.1); opacity: 1; filter: blur(0px); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.animate-vacuum-pop {
+  animation: vacuumPop 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Magnetic Repulsion Class (Calculated in JS) */
+.repulse {
+  transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1) !important;
+}
