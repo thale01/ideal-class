@@ -708,9 +708,21 @@ const TeacherDashboard = () => {
                                     </div>
                                  </div>
                               </div>
-                              <div className="flex items-center gap-3">
-                                 <button onClick={() => updateAppStatus(app._id, 'approved')} className="btn-premium btn-premium-primary py-2.5 text-xs">Approve</button>
-                                 <button onClick={() => removeApplication(app._id)} className="w-10 h-10 rounded-xl bg-alt border border-subtle flex-center text-dim hover:text-danger hover:border-danger/30"><Trash2 size={18} /></button>
+                              <div className="flex items-center gap-3 w-full md:w-auto">
+                                 <button 
+                                    onClick={async () => {
+                                       setMessage({ text: 'Processing Approval & Sending Notification...', type: 'success' });
+                                       await updateAppStatus(app._id, 'approved');
+                                       setMessage({ text: 'Application Approved: Email Dispatched to Student', type: 'success' });
+                                       setTimeout(() => setMessage({ text: '', type: '' }), 4000);
+                                    }} 
+                                    className="btn-premium btn-premium-primary flex-1 md:flex-none py-3 md:py-2.5 px-6 text-sm md:text-xs"
+                                 >
+                                    Approve
+                                 </button>
+                                 <button onClick={() => removeApplication(app._id)} className="w-12 h-12 md:w-10 md:h-10 rounded-xl bg-alt border border-subtle flex-center text-dim hover:text-danger hover:border-danger/30 transition-all shrink-0">
+                                    <Trash2 size={18} />
+                                 </button>
                               </div>
                            </div>
                         ))}
