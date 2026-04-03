@@ -327,9 +327,9 @@ const TeacherDashboard = () => {
                         <div className="space-y-8 animate-fadeIn">
                            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 sm:gap-12">
                               <div className="space-y-1 sm:space-y-2">
-                                 <h3 className="text-xl sm:text-4xl font-black text-bright tracking-tight uppercase leading-tight italic">INFRASTRUCTURE CATALOG</h3>
+                                 <h3 className="text-xl sm:text-4xl font-black text-bright tracking-tight uppercase leading-tight italic">Secure Repository</h3>
                                  <p className="text-[10px] sm:text-[12px] font-black text-dim uppercase tracking-[0.2em] sm:tracking-[0.4em] [word-spacing:0.4em] opacity-60">
-                                    Central Command: Manage Batches & Academic Structure
+                                    Level 2: Academic Subjects Access & Dynamic Catalog
                                  </p>
                               </div>
 
@@ -436,8 +436,8 @@ const TeacherDashboard = () => {
                                        <div className="flex items-center gap-3">
                                           <div className="w-3 h-3 rounded-full bg-blue-600"></div>
                                           <p className="text-[11px] font-black uppercase tracking-[0.3em] text-slate-400">
-                                             SECURE REPOSITORY ACCESS ({selectedChapterName ? 'Level 4: Chapters' : selectedSubjectId ? 'Level 3: Modules' : 'Level 2: Subjects'})
-                                          </p>
+                                          {selectedChapterName ? 'Secure Repository: Resource Level' : selectedSubjectId ? 'Level 3: Module Control' : 'Level 2: Academic Subjects Access'}
+                                       </p>
                                        </div>
                                     </div>
                                  </div>
@@ -499,14 +499,18 @@ const TeacherDashboard = () => {
                                                 <p className="text-[11px] font-black text-slate-400 uppercase tracking-widest">{sub.category}</p>
                                              </div>
                                              <div className="flex gap-4 mt-2">
-                                                <div className="flex-1 bg-slate-50 py-4 rounded-2xl text-center border border-slate-100">
+                                                <div className="flex-1 bg-slate-50 py-4 rounded-2xl text-center border border-slate-100 group-hover:bg-blue-50 transition-colors">
                                                    <p className="text-lg font-black text-black">{sub.resources?.notes?.length || 0}</p>
-                                                   <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Notes</p>
+                                                   <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest flex items-center justify-center gap-1"><FileText size={10} /> Notes</p>
                                                 </div>
-                                                <div className="flex-1 bg-slate-50 py-4 rounded-2xl text-center border border-slate-100">
+                                                <div className="flex-1 bg-slate-50 py-4 rounded-2xl text-center border border-slate-100 group-hover:bg-red-50 transition-colors">
                                                    <p className="text-lg font-black text-black">{sub.resources?.videos?.length || 0}</p>
-                                                   <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Videos</p>
+                                                   <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest flex items-center justify-center gap-1"><Video size={10} /> Videos</p>
                                                 </div>
+                                             </div>
+                                             <div className="mt-4 pt-4 border-t border-slate-50 flex items-center justify-between">
+                                                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Secure Access Ready</span>
+                                                <Layout size={14} className="text-slate-100 group-hover:text-blue-500 transition-colors" />
                                              </div>
                                           </div>
                                        ))}
