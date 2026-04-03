@@ -28,51 +28,41 @@ const Sidebar = ({ onClose }) => {
 
   const isActive = (path) => location.pathname === path;
 
-   return (
-    <aside className="w-[280px] bg-white border-r border-slate-200 h-screen flex flex-col transition-all overflow-hidden relative shadow-2xl z-[200]">
-      <div className="p-8 border-b border-slate-100 flex items-center justify-between bg-white relative z-20">
-        <div className="flex items-center gap-4">
-          <div className="w-10 h-10 bg-black rounded-2xl flex items-center justify-center text-white text-xs font-black shadow-lg shadow-slate-200">IC</div>
-          <div>
-            <h1 className="text-sm font-black tracking-[0.2em] text-slate-900 leading-none">IDEAL</h1>
-            <p className="text-[9px] font-black text-slate-400 tracking-[0.3em] mt-1.5 uppercase leading-none">Protocol</p>
-          </div>
-        </div>
-        <button onClick={onClose} className="p-2.5 rounded-xl bg-slate-50 border border-slate-100 text-slate-400 hover:text-black hover:bg-slate-100 lg:hidden transition-all shadow-sm">
-          <X size={18} />
+  return (
+    <aside className="w-64 bg-white border-r border-slate-200 h-screen flex flex-col transition-all overflow-hidden relative">
+      <div className="p-8 border-b border-slate-100 flex items-center justify-between">
+        <h1 className="text-xl font-black tracking-tight flex items-center gap-3">
+          <div className="w-8 h-8 bg-black rounded-lg flex items-center justify-center text-white text-xs">IC</div>
+          <span>IDEAL CLASSES</span>
+        </h1>
+        <button onClick={onClose} className="p-2 text-slate-400 lg:hidden">
+          <X size={20} />
         </button>
       </div>
       
-      <nav className="flex-1 overflow-y-auto px-4 py-8 space-y-2 no-scrollbar scroll-smooth">
-        {menuItems.map((item, index) => (
+      <nav className="flex-1 overflow-y-auto p-4 space-y-1 custom-scrollbar">
+        {menuItems.map((item) => (
           <Link
             key={item.path}
             to={item.path}
             onClick={onClose}
             className={`
-              flex items-center gap-4 px-5 py-4 rounded-2xl font-black text-[10px] uppercase tracking-[0.2em] transition-all duration-300 group
+              flex items-center gap-3 px-4 py-3 rounded-xl font-semibold text-sm transition-all
               ${isActive(item.path) 
-                ? 'bg-slate-900 text-white shadow-[0_10px_30px_rgba(0,0,0,0.15)] -translate-y-0.5' 
-                : 'text-slate-400 hover:bg-slate-50 hover:text-slate-900 hover:translate-x-1'}
+                ? 'bg-slate-900 text-white shadow-lg shadow-slate-200' 
+                : 'text-slate-500 hover:bg-slate-50 hover:text-slate-900'}
             `}
           >
-            <div className={`
-              w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-300
-              ${isActive(item.path) ? 'bg-white/10 text-white' : 'bg-slate-50 text-slate-400 group-hover:bg-white group-hover:text-slate-900 shadow-inner'}
-            `}>
-              {item.icon}
-            </div>
-            <span className="flex-1 truncate">{item.label}</span>
+            {item.icon}
+            {item.label}
           </Link>
         ))}
       </nav>
       
-      <div className="p-6 border-t border-slate-100 bg-white relative z-20">
-        <button className="w-full flex items-center gap-4 px-5 py-4 rounded-2xl font-black text-[10px] uppercase tracking-[0.2em] text-red-500 bg-red-50/30 border border-red-100/50 hover:bg-red-500 hover:text-white transition-all duration-300 group">
-          <div className="w-10 h-10 rounded-xl flex items-center justify-center bg-white text-red-500 group-hover:bg-white/20 group-hover:text-white shadow-sm transition-all duration-300">
-            <LogOut size={20} />
-          </div>
-          Sign Out Protocol
+      <div className="p-4 border-t border-slate-100 bg-white">
+        <button className="w-full flex items-center gap-3 px-4 py-3 rounded-xl font-semibold text-sm text-red-500 hover:bg-red-50 transition-all">
+          <LogOut size={20} />
+          Sign Out
         </button>
       </div>
     </aside>

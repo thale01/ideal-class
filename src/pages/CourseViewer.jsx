@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useCourse } from '../context/CourseContext';
 import { useAuth } from '../context/AuthContext';
-import { ChevronLeft, ChevronRight, FileText, Play, Clock, Search, ExternalLink, Download, Folder, Filter, BookOpen } from 'lucide-react';
+import { ChevronLeft, FileText, Play, Clock, Search, ExternalLink, Download, Folder, Filter, BookOpen } from 'lucide-react';
 import { API_URL as BASE_URL } from '../config/api';
 const API_BASE = BASE_URL.replace('/api', '');
 
@@ -14,7 +14,6 @@ const CourseViewer = () => {
 
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedChapter, setSelectedChapter] = useState(null);
-  const [selectedVideo, setSelectedVideo] = useState(null);
 
   const isAssigned = user?.role === 'admin' || user?.assignedCourses?.includes(subject?.courseId);
 
@@ -34,47 +33,9 @@ const CourseViewer = () => {
     );
   };
 
-  const getYouTubeEmbedUrl = (url) => {
-    if (!url) return '';
-    const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
-    const match = url.match(regExp);
-    return (match && match[2].length === 11) ? `https://www.youtube.com/embed/${match[2]}` : url;
-  };
-
   return (
     <div className="min-h-screen bg-main pb-32 animate-fadeIn transition-colors duration-500">
-      
-      {selectedVideo && (
-        <div className="fixed inset-0 z-[200] flex items-center justify-center p-4">
-           <div className="absolute inset-0 bg-black/95 backdrop-blur-xl animate-fadeIn" onClick={() => setSelectedVideo(null)}></div>
-           <div className="relative w-full max-w-5xl bg-surface rounded-[40px] overflow-hidden shadow-[0_50px_100px_rgba(0,0,0,0.5)] animate-fadeUp border border-white/5">
-              <div className="video-container">
-                 <iframe
-                    src={getYouTubeEmbedUrl(selectedVideo.url)}
-                    title={selectedVideo.title}
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowFullScreen
-                    className="w-full h-full"
-                 ></iframe>
-              </div>
-              <div className="p-8 sm:p-12 flex flex-col md:flex-row md:items-center justify-between gap-8 bg-surface">
-                 <div>
-                    <h3 className="text-2xl sm:text-3xl font-black text-bright uppercase tracking-tighter italic leading-none">{selectedVideo.title}</h3>
-                    <p className="text-[10px] font-900 text-dim uppercase tracking-[0.3em] mt-4 flex items-center gap-2">
-                       <Play size={12} className="text-primary"/> {selectedVideo.chapter} • PERSISTENT ACADEMIC STREAM
-                    </p>
-                 </div>
-                 <button 
-                    onClick={() => setSelectedVideo(null)}
-                    className="btn-premium bg-danger/10 text-danger border border-danger/20 px-10 py-5 font-black uppercase tracking-widest hover:bg-danger hover:text-white transition-all shadow-xl"
-                 >
-                    CLOSE THEATER
-                 </button>
-              </div>
-           </div>
-        </div>
-      )}
-
+      {/* Dynamic Header */}
       <header className="header-premium sticky top-0 z-50 transition-all duration-300 border-b border-subtle">
         <div className="container-premium py-4 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
            <div className="flex items-center gap-4 sm:gap-8 w-full md:w-auto">
@@ -101,8 +62,8 @@ const CourseViewer = () => {
            </div>
         </div>
       </header>
-
       <main className="container-premium mt-8 sm:mt-12 animate-fadeUp">
+         {/* Hierarchical Breadcrumb */}
          <div className="flex flex-wrap items-center gap-2 sm:gap-3 mb-8 sm:mb-10 py-2.5 sm:py-3 px-4 sm:px-5 bg-surface/50 rounded-2xl border border-subtle w-full sm:w-fit backdrop-blur-sm shadow-sm">
             <button 
                onClick={() => setSelectedChapter(null)}
@@ -151,6 +112,7 @@ const CourseViewer = () => {
             </div>
          ) : (
             <div className="space-y-12 animate-fadeUp">
+               {/* Chapter Resources Header */}
                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between border-b border-subtle pb-6 sm:pb-8 gap-4">
                   <h3 className="text-2xl sm:text-4xl font-black text-bright uppercase tracking-tight italic">{selectedChapter} Assets</h3>
                   <button onClick={() => setSelectedChapter(null)} className="btn-premium btn-premium-secondary px-4 sm:px-6 py-2 sm:py-3 flex items-center gap-2 text-[9px] sm:text-[10px]">
@@ -159,6 +121,7 @@ const CourseViewer = () => {
                </div>
 
                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-8">
+                  {/* Notes in Chapter */}
                   {getFilteredResources(subject.resources?.notes, selectedChapter, searchTerm).map((note, i) => (
                      <div key={`n-${i}`} className="card-premium group hover:border-primary/30 transition-all p-6 sm:p-8 flex items-center gap-6 sm:gap-8 bg-surface/40">
                         <div className="w-12 h-12 sm:w-16 sm:h-16 flex-shrink-0 rounded-2xl bg-primary/10 text-primary flex items-center justify-center shadow-inner"><FileText size={24}/></div>
@@ -177,8 +140,9 @@ const CourseViewer = () => {
                      </div>
                   ))}
 
+                  {/* Videos in Chapter */}
                   {getFilteredResources(subject.resources?.videos, selectedChapter, searchTerm).map((vid, i) => (
-                     <div key={`v-${i}`} className="card-premium group hover:border-success/30 transition-all p-6 sm:p-8 flex flex-col sm:flex-row items-center gap-6 sm:gap-8 bg-surface/40 cursor-pointer" onClick={() => setSelectedVideo(vid)}>
+                     <div key={`v-${i}`} className="card-premium group hover:border-success/30 transition-all p-6 sm:p-8 flex flex-col sm:flex-row items-center gap-6 sm:gap-8 bg-surface/40">
                         <div className="w-full sm:w-auto flex items-center gap-6 flex-1">
                            <div className="w-12 h-12 sm:w-16 sm:h-16 flex-shrink-0 rounded-2xl bg-success/10 text-success flex items-center justify-center shadow-inner"><Play size={24}/></div>
                            <div className="flex-1 min-w-0">
@@ -186,15 +150,19 @@ const CourseViewer = () => {
                               <p className="text-[9px] sm:text-[10px] font-black text-dim uppercase tracking-widest mt-1 opacity-70">Masterclass • {vid.type}</p>
                            </div>
                         </div>
-                        <button className="w-full sm:w-auto btn-premium bg-success text-white px-8 py-3 rounded-xl font-black text-[9px] uppercase tracking-widest border-none hover:scale-105 transition-transform flex items-center justify-center gap-2 shadow-lg shadow-success/20">
+                        <a href={vid.url} target="_blank" rel="noreferrer" className="w-full sm:w-auto btn-premium bg-success text-white px-8 py-3 rounded-xl font-black text-[9px] uppercase tracking-widest border-none hover:scale-105 transition-transform flex items-center justify-center gap-2 shadow-lg shadow-success/20">
                            WATCH <Play size={14}/>
-                        </button>
+                        </a>
                      </div>
                   ))}
                </div>
             </div>
          )}
       </main>
+
+      <style>{`
+        .delay-100 { animation-delay: 0.1s; }
+      `}</style>
     </div>
   );
 };

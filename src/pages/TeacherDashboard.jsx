@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
    Users, BookOpen, Bell, Settings,
    Trash2, Plus, Search, LogOut, CheckCircle,
@@ -28,7 +28,8 @@ const TeacherDashboard = () => {
       subjects, courses, 
       deleteSubject, addSubject, updateSubject,
       addCourse, deleteCourse, updateCourse,
-      assignCourses, fetchCourses, fetchSubjects, renameChapter 
+      assignCourses, fetchCourses, fetchSubjects, renameChapter,
+      addResource, deleteResource
    } = useCourse();
    const { applications, removeApplication, updateAppStatus } = useAdmission();
    const { fees, addFeeEntry, deleteFeeEntry } = useFee();
@@ -169,11 +170,11 @@ const TeacherDashboard = () => {
 
    const menuItems = [
       { id: 'subjects', label: 'Dashboard', icon: Layout },
-      { id: 'admissions', label: 'Admissions', icon: UserPlus },
-      { id: 'directory', label: 'Student Registry', icon: Users },
-      { id: 'fees', label: 'Transactions', icon: CreditCard },
+      { id: 'directory', label: 'Students', icon: Users },
+      { id: 'admissions', label: 'Registrations', icon: UserPlus },
+      { id: 'fees', label: 'Fees Management', icon: CreditCard },
       { id: 'doubts', label: 'Doubt Desk', icon: MessageSquareShare },
-      { id: 'announcements', label: 'Notices', icon: Bell },
+      { id: 'announcements', label: 'Announcements', icon: Bell },
       { id: 'halloffame', label: 'Hall of Fame', icon: Award },
       { id: 'settings', label: 'Settings', icon: Settings },
    ];

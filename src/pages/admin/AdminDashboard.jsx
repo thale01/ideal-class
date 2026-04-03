@@ -1,6 +1,9 @@
+import React, { useState } from 'react';
+import { useCourse } from '../../context/CourseContext';
+import { useAuth } from '../../context/AuthContext';
 import AdminLayout from '../../components/admin/AdminLayout';
 import SubjectCard from '../../components/admin/SubjectCard';
-import { Plus, X } from 'lucide-react';
+import { Plus, X, Users, BookOpen, CreditCard, Bell, Video, FileText } from 'lucide-react';
 
 const AdminDashboard = () => {
   const { subjects, addSubject, deleteSubject, updateSubject } = useCourse();
@@ -62,21 +65,7 @@ const AdminDashboard = () => {
         <p className="text-[11px] font-black text-slate-400 uppercase tracking-[0.3em]">Protocol Management & Curriculum Orchestration</p>
       </div>
 
-      <div className="grid-premium">
-        {/* ADD NEW SUBJECT CARD */}
-        <div 
-          onClick={() => setShowAddModal(true)}
-          className="group border-2 border-dashed border-slate-200 rounded-[2.5rem] p-10 flex flex-col items-center justify-center gap-6 cursor-pointer hover:border-black hover:bg-slate-50 transition-all duration-500 h-[260px] animate-fadeIn"
-        >
-          <div className="w-20 h-20 rounded-3xl bg-slate-50 border border-slate-100 flex items-center justify-center text-slate-300 group-hover:bg-black group-hover:text-white group-hover:rotate-90 transition-all duration-700 shadow-sm">
-            <Plus size={32} />
-          </div>
-          <div className="text-center">
-            <h3 className="text-xl font-black text-slate-900 uppercase tracking-tight italic leading-none mb-2 group-hover:text-black">Add New Subject</h3>
-            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest group-hover:text-slate-500">Expand Curriculum Protocol</p>
-          </div>
-        </div>
-
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 lg:gap-8">
         {subjects.map(subject => (
           <SubjectCard 
             key={subject._id} 

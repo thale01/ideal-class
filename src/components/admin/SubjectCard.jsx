@@ -8,9 +8,9 @@ const SubjectCard = ({ subject, onEdit, onDelete }) => {
   return (
     <div 
       onClick={() => navigate(`/admin/subject/${subject._id}`)}
-      className="group bg-white border border-slate-200 rounded-[2.5rem] p-10 hover:shadow-2xl hover:border-black hover:-translate-y-2 transition-all duration-500 cursor-pointer relative overflow-hidden flex flex-col justify-between min-h-[260px] animate-fadeIn"
+      className="group bg-white border border-slate-200 rounded-2xl p-6 hover:shadow-xl hover:border-slate-300 transition-all cursor-pointer relative overflow-hidden flex flex-col justify-between h-[220px]"
     >
-      <div className="absolute top-0 right-0 w-32 h-32 bg-slate-50 rounded-bl-[64px] -mr-12 -mt-12 transition-all duration-700 group-hover:bg-slate-100 group-hover:scale-125"></div>
+      <div className="absolute top-0 right-0 w-24 h-24 bg-slate-50 rounded-bl-[48px] -mr-8 -mt-8 transition-all group-hover:bg-slate-100/50"></div>
       
       <div>
         <div className="flex items-start justify-between relative z-10 mb-4">

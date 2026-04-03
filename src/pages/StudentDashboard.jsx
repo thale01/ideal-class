@@ -33,19 +33,10 @@ const StudentDashboard = () => {
    const myFees = fees.filter(f => f.studentName === user?.name || f.email === user?.email);
    const myDoubts = doubts.filter(d => d.studentName === user?.name || d.email === user?.email);
 
-   // Aggregate resources from all assigned courses
-   const mySubjects = subjects.filter(s => user?.assignedCourses?.includes(s.courseId));
-   const allNotes = mySubjects.flatMap(s => (s.resources?.notes || []).map(n => ({ ...n, subjectId: s._id, subjectName: s.name })));
-   const allVideos = mySubjects.flatMap(s => (s.resources?.videos || []).map(v => ({ ...v, subjectId: s._id, subjectName: s.name })));
-
-   const [playingVideo, setPlayingVideo] = useState(null);
-
    const menuItems = [
       { id: 'courses', label: 'My Courses', icon: BookOpen },
-      { id: 'notes', label: 'My Notes', icon: FileText },
-      { id: 'videos', label: 'Video Lectures', icon: Play },
-      { id: 'financials', label: 'My Fees', icon: CreditCard },
       { id: 'queries', label: 'Query Desk', icon: MessageSquare },
+      { id: 'financials', label: 'Payments', icon: CreditCard },
       { id: 'notices', label: 'Bulletin', icon: Bell },
       { id: 'achievements', label: 'Hall of Fame', icon: Award },
       { id: 'settings', label: 'Profile', icon: Settings },
@@ -64,52 +55,39 @@ const StudentDashboard = () => {
       setIsSubmitting(false);
    };
 
-   const getYouTubeEmbedUrl = (url) => {
-      if (!url) return '';
-      const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
-      const match = url.match(regExp);
-      return (match && match[2].length === 11) ? `https://www.youtube.com/embed/${match[2]}` : url;
-   };
-
    return (
       <div className="min-h-screen bg-main flex flex-col md:flex-row transition-colors duration-500 overflow-x-hidden">
          {/* Sidebar Navigation - Fixed on Desktop */}
-         <aside className={`fixed inset-y-0 left-0 z-[100] w-[280px] sidebar-premium bg-surface border-r border-subtle transition-transform duration-500 md:translate-x-0 ${activeTab === 'menu-open' ? 'translate-x-0' : '-translate-x-full md:translate-x-0'} shadow-2xl`}>
-            <div className="p-8 border-b border-subtle mb-6">
-               <div className="flex items-center gap-4">
-                  <div className="w-10 h-10 bg-grad-main rounded-2xl flex items-center justify-center text-white text-xs font-black shadow-lg shadow-primary/20">IC</div>
+         <aside className={`fixed inset-y-0 left-0 z-[100] w-72 sidebar-premium bg-surface border-r border-subtle transition-transform duration-500 md:translate-x-0 ${activeTab === 'menu-open' ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}`}>
+            <div className="p-8">
+               <div className="flex items-center gap-3">
+                  <img src={logo} alt="Ideal Classes Logo" className="h-10 w-auto object-contain" />
                   <div>
-                     <h1 className="text-sm font-black text-bright tracking-[0.2em] leading-none uppercase">IDEAL</h1>
-                     <p className="text-[9px] font-black text-dim tracking-[0.3em] mt-1.5 uppercase leading-none">Learner Hub</p>
+                     <h1 className="text-xl font-bold text-bright tracking-tight italic leading-tight">IDEAL CLASSES</h1>
+                     <p className="badge-premium badge-primary text-[8px] font-black uppercase tracking-widest mt-1 px-3 py-0.5">Learner Hub</p>
                   </div>
                </div>
             </div>
 
-            <nav className="flex-1 px-4 space-y-2 overflow-y-auto no-scrollbar scroll-smooth">
+            <nav className="flex-1 px-4 space-y-1.5 overflow-y-auto no-scrollbar">
                {menuItems.map(item => (
                   <button
                      key={item.id}
                      onClick={() => { setActiveTab(item.id); }}
-                     className={`w-full flex items-center gap-4 px-5 py-4 rounded-2xl font-black text-[10px] uppercase tracking-[0.2em] transition-all duration-300 group
-                        ${activeTab === item.id 
-                           ? 'bg-primary text-white shadow-[0_10px_30px_rgba(0,0,0,0.15)] -translate-y-0.5' 
-                           : 'text-dim hover:bg-alt/50 hover:text-bright hover:translate-x-1'}`}
+                     className={`sidebar-item w-full group ${activeTab === item.id ? 'active bg-primary/10 text-primary' : 'text-dim hover:bg-alt/50 hover:text-bright'}`}
                   >
-                     <div className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-300
-                        ${activeTab === item.id ? 'bg-white/10 text-white' : 'bg-alt text-dim group-hover:bg-white group-hover:text-primary shadow-inner'}`}>
+                     <div className={`p-2 rounded-lg transition-all ${activeTab === item.id ? 'bg-primary text-white shadow-md shadow-primary/20' : 'bg-transparent text-dim group-hover:text-primary'}`}>
                         <item.icon size={18} />
                      </div>
-                     <span className="flex-1 text-left truncate">{item.label}</span>
+                     <span className="font-bold ml-3 text-sm">{item.label}</span>
                   </button>
                ))}
             </nav>
 
-            <div className="p-6 border-t border-subtle bg-surface relative z-20">
-               <button onClick={logout} className="w-full flex items-center gap-4 px-5 py-4 rounded-2xl font-black text-[10px] uppercase tracking-[0.2em] text-danger bg-danger/5 border border-danger/10 hover:bg-danger hover:text-white transition-all duration-300 group">
-                  <div className="w-10 h-10 rounded-xl flex items-center justify-center bg-white text-danger group-hover:bg-white/20 group-hover:text-white shadow-sm transition-all duration-300">
-                     <LogOut size={18} />
-                  </div>
-                  Terminate Session
+            <div className="p-6 border-t border-subtle">
+               <button onClick={logout} className="sidebar-item w-full transition-all group hover:bg-danger/10 text-danger">
+                  <LogOut size={18} />
+                  <span className="font-bold text-sm ml-3">Log Out</span>
                </button>
             </div>
          </aside>
@@ -123,7 +101,7 @@ const StudentDashboard = () => {
          )}
 
          {/* Main content area */}
-         <main className="flex-1 min-h-screen md:ml-[280px] min-w-0 transition-all duration-300">
+         <main className="flex-1 min-h-screen md:ml-72 min-w-0 transition-all duration-300">
             <header className="header-premium sticky top-0 z-[80] bg-surface/80 backdrop-blur-xl border-b border-subtle">
                <div className="container-premium py-3 flex items-center justify-between gap-4">
                   <div className="flex items-center gap-4">
@@ -300,152 +278,6 @@ const StudentDashboard = () => {
                   </>
                )}
 
-               {activeTab === 'notes' && (
-                  <div className="space-y-10 animate-fadeIn">
-                     <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
-                        <div>
-                           <h3 className="text-3xl font-black text-bright tracking-tight uppercase italic leading-none mb-3">Academic Documents</h3>
-                           <p className="text-[11px] text-dim font-black uppercase tracking-[0.3em] opacity-60">PDF Study Material Repository</p>
-                        </div>
-                        <div className="relative group w-full max-w-sm">
-                           <input
-                              type="text"
-                              placeholder="Search notes..."
-                              className="input-premium py-3 pl-12 bg-alt/40 border-subtle text-sm rounded-2xl"
-                              value={searchTerm}
-                              onChange={e => setSearchTerm(e.target.value)}
-                           />
-                           <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-dim group-focus-within:text-primary transition-all" size={18} />
-                        </div>
-                     </div>
-
-                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        {allNotes.filter(n => n.title.toLowerCase().includes(searchTerm.toLowerCase())).map((note, i) => (
-                           <div key={i} className="card-premium group hover:border-primary/40 transition-all p-8 flex flex-col gap-6 bg-surface/50 border-2">
-                              <div className="flex items-center justify-between">
-                                 <div className="w-14 h-14 rounded-2xl bg-danger/10 text-danger flex items-center justify-center shadow-inner border border-danger/20">
-                                    <FileText size={28} />
-                                 </div>
-                                 <span className="badge-premium badge-primary text-[9px] font-black">{note.subjectName}</span>
-                              </div>
-                              <div>
-                                 <h4 className="text-lg font-black text-bright uppercase tracking-tight mb-2 truncate leading-tight group-hover:text-primary transition-colors">{note.title}</h4>
-                                 <p className="text-[9px] font-black text-dim uppercase tracking-widest">CHAPTER: {note.chapter || 'GENERAL'}</p>
-                              </div>
-                              <div className="grid grid-cols-2 gap-3 mt-auto">
-                                 <a 
-                                    href={note.fileUrl} 
-                                    target="_blank" 
-                                    rel="noreferrer" 
-                                    className="btn-premium py-3 bg-alt text-dim hover:text-primary border border-subtle text-[10px] font-black"
-                                 >
-                                    VIEW PDF
-                                 </a>
-                                 <a 
-                                    href={note.fileUrl} 
-                                    download 
-                                    className="btn-premium py-3 bg-primary text-white text-[10px] font-black shadow-lg shadow-primary/20"
-                                 >
-                                    DOWNLOAD
-                                 </a>
-                              </div>
-                           </div>
-                        ))}
-                        {allNotes.length === 0 && (
-                           <div className="col-span-full py-32 text-center border-2 border-dashed border-subtle rounded-[40px] bg-alt/10">
-                              <FileText size={48} className="mx-auto text-dim/20 mb-6" />
-                              <h4 className="text-xl font-bold text-dim uppercase tracking-widest">No Documents Found</h4>
-                           </div>
-                        )}
-                     </div>
-                  </div>
-               )}
-
-               {activeTab === 'videos' && (
-                  <div className="space-y-10 animate-fadeIn">
-                     <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
-                        <div>
-                           <h3 className="text-3xl font-black text-bright tracking-tight uppercase italic leading-none mb-3">Cinema Hall</h3>
-                           <p className="text-[11px] text-dim font-black uppercase tracking-[0.3em] opacity-60">High-Definition Masterclasses</p>
-                        </div>
-                        <div className="relative group w-full max-w-sm">
-                           <input
-                              type="text"
-                              placeholder="Search lectures..."
-                              className="input-premium py-3 pl-12 bg-alt/40 border-subtle text-sm rounded-2xl"
-                              value={searchTerm}
-                              onChange={e => setSearchTerm(e.target.value)}
-                           />
-                           <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-dim group-focus-within:text-primary transition-all" size={18} />
-                        </div>
-                     </div>
-
-                     {playingVideo && (
-                        <div className="animate-fadeDown mb-12">
-                           <div className="card-premium p-0 overflow-hidden shadow-2xl border-2 border-primary/20">
-                              <div className="relative pt-[56.25%] bg-black">
-                                 <iframe
-                                    className="absolute inset-0 w-full h-full"
-                                    src={getYouTubeEmbedUrl(playingVideo.url)}
-                                    title={playingVideo.title}
-                                    frameBorder="0"
-                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                    allowFullScreen
-                                 ></iframe>
-                              </div>
-                              <div className="p-8 flex flex-col md:flex-row md:items-center justify-between gap-6 bg-surface">
-                                 <div>
-                                    <div className="flex items-center gap-3 mb-2">
-                                       <span className="badge-premium badge-primary text-[10px] px-3">{playingVideo.subjectName}</span>
-                                       <span className="text-[10px] font-black text-dim uppercase tracking-widest">{playingVideo.chapter || 'Global Module'}</span>
-                                    </div>
-                                    <h3 className="text-2xl font-black text-bright uppercase tracking-tight italic">{playingVideo.title}</h3>
-                                 </div>
-                                 <button 
-                                    onClick={() => setPlayingVideo(null)}
-                                    className="btn-premium bg-danger/10 text-danger border border-danger/20 px-8 py-4 text-[10px] font-black uppercase tracking-widest hover:bg-danger hover:text-white transition-all shadow-inner"
-                                 >
-                                    CLOSE THEATER
-                                 </button>
-                              </div>
-                           </div>
-                        </div>
-                     )}
-
-                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                        {allVideos.filter(v => v.title.toLowerCase().includes(searchTerm.toLowerCase())).map((vid, i) => (
-                           <div key={i} className="card-premium group hover:border-success/40 transition-all p-0 overflow-hidden bg-surface/50 border-2 flex flex-col">
-                              <div className="relative pt-[56.25%] bg-alt/50 group-hover:bg-black transition-colors cursor-pointer" onClick={() => { setPlayingVideo(vid); window.scrollTo({ top: 0, behavior: 'smooth' }); }}>
-                                 <div className="absolute inset-0 flex items-center justify-center z-10">
-                                    <div className="w-16 h-16 rounded-full bg-success/90 text-white flex items-center justify-center shadow-xl group-hover:scale-125 transition-all duration-500 border-4 border-white/20">
-                                       <Play size={24} fill="currentColor" />
-                                    </div>
-                                 </div>
-                                 <img src={`https://img.youtube.com/vi/${(vid.url?.match(/^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/)?.[2])}/maxresdefault.jpg`} alt={vid.title} className="absolute inset-0 w-full h-full object-cover opacity-50 group-hover:opacity-80 transition-opacity" />
-                              </div>
-                              <div className="p-8 space-y-4">
-                                 <div>
-                                    <p className="text-[9px] font-black text-primary uppercase tracking-[0.2em] mb-1">{vid.subjectName}</p>
-                                    <h4 className="text-lg font-black text-bright uppercase tracking-tight truncate leading-tight group-hover:text-success transition-colors">{vid.title}</h4>
-                                 </div>
-                                 <div className="flex items-center justify-between pt-4 border-t border-subtle">
-                                    <span className="text-[9px] font-black text-dim uppercase tracking-widest">{vid.chapter || 'Masterclass'}</span>
-                                    <button onClick={() => { setPlayingVideo(vid); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="text-success hover:text-success/80 transition-colors">
-                                       <ChevronRight size={20} />
-                                    </button>
-                                 </div>
-                              </div>
-                           </div>
-                        ))}
-                        {allVideos.length === 0 && (
-                           <div className="col-span-full py-32 text-center border-2 border-dashed border-subtle rounded-[40px] bg-alt/10">
-                              <Play size={48} className="mx-auto text-dim/20 mb-6" />
-                              <h4 className="text-xl font-bold text-dim uppercase tracking-widest">No Lectures Available</h4>
-                           </div>
-                        )}
-                     </div>
-                  </div>
-               )}
                {activeTab === 'queries' && (
                   <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
                      <div className="lg:col-span-5 space-y-6">
@@ -515,69 +347,46 @@ const StudentDashboard = () => {
                )}
 
                {activeTab === 'financials' && (
-                  <div className="space-y-12 animate-fadeIn">
-                     <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
-                        <div>
-                           <h3 className="text-3xl font-black text-bright tracking-tight uppercase italic leading-none mb-3">Financial Nexus</h3>
-                           <p className="text-[11px] text-dim font-black uppercase tracking-[0.3em] opacity-60">Verified Settlement Ledger</p>
+                  <div className="space-y-8">
+                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                        <div className="card-premium bg-primary-glow border-none p-10">
+                           <p className="text-[10px] font-bold text-primary uppercase tracking-widest mb-2">My Payment</p>
+                                                      <h2 className="text-4xl font-bold text-primary tracking-tight">₹{(myFees.reduce((acc, f) => acc + (Number(f.paidAmount) || 0), 0)).toLocaleString()}</h2>
+
+                           <p className="text-xs text-primary/60 font-medium mt-4">Verified cloud transaction history</p>
+                        </div>
+                        <div className="card-premium p-10 border-danger/10">
+                           <p className="text-[10px] font-bold text-dim uppercase tracking-widest mb-2">Pending Dues</p>
+                                                      <h2 className="text-4xl font-bold text-danger tracking-tight">₹{(myFees.reduce((acc, f) => acc + (Number(f.pendingFees) || 0), 0)).toLocaleString()}</h2>
+
+                           <p className="text-xs text-danger/60 font-medium mt-4">Required for upcoming semester</p>
                         </div>
                      </div>
 
-                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-                        <div className="card-premium bg-grad-main border-none p-10 text-white relative overflow-hidden shadow-2xl">
-                           <p className="text-[10px] font-black text-white/60 uppercase tracking-[0.3em] mb-4">Total Settled</p>
-                           <h2 className="text-5xl font-black tracking-tighter">₹{(myFees.reduce((acc, f) => acc + (Number(f.paidAmount) || 0), 0)).toLocaleString()}</h2>
-                           <div className="mt-8 flex items-center gap-3">
-                              <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center"><CheckCircle2 size={16} /></div>
-                              <p className="text-xs font-bold text-white/80">Active Verification Status</p>
-                           </div>
-                           <div className="absolute -bottom-10 -right-10 w-48 h-48 bg-white/10 rounded-full blur-3xl"></div>
-                        </div>
-                        <div className="card-premium bg-surface border-2 border-danger/20 p-10 relative overflow-hidden shadow-xl">
-                           <p className="text-[10px] font-black text-danger uppercase tracking-[0.3em] mb-4">Pending Commitment</p>
-                           <h2 className="text-5xl font-black text-danger tracking-tighter">₹{(myFees.reduce((acc, f) => acc + (Number(f.pendingFees) || 0), 0)).toLocaleString()}</h2>
-                           <div className="mt-8 flex items-center gap-3">
-                              <div className="w-8 h-8 rounded-full bg-danger/10 text-danger flex items-center justify-center"><AlertCircle size={16} /></div>
-                              <p className="text-xs font-bold text-danger/80 italic">Balance Due Notification</p>
-                           </div>
-                        </div>
-                        <div className="card-premium bg-surface border-2 border-subtle p-10 flex flex-col justify-center">
-                           <p className="text-[10px] font-black text-dim uppercase tracking-[0.3em] mb-6 text-center">Batch Protocol</p>
-                           <div className="p-6 bg-alt/50 rounded-2xl border border-subtle text-center">
-                              <span className="text-2xl font-black text-bright uppercase italic">{user?.studentClass || 'Active Batch'}</span>
-                           </div>
-                           <p className="text-[9px] font-bold text-dim/60 text-center mt-4">Structural Alignment Verified</p>
-                        </div>
-                     </div>
-
-                     <div className="card-premium p-0 overflow-hidden shadow-2xl border-2 border-subtle bg-surface">
-                        <div className="px-10 py-8 border-b border-subtle bg-alt/30 flex items-center justify-between">
-                           <h3 className="text-xl font-black text-bright tracking-tight uppercase italic leading-none">Global Ledger History</h3>
-                           <span className="badge-premium badge-primary px-4 py-2 text-[10px] font-black uppercase tracking-widest">{myFees.length} ENTRIES</span>
+                     <div className="card-premium p-0 overflow-hidden shadow-sm">
+                        <div className="px-6 py-5 border-b border-subtle bg-alt/30">
+                           <h3 className="font-bold text-bright tracking-tight">Payment Ledger</h3>
                         </div>
                         <div className="overflow-x-auto">
                            <table className="w-full text-left">
                               <thead className="bg-alt/50 border-b border-subtle">
                                  <tr>
-                                    <th className="px-10 py-6 text-[10px] font-black uppercase tracking-[0.2em] text-dim">Transactional Descriptor</th>
-                                    <th className="px-10 py-6 text-[10px] font-black uppercase tracking-[0.2em] text-dim">Settlement Amount</th>
-                                    <th className="px-10 py-6 text-[10px] font-black uppercase tracking-[0.2em] text-dim">Vector Status</th>
-                                    <th className="px-10 py-6 text-[10px] font-black uppercase tracking-[0.2em] text-dim">Balance Remainder</th>
+                                    <th className="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-dim text-xs">Descriptor</th>
+                                    <th className="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-dim text-xs">Amount Paid</th>
+                                    <th className="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-dim text-xs">Status</th>
+                                    <th className="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-dim text-xs">Due</th>
                                  </tr>
                               </thead>
                               <tbody className="divide-y divide-subtle">
-                                 {myFees.length === 0 && <tr><td colSpan="4" className="px-10 py-24 text-center text-dim font-bold uppercase tracking-widest italic opacity-40">No Transactional History Record Found.</td></tr>}
+                                 {myFees.length === 0 && <tr><td colSpan="4" className="px-6 py-10 text-center text-dim italic">No transaction records found.</td></tr>}
                                  {myFees.map((f, i) => (
-                                    <tr key={i} className="hover:bg-alt/10 transition-all border-l-4 border-transparent hover:border-primary">
-                                       <td className="px-10 py-8">
-                                          <div className="flex flex-col">
-                                             <span className="font-black text-bright uppercase tracking-tight text-lg mb-1">{f.paymentMode} Protocol Settlement</span>
-                                             <span className="text-[9px] font-bold text-dim uppercase tracking-widest">{new Date().toDateString()} • ID: TR-{(i+1024).toString(16).toUpperCase()}</span>
-                                          </div>
-                                       </td>
-                                       <td className="px-10 py-8"><span className="text-xl font-black text-success tabular-nums tracking-tighter">₹{(Number(f.paidAmount) || 0).toLocaleString()}</span></td>
-                                       <td className="px-10 py-8"><span className="badge-premium badge-success px-5 py-2 font-black rounded-lg">VERIFIED</span></td>
-                                       <td className="px-10 py-8"><span className="text-xl font-black text-danger/60 tabular-nums tracking-tighter">₹{(Number(f.pendingFees) || 0).toLocaleString()}</span></td>
+                                    <tr key={i} className="hover:bg-alt/10 transition-all">
+                                       <td className="px-6 py-4 font-bold text-bright capitalize">Cycle Payment / {f.paymentMode}</td>
+                                                                               <td className="px-6 py-4 text-success font-bold">₹{(Number(f.paidAmount) || 0).toLocaleString()}</td>
+
+                                       <td className="px-6 py-4"><span className="badge-premium badge-success">Success</span></td>
+                                                                               <td className="px-6 py-4 text-danger font-bold">₹{(Number(f.pendingFees) || 0).toLocaleString()}</td>
+
                                     </tr>
                                  ))}
                               </tbody>

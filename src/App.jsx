@@ -12,7 +12,7 @@ import { DoubtProvider } from './context/DoubtContext';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import Admission from './pages/AdmissionForm';
-import TeacherDashboard from './pages/admin/AdminDashboard';
+import TeacherDashboard from './pages/TeacherDashboard';
 import SubjectPage from './pages/admin/SubjectPage';
 import ManageCourse from './pages/ManageCourse';
 import StudentDashboard from './pages/StudentDashboard';
