@@ -20,9 +20,10 @@ module.exports = {
     get: (key) => loadData()[key],
     save: (key, item) => {
         const data = loadData();
-        data[key].push({ ...item, _id: Date.now().toString() });
+        const newItem = { ...item, _id: Date.now().toString() };
+        data[key].push(newItem);
         saveData(data);
-        return item;
+        return newItem;
     },
     update: (key, id, updateFn) => {
         const data = loadData();

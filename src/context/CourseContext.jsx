@@ -15,8 +15,14 @@ export const CourseProvider = ({ children }) => {
     try {
       const res = await fetch(COURSES_URL);
       if (res.ok) {
-        const data = await res.json();
-        setCourses(data);
+        let data = await res.json();
+        // DEDUPLICATION: Ensure unique courses by name + category
+        const uniqueMap = new Map();
+        data.forEach(course => {
+          const key = `${course.name}-${course.category}`.toLowerCase();
+          if (!uniqueMap.has(key)) uniqueMap.set(key, course);
+        });
+        setCourses(Array.from(uniqueMap.values()));
       }
     } catch (err) {
       console.error("Failed to fetch courses", err);
@@ -28,22 +34,39 @@ export const CourseProvider = ({ children }) => {
       const res = await fetch(API_URL);
       if (res.ok) {
         const data = await res.json();
-        setSubjects(data);
+        // PERSISTENCE GUARANTEE: Never overwrite valid local state with an empty server response
+        const localData = JSON.parse(localStorage.getItem('subjects_persistent') || '[]');
+        const serverIds = new Set(data.map(s => s._id));
+        
+        const merged = [
+          ...data,
+          ...localData.filter(ls => ls._id.startsWith('temp-') && !serverIds.has(ls._id))
+        ];
+
+        setSubjects(merged);
+        localStorage.setItem('subjects_persistent', JSON.stringify(merged));
       }
     } catch (err) {
-      console.error("Failed to fetch subjects", err);
+      console.error("Fetch failed - using backup", err);
+      const backup = localStorage.getItem('subjects_persistent');
+      if (backup) setSubjects(JSON.parse(backup));
     }
   };
 
   useEffect(() => {
+    // Initial Hydration from disk
+    const backup = localStorage.getItem('subjects_persistent');
+    const coursesBackup = localStorage.getItem('courses_persistent');
+    if (backup) setSubjects(JSON.parse(backup));
+    if (coursesBackup) setCourses(JSON.parse(coursesBackup));
+    
     fetchSubjects();
     fetchCourses();
 
-    // Auto-refresh every 30 seconds to keep folder structures synced
     const interval = setInterval(() => {
       fetchSubjects();
       fetchCourses();
-    }, 30000);
+    }, 10000);
 
     return () => clearInterval(interval);
   }, []);
@@ -97,11 +120,20 @@ export const CourseProvider = ({ children }) => {
   };
 
   const addSubject = async (subjectData) => {
-    const tempId = 'temp-' + Math.random().toString(36).substr(2, 9);
-    const optimisticSubject = { ...subjectData, _id: tempId, resources: { notes: [], videos: [] }, createdAt: new Date().toISOString() };
+    const tempId = 'temp-' + Date.now();
+    const optimisticSubject = { 
+      ...subjectData, 
+      _id: tempId, 
+      resources: { notes: [], videos: [] }, 
+      createdAt: new Date().toISOString() 
+    };
     
-    // Optimistic Update
-    setSubjects(prev => [...prev, optimisticSubject]);
+    // FORCED PERSISTENCE: Push to state and local disk immediately
+    setSubjects(prev => {
+      const newList = [...prev, optimisticSubject];
+      localStorage.setItem('subjects_persistent', JSON.stringify(newList));
+      return newList;
+    });
 
     const token = localStorage.getItem('token');
     try {
@@ -113,15 +145,17 @@ export const CourseProvider = ({ children }) => {
         },
         body: JSON.stringify(subjectData)
       });
+      
       if (res.ok) {
-        fetchSubjects();
-      } else {
-        // Rollback
-        setSubjects(prev => prev.filter(s => s._id !== tempId));
+        const serverSubject = await res.json();
+        setSubjects(prev => {
+          const synced = prev.map(s => s._id === tempId ? serverSubject : s);
+          localStorage.setItem('subjects_persistent', JSON.stringify(synced));
+          return synced;
+        });
       }
     } catch (err) {
-      console.error("Add subject failed", err);
-      setSubjects(prev => prev.filter(s => s._id !== tempId));
+      console.error("Server add failed, but keeping local optimistic copy.", err);
     }
   };
 

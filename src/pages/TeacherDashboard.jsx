@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import SubjectCard from '../components/admin/SubjectCard';
 import {
    Users, BookOpen, Bell, Settings,
    Trash2, Plus, Search, LogOut, CheckCircle,
@@ -259,10 +260,8 @@ const TeacherDashboard = () => {
 
          {/* Main Main Area */}
          <main className="flex-1 min-h-screen min-w-0 overflow-x-hidden">
-
             <header className="header-premium border-b border-subtle sticky top-0 bg-surface/90 backdrop-blur-md z-[1000]">
                <div className="px-6 lg:px-12 flex items-center justify-between w-full h-full">
-
                   <div className="flex items-center gap-2 sm:gap-4">
                      <button 
                         onClick={() => setIsSidebarOpen(true)}
@@ -283,7 +282,6 @@ const TeacherDashboard = () => {
                         </div>
                      </div>
                   </div>
-
 
                    <div className="flex items-center gap-2 sm:gap-4">
                      <div className="relative group hidden sm:block">
@@ -320,7 +318,6 @@ const TeacherDashboard = () => {
             </header>
 
             <div className="px-4 md:px-8 lg:px-12 py-10 animate-fadeUp max-w-[1800px] mx-auto">
-
                {activeTab === 'subjects' && (
                   <>
                      {!selectedCourseId ? (
@@ -375,7 +372,6 @@ const TeacherDashboard = () => {
                                              setEditingId(course._id); 
                                              setEditValue(course.name); 
                                           }} className="w-10 h-10 rounded-xl bg-surface flex items-center justify-center text-dim hover:text-primary transition-all border border-subtle"><Edit2 size={16} /></button>
-                                          <button onClick={(e) => { e.stopPropagation(); deleteCourse(course._id); }} className="w-10 h-10 rounded-xl bg-surface flex items-center justify-center text-dim hover:text-danger hover:border-danger/30 transition-all border border-subtle"><Trash2 size={16} /></button>
                                        </div>
                                     </div>
                                     {editingId === course._id ? (
@@ -415,7 +411,6 @@ const TeacherDashboard = () => {
                      ) : (
                         <div className="folder-isolated-view">
                            <div className="max-w-7xl mx-auto w-full px-6 py-12 md:py-20 animate-fadeIn">
-                              {/* Header Section */}
                               <div className="flex flex-col md:flex-row md:items-center justify-between gap-10 mb-20 px-2">
                                  <div className="flex flex-col items-start gap-8">
                                     <button 
@@ -464,60 +459,33 @@ const TeacherDashboard = () => {
                                     )}
                                  </div>
                               </div>
-
-                              {/* Content Grid */}
+                              
                               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
-                                 {/* Subjects Level */}
                                  {selectedCourseId && !selectedSubjectId && (
                                     <>
                                        {subjects.filter(s => s.courseId === selectedCourseId).length === 0 && (
-                                          <div className="col-span-full py-20 text-center border-2 border-dashed border-slate-100 rounded-[2.5rem]">
-                                             <BookOpen size={48} className="mx-auto text-slate-200 mb-6" />
-                                             <h4 className="text-xl font-black text-slate-300 uppercase tracking-[0.2em]">No Subjects Defined</h4>
-                                             <p className="text-slate-400 text-sm mt-2 font-black uppercase tracking-widest opacity-60">Initialize curriculum to populate catalog</p>
+                                          <div className="col-span-full py-24 text-center bg-slate-50/50 border-2 border-dashed border-slate-100 rounded-[3rem] animate-fadeIn">
+                                             <div className="w-24 h-24 bg-white rounded-3xl shadow-sm flex items-center justify-center mx-auto mb-8">
+                                                <BookOpen size={40} className="text-slate-200" />
+                                             </div>
+                                             <h4 className="text-2xl font-black text-slate-300 uppercase tracking-[0.3em] italic">Vault Empty</h4>
+                                             <p className="text-slate-400 text-[10px] mt-3 font-black uppercase tracking-[0.4em] opacity-50">CURRICULUM INITIALIZATION REQUIRED</p>
+                                             <button onClick={() => setShowAddModal(true)} className="mt-10 btn-premium py-3 px-8 text-[10px]">Deploy First Module</button>
                                           </div>
                                        )}
-                                       {filteredItems(subjects.filter(s => s.courseId === selectedCourseId)).map((sub, i) => (
-                                          <div key={sub._id || i} onClick={() => { setSelectedSubjectId(sub._id); setActiveResourceTab('notes'); }} className="card-clean group cursor-pointer border-slate-100 hover:border-black p-10 flex flex-col gap-8 transition-transform hover:-translate-y-2 relative">
-                                             <div className="flex items-center justify-between">
-                                                <div className="w-20 h-20 rounded-3xl bg-slate-50 flex items-center justify-center text-5xl group-hover:scale-110 transition-transform shadow-sm">{sub.icon || '📚'}</div>
-                                                <div className="flex gap-2">
-                                                   <button onClick={(e) => { e.stopPropagation(); setEditingId(sub._id); setEditValue(sub.name); }} className="w-10 h-10 rounded-xl bg-white border border-slate-100 flex items-center justify-center text-slate-400 hover:text-blue-600 transition-all shadow-sm">
-                                                      <Edit2 size={16} />
-                                                   </button>
-                                                   <button onClick={(e) => { e.stopPropagation(); deleteSubject(sub._id); }} className="w-10 h-10 rounded-xl bg-white border border-slate-100 flex items-center justify-center text-slate-400 hover:text-red-600 transition-all shadow-sm">
-                                                      <Trash2 size={16} />
-                                                   </button>
-                                                </div>
-                                             </div>
-                                             <div>
-                                                {editingId === sub._id ? (
-                                                   <input autoFocus className="text-2xl font-black text-black uppercase mb-1 tracking-tight bg-slate-50 border-b-2 border-black w-full outline-none" value={editValue} onChange={e => setEditValue(e.target.value)} onClick={e => e.stopPropagation()} onBlur={async () => { if (editValue.trim() && editValue !== sub.name) await updateSubject(sub._id, { name: editValue }); setEditingId(null); }} />
-                                                ) : (
-                                                   <h4 className="text-2xl font-black text-black uppercase mb-1 tracking-tight">{sub.name}</h4>
-                                                )}
-                                                <p className="text-[11px] font-black text-slate-400 uppercase tracking-widest">{sub.category}</p>
-                                             </div>
-                                             <div className="flex gap-4 mt-2">
-                                                <div className="flex-1 bg-slate-50 py-4 rounded-2xl text-center border border-slate-100 group-hover:bg-blue-50 transition-colors">
-                                                   <p className="text-lg font-black text-black">{sub.resources?.notes?.length || 0}</p>
-                                                   <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest flex items-center justify-center gap-1"><FileText size={10} /> Notes</p>
-                                                </div>
-                                                <div className="flex-1 bg-slate-50 py-4 rounded-2xl text-center border border-slate-100 group-hover:bg-red-50 transition-colors">
-                                                   <p className="text-lg font-black text-black">{sub.resources?.videos?.length || 0}</p>
-                                                   <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest flex items-center justify-center gap-1"><Video size={10} /> Videos</p>
-                                                </div>
-                                             </div>
-                                             <div className="mt-4 pt-4 border-t border-slate-50 flex items-center justify-between">
-                                                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Secure Access Ready</span>
-                                                <Layout size={14} className="text-slate-100 group-hover:text-blue-500 transition-colors" />
-                                             </div>
-                                          </div>
+                                       {filteredItems(subjects.filter(s => s.courseId === selectedCourseId)).map((sub) => (
+                                          <SubjectCard 
+                                             key={sub._id} 
+                                             subject={sub} 
+                                             onEdit={(s) => { setEditingId(s._id); setEditValue(s.name); }}
+                                             onDelete={deleteSubject}
+                                          />
                                        ))}
                                     </>
                                  )}
+                              </div>
 
-                                 {selectedSubjectId && !showResourceForm && (
+                               {selectedSubjectId && !showResourceForm && (
                                     <div className="col-span-full">
                                        <div className="flex items-center gap-6 mb-12 border-b border-slate-100 pb-4">
                                           <button onClick={() => setActiveResourceTab('notes')} className={`text-sm font-black uppercase tracking-widest pb-4 border-b-4 transition-all ${activeResourceTab === 'notes' ? 'border-black text-black' : 'border-transparent text-slate-300'}`}>Notes & PDF</button>
@@ -550,7 +518,7 @@ const TeacherDashboard = () => {
                                                    </div>
                                                    <div className="flex gap-2">
                                                       <a href={activeResourceTab === 'notes' ? `${API_BASE}${asset.fileUrl}` : asset.url} target="_blank" rel="noreferrer" className="w-10 h-10 rounded-xl bg-black text-white flex items-center justify-center shadow-lg">
-                                                         {activeResourceTab === 'notes' ? <Download size={18} /> : <Play size={18} />}
+                                                         <Play size={18} />
                                                       </a>
                                                       <button onClick={async () => { if(window.confirm('Erase this asset?')) await deleteResource(selectedSubjectId, asset._id, activeResourceTab === 'notes' ? 'note' : 'video'); }} className="w-10 h-10 rounded-xl bg-slate-50 text-slate-400 hover:text-red-500 flex items-center justify-center border border-slate-100"><Trash2 size={18} /></button>
                                                    </div>
@@ -611,14 +579,13 @@ const TeacherDashboard = () => {
                                        </div>
                                     </div>
                                  )}
-                              </div>
-                           </div>
-                        </div>
-                     )}
-                  </>
-               )}
+                               </div>
+                            </div>
+                         )}
+                      </>
+                   )}
 
-               {activeTab === 'directory' && (
+                {activeTab === 'directory' && (
                   <div className="space-y-6">
                      <div className="flex items-center justify-between">
                         <div>
@@ -685,7 +652,7 @@ const TeacherDashboard = () => {
                            </table>
                         </div>
                      </div>
-                   </div>
+                  </div>
                 )}
 
                 {activeTab === 'admissions' && (
@@ -726,7 +693,6 @@ const TeacherDashboard = () => {
                                           } else {
                                              setMessage({ text: 'Approval Link Failure - Check Server Connection', type: 'error' });
                                           }
-                                          setTimeout(() => setMessage({ text: '', type: '' }), 4000);
                                        }} 
                                        className="btn-premium btn-premium-primary flex-1 md:flex-none py-3 md:py-2.5 px-6 text-sm md:text-xs"
                                     >
@@ -816,24 +782,19 @@ const TeacherDashboard = () => {
                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                         <div className="card-premium bg-primary-glow border-none">
                            <p className="text-[10px] font-bold text-primary uppercase tracking-widest mb-2">Total Credit</p>
-                                                       <h2 className="text-3xl font-bold text-primary tracking-tight">₹{(fees.reduce((acc, f) => acc + (Number(f.paidAmount) || 0), 0)).toLocaleString()}</h2>
+                           <h2 className="text-3xl font-bold text-primary tracking-tight">₹{(fees.reduce((acc, f) => acc + (Number(f.paidAmount) || 0), 0)).toLocaleString()}</h2>
 
                            <div className="mt-4 flex items-center gap-2 text-primary/50 text-xs"><TrendingUp size={14} /> <span>Verified Log</span></div>
                         </div>
                         <div className="card-premium border-danger/10">
                            <p className="text-[10px] font-bold text-dim uppercase tracking-widest mb-2">Pending Balance</p>
-                                                       <h2 className="text-3xl font-bold text-danger tracking-tight">₹{(fees.reduce((acc, f) => acc + (Number(f.pendingFees) || 0), 0)).toLocaleString()}</h2>
+                           <h2 className="text-3xl font-bold text-danger tracking-tight">₹{(fees.reduce((acc, f) => acc + (Number(f.pendingFees) || 0), 0)).toLocaleString()}</h2>
 
                            <div className="mt-4 flex items-center gap-2 text-danger/50 text-xs"><AlertCircle size={14} /> <span>Collection Needed</span></div>
                         </div>
-                        <div
-                           onClick={() => setShowFeeModal(true)}
-                           className="card-premium flex items-center justify-center border-dashed border-dim/20 hover:border-primary/50 cursor-pointer bg-transparent shadow-none hover:shadow-md group"
-                        >
-                           <div className="text-center">
-                              <Plus size={24} className="mx-auto text-dim group-hover:text-primary transition-all mb-2" />
-                              <p className="text-xs font-bold text-dim group-hover:text-primary transition-all uppercase tracking-widest">Post Payment</p>
-                           </div>
+                        <div onClick={() => setShowFeeModal(true)} className="card-premium flex flex-col items-center justify-center border-dashed border-subtle hover:border-primary cursor-pointer group transition-all">
+                           <Plus size={24} className="mx-auto text-dim group-hover:text-primary transition-all mb-2" />
+                           <p className="text-xs font-bold text-dim group-hover:text-primary transition-all uppercase tracking-widest">Post Payment</p>
                         </div>
                      </div>
 
@@ -857,11 +818,9 @@ const TeacherDashboard = () => {
                                  {filteredItems(fees, 'studentName').map((f, i) => (
                                     <tr key={i} className="hover:bg-alt/20 transition-colors">
                                        <td className="px-6 py-4 font-bold text-bright text-sm">{f.studentName}</td>
-                                                                               <td className="px-6 py-4 text-success font-bold text-sm">₹{(Number(f.paidAmount) || 0).toLocaleString()}</td>
-
+                                       <td className="px-6 py-4 text-success font-bold text-sm">₹{(Number(f.paidAmount) || 0).toLocaleString()}</td>
                                        <td className="px-6 py-4"><span className="badge-premium badge-primary">{f.paymentMode}</span></td>
-                                                                               <td className="px-6 py-4 text-danger font-bold text-sm">₹{(Number(f.pendingFees) || 0).toLocaleString()}</td>
-
+                                       <td className="px-6 py-4 text-danger font-bold text-sm">₹{(Number(f.pendingFees) || 0).toLocaleString()}</td>
                                        <td className="px-6 py-4 text-right">
                                           <button onClick={() => deleteFeeEntry(f._id)} className="text-dim hover:text-danger transition-all">
                                              <Trash2 size={16} />
@@ -974,7 +933,7 @@ const TeacherDashboard = () => {
                            >
                               <div className="h-64 bg-slate-900/40 rounded-3xl mb-6 flex items-center justify-center overflow-hidden border border-white/5 relative group-hover:border-violet-500/30 transition-all">
                                  {t.photoUrl ? (
-                                    <img src={`${API_BASE}${t.photoUrl}`} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
+                                    <img src={`${API_BASE}${t.photoUrl}`} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt={t.name} />
                                  ) : (
                                     <Trophy size={80} className="text-white/10" />
                                  )}
@@ -1002,10 +961,9 @@ const TeacherDashboard = () => {
                   </div>
                )}
 
-                {activeTab === 'settings' && (
+               {activeTab === 'settings' && (
                   <div className="space-y-12 animate-fadeUp">
                     <div className="flex flex-col md:flex-row gap-8">
-                       {/* Admin Password Card */}
                        <div className="flex-1 card-premium p-8 relative overflow-hidden">
                           <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full -mr-16 -mt-16"></div>
                           <div className="flex items-center gap-4 mb-8">
@@ -1066,15 +1024,8 @@ const TeacherDashboard = () => {
                              >
                                 Synchronize Security
                              </button>
-                             {message.text && (
-                                <p className={`text-center text-[10px] font-bold uppercase mt-4 py-2 rounded-lg ${message.type === 'success' ? 'bg-success/10 text-success' : 'bg-danger/10 text-danger'}`}>
-                                   {message.text}
-                                </p>
-                             )}
                           </div>
-                       </div>
 
-                       {/* System Stats/Info Card */}
                        <div className="flex-1 space-y-8">
                           <div className="card-premium p-8 border-l-4 border-l-primary/40 bg-grad-surface">
                              <h4 className="text-sm font-black text-bright uppercase tracking-widest mb-6 border-b border-subtle pb-4 italic">Platform Ecosystem</h4>
@@ -1089,22 +1040,11 @@ const TeacherDashboard = () => {
                                 </div>
                              </div>
                           </div>
-                          <div className="card-premium p-8 bg-surface/30 border-subtle">
-                             <h4 className="text-[10px] font-black text-dim uppercase tracking-[0.2em] mb-4">Security Advisory</h4>
-                             <p className="text-xs text-dim leading-loose font-medium opacity-80 italic">Regularly update administrative keys to maintain data integrity. Use a combination of uppercase letters, numbers, and specialized symbols for maximum cryptographic strength.</p>
-                          </div>
                        </div>
                     </div>
 
-                    {/* Student Management Section */}
                     <div className="space-y-6">
-                       <div className="flex items-center justify-between px-2">
-                          <div>
-                             <h3 className="text-2xl font-black text-bright uppercase tracking-tight italic">Scholar Directory Oversight</h3>
-                             <p className="text-[10px] font-bold text-dim uppercase tracking-[0.2em]">Manage Identity & Access Credentials</p>
-                          </div>
-                       </div>
-
+                       <h3 className="text-2xl font-black text-bright uppercase tracking-tight italic">Scholar Directory Oversight</h3>
                        <div className="card-premium p-0 overflow-hidden border-subtle shadow-xl">
                           <div className="overflow-x-auto">
                              <table className="w-full text-left">
@@ -1112,7 +1052,6 @@ const TeacherDashboard = () => {
                                    <tr>
                                       <th className="px-8 py-5 text-[9px] font-black uppercase tracking-[0.2em] text-dim">SCHOLAR IDENTITY</th>
                                       <th className="px-8 py-5 text-[9px] font-black uppercase tracking-[0.2em] text-dim">BATCH / BOARD</th>
-                                      <th className="px-8 py-5 text-[9px] font-black uppercase tracking-[0.2em] text-dim">CONTACT VECTOR</th>
                                       <th className="px-8 py-5 text-[9px] font-black uppercase tracking-[0.2em] text-dim text-right">MASTER ACTIONS</th>
                                    </tr>
                                 </thead>
@@ -1121,7 +1060,7 @@ const TeacherDashboard = () => {
                                       <tr key={i} className="group hover:bg-primary/5 transition-all">
                                          <td className="px-8 py-5">
                                             <div className="flex items-center gap-4">
-                                               <div className="w-10 h-10 rounded-2xl bg-grad-main flex items-center justify-center font-black text-white text-xs shadow-md shadow-primary/20">{st.name.charAt(0)}</div>
+                                               <div className="w-10 h-10 rounded-2xl bg-grad-main flex items-center justify-center font-black text-white text-xs">{st.name.charAt(0)}</div>
                                                <div>
                                                   <p className="font-black text-bright text-sm uppercase tracking-tight">{st.name}</p>
                                                   <p className="text-[9px] text-dim font-bold tracking-widest mt-0.5 opacity-70">UID: {st._id.substring(st._id.length - 8)}</p>
@@ -1129,29 +1068,11 @@ const TeacherDashboard = () => {
                                             </div>
                                          </td>
                                          <td className="px-8 py-5"><span className="badge-premium badge-primary text-[9px] font-black px-4 py-1.5 uppercase">{st.studentClass || 'UNASSIGNED'}</span></td>
-                                         <td className="px-8 py-5 font-bold text-xs text-bright/80">{st.phone}</td>
                                          <td className="px-8 py-5">
                                             <div className="flex justify-end gap-2.5">
-                                               <button 
-                                                  onClick={() => { setSelectedStudent(st); setShowEditStudentModal(true); }}
-                                                  className="w-10 h-10 rounded-xl bg-surface border border-subtle text-dim hover:text-primary hover:border-primary/30 transition-all flex items-center justify-center"
-                                                  title="Edit Identity"
-                                               >
-                                                  <Edit2 size={16} />
-                                               </button>
-                                               <button 
-                                                  onClick={() => { setSelectedStudent(st); setShowResetPassModal(true); }}
-                                                  className="w-10 h-10 rounded-xl bg-surface border border-subtle text-dim hover:text-success hover:border-success/30 transition-all flex items-center justify-center"
-                                                  title="Access Override"
-                                               >
-                                                  <Award size={16} />
-                                               </button>
-                                               <button 
-                                                  onClick={() => { if(window.confirm(`Terminate ${st.name}'s account?`)) deleteStudent(st._id); }}
-                                                  className="w-10 h-10 rounded-xl bg-surface border border-subtle text-dim hover:text-danger hover:border-danger/30 transition-all flex items-center justify-center"
-                                               >
-                                                  <Trash2 size={16} />
-                                               </button>
+                                               <button onClick={() => { setSelectedStudent(st); setShowEditStudentModal(true); }} className="w-10 h-10 rounded-xl bg-surface border border-subtle text-dim hover:text-primary transition-all flex items-center justify-center"><Edit2 size={16} /></button>
+                                               <button onClick={() => { setSelectedStudent(st); setShowResetPassModal(true); }} className="w-10 h-10 rounded-xl bg-surface border border-subtle text-dim hover:text-success transition-all flex items-center justify-center"><Award size={16} /></button>
+                                               <button onClick={() => { if(window.confirm(`Terminate ${st.name}?`)) deleteStudent(st._id); }} className="w-10 h-10 rounded-xl bg-surface border border-subtle text-dim hover:text-danger transition-all flex items-center justify-center"><Trash2 size={16} /></button>
                                             </div>
                                          </td>
                                       </tr>
@@ -1162,7 +1083,8 @@ const TeacherDashboard = () => {
                        </div>
                     </div>
                   </div>
-                )}
+
+               )}
             </div>
          </main>
 
@@ -1423,14 +1345,13 @@ const TeacherDashboard = () => {
                   <form onSubmit={async (e) => {
                      e.preventDefault();
                      const fd = new FormData(e.target);
-                     const updatedData = {
+                     await updateStudent(selectedStudent._id, {
                         name: fd.get('name'),
                         email: fd.get('email'),
                         phone: fd.get('phone'),
                         studentClass: fd.get('studentClass')
-                     };
-                     const ok = await updateStudent(selectedStudent._id, updatedData);
-                     if (ok) setShowEditStudentModal(false);
+                     });
+                     setShowEditStudentModal(false);
                   }} className="space-y-8">
                      <div className="space-y-6">
                         <div>
@@ -1439,7 +1360,7 @@ const TeacherDashboard = () => {
                         </div>
                         <div className="grid grid-cols-2 gap-6">
                            <div>
-                              <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 block">Electronic Mail</label>
+                              <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 block">Email Address</label>
                               <input name="email" type="email" className="w-full bg-slate-50 border border-slate-200 rounded-2xl py-5 px-6 text-black font-black" defaultValue={selectedStudent.email} required />
                            </div>
                            <div>
@@ -1448,7 +1369,7 @@ const TeacherDashboard = () => {
                            </div>
                         </div>
                         <div>
-                           <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 block">Strategic Batch</label>
+                           <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 block">Board / Class</label>
                            <input name="studentClass" className="w-full bg-slate-50 border border-slate-200 rounded-2xl py-5 px-6 text-black font-black" defaultValue={selectedStudent.studentClass} />
                         </div>
                      </div>
@@ -1466,37 +1387,13 @@ const TeacherDashboard = () => {
             <div className="fixed inset-0 z-[10001] flex items-center justify-center p-6 sm:p-8 bg-black/80 animate-fadeIn">
                <div className="w-full max-w-sm modal-high-contrast rounded-[2.5rem] p-8 sm:p-12 animate-fadeUp relative">
                   <div className="flex items-start justify-between gap-8 mb-10">
-                     <div className="text-left flex-1">
-                        <h2 className="text-xl font-black text-black uppercase tracking-tight italic">Access Override</h2>
-                        <p className="text-[10px] text-slate-500 font-black uppercase mt-1">FOR {selectedStudent.name}</p>
-                     </div>
-                     <button 
-                        onClick={() => setShowResetPassModal(false)} 
-                        className="w-11 h-11 rounded-2xl bg-slate-50 border border-slate-200 flex items-center justify-center text-slate-400 hover:bg-slate-100 hover:text-black transition-all shadow-sm shrink-0"
-                     >
-                        <X size={20} />
-                     </button>
+                     <h2 className="text-xl font-black text-black uppercase tracking-tight italic">Access Override</h2>
+                     <button onClick={() => setShowResetPassModal(false)} className="w-11 h-11 rounded-2xl bg-slate-50 border border-slate-200 flex items-center justify-center text-slate-400 hover:text-black shadow-sm"><X size={20} /></button>
                   </div>
                   <div className="space-y-8">
-                     <div>
-                        <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3 block text-center">New Access Key</label>
-                        <div className="flex gap-3">
-                           <input id="resetPassInput" type="text" className="w-full bg-slate-50 border border-slate-200 rounded-2xl py-5 text-center text-black font-black tracking-[0.2em]" placeholder="G-8A9K2M" />
-                           <button 
-                              type="button"
-                              onClick={() => {
-                                 const charset = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
-                                 let retVal = "";
-                                 for (let i = 0; i < 6; ++i) {
-                                    retVal += charset.charAt(Math.floor(Math.random() * charset.length));
-                                 }
-                                 document.getElementById('resetPassInput').value = retVal;
-                              }}
-                              className="w-16 h-16 rounded-2xl bg-black text-white flex items-center justify-center"
-                           >
-                              <Plus size={24} />
-                           </button>
-                        </div>
+                     <div className="text-center">
+                        <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3 block">New Access Key</label>
+                        <input id="resetPassInput" type="text" className="w-full bg-slate-50 border border-slate-200 rounded-2xl py-5 text-center text-black font-black tracking-[0.2em]" placeholder="G-8A9K2M" />
                      </div>
                      <div className="flex gap-3 pt-4">
                         <button onClick={() => setShowResetPassModal(false)} className="flex-1 bg-slate-100 text-slate-600 py-5 rounded-2xl font-black uppercase text-[10px] tracking-widest">Cancel</button>
@@ -1504,11 +1401,8 @@ const TeacherDashboard = () => {
                            onClick={async () => {
                               const pass = document.getElementById('resetPassInput').value;
                               if (!pass) return;
-                              const ok = await resetStudentPassword(selectedStudent._id, pass);
-                              if (ok) {
-                                 alert(`New credentials deployed: ${pass}`);
-                                 setShowResetPassModal(false);
-                              }
+                              await resetStudentPassword(selectedStudent._id, pass);
+                              setShowResetPassModal(false);
                            }}
                            className="flex-1 bg-black text-white py-5 rounded-2xl font-black uppercase text-[10px] tracking-widest shadow-xl"
                         >
@@ -1520,10 +1414,6 @@ const TeacherDashboard = () => {
             </div>
          )}
 
-         <style>{`
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        .flex-center { display: flex; align-items: center; justify-content: center; }
-      `}</style>
          {/* Add Topper Modal */}
          {showGalleryModal && (
             <div className="fixed inset-0 z-[10001] flex items-center justify-center p-6 sm:p-8 bg-black/60 backdrop-blur-md animate-fadeIn">
@@ -1533,50 +1423,31 @@ const TeacherDashboard = () => {
                         <h2 className="text-3xl font-black text-white tracking-tighter uppercase leading-none mb-2 italic">Archive Excellence</h2>
                         <p className="text-[10px] text-violet-400 font-black uppercase tracking-[0.3em]">Scholar Data Input</p>
                      </div>
-                     <button 
-                        onClick={() => setShowGalleryModal(false)} 
-                        className="w-11 h-11 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-white/40 hover:bg-white/10 hover:text-white transition-all shadow-sm shrink-0"
-                     >
-                        <X size={20} />
-                     </button>
+                     <button onClick={() => setShowGalleryModal(false)} className="w-11 h-11 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-white/40 shadow-sm shrink-0"><X size={20} /></button>
                   </div>
                   <form onSubmit={handleAddTopper} className="space-y-8">
                      <div className="space-y-6">
-                        <div>
-                           <label className="text-[10px] font-black text-white/40 uppercase tracking-widest mb-3 block">Scholar Name</label>
-                           <input className="w-full bg-white/5 border border-white/10 rounded-2xl py-5 px-6 text-white font-black focus:bg-white/10 transition-all outline-none" placeholder="e.g. ARYAN SHARMA" value={newTopper.name} onChange={e => setNewTopper({ ...newTopper, name: e.target.value })} required />
-                        </div>
+                        <input className="w-full bg-white/5 border border-white/10 rounded-2xl py-5 px-6 text-white font-black outline-none" placeholder="Scholar Name" value={newTopper.name} onChange={e => setNewTopper({ ...newTopper, name: e.target.value })} required />
                         <div className="grid grid-cols-2 gap-6">
-                           <div>
-                              <label className="text-[10px] font-black text-white/40 uppercase tracking-widest mb-3 block">Exam Category</label>
-                              <input className="w-full bg-white/5 border border-white/10 rounded-2xl py-5 px-6 text-white font-black focus:bg-white/10 transition-all outline-none" placeholder="CBSE XII" value={newTopper.exam} onChange={e => setNewTopper({ ...newTopper, exam: e.target.value })} required />
-                           </div>
-                           <div>
-                              <label className="text-[10px] font-black text-white/40 uppercase tracking-widest mb-3 block">Score (%)</label>
-                              <input className="w-full bg-white/5 border border-white/10 rounded-2xl py-5 px-6 text-white font-black focus:bg-white/10 transition-all outline-none" placeholder="98.5" value={newTopper.marks} onChange={e => setNewTopper({ ...newTopper, marks: e.target.value })} required />
-                           </div>
+                           <input className="w-full bg-white/5 border border-white/10 rounded-2xl py-5 px-6 text-white font-black" placeholder="Exam Category" value={newTopper.exam} onChange={e => setNewTopper({ ...newTopper, exam: e.target.value })} required />
+                           <input className="w-full bg-white/5 border border-white/10 rounded-2xl py-5 px-6 text-white font-black" placeholder="Score (%)" value={newTopper.marks} onChange={e => setNewTopper({ ...newTopper, marks: e.target.value })} required />
                         </div>
-                        <div>
-                           <label className="text-[10px] font-black text-white/40 uppercase tracking-widest mb-3 block">Digital Portrait</label>
-                           <div className="relative group cursor-pointer">
-                              <input type="file" className="absolute inset-0 opacity-0 cursor-pointer z-10" onChange={e => setNewTopper({ ...newTopper, photo: e.target.files[0] })} required />
-                              <div className="w-full bg-white/5 border border-dashed border-white/10 rounded-2xl py-6 px-6 text-center group-hover:border-violet-500/50 transition-all">
-                                 <Plus className="mx-auto text-white/20 mb-2" size={24} />
-                                 <p className="text-[10px] font-black text-white/40 uppercase tracking-widest">{newTopper.photo ? newTopper.photo.name : 'Select JPG/PNG'}</p>
-                              </div>
-                           </div>
-                        </div>
+                        <input type="file" className="w-full bg-white/5 border border-white/10 rounded-2xl py-6 px-6 text-white font-black" onChange={e => setNewTopper({ ...newTopper, photo: e.target.files[0] })} required />
                      </div>
                      <div className="flex gap-4 pt-4">
                         <button type="button" onClick={() => setShowGalleryModal(false)} className="flex-1 bg-white/5 text-white/40 py-5 rounded-2xl font-black uppercase text-[10px] tracking-widest">Abort</button>
-                        <button type="submit" disabled={isLoading} className="flex-1 bg-violet-600 text-white py-5 rounded-2xl font-black uppercase text-[10px] tracking-widest shadow-[0_0_30px_rgba(138,43,226,0.3)] disabled:opacity-50">
-                           {isLoading ? 'Uploading...' : 'Finalize Archive'}
-                        </button>
+                        <button type="submit" disabled={isLoading} className="flex-1 bg-violet-600 text-white py-5 rounded-2xl font-black uppercase text-[10px] tracking-widest shadow-[0_0_30px_rgba(138,43,226,0.3)] disabled:opacity-50">Archive</button>
                      </div>
                   </form>
                </div>
             </div>
          )}
+         
+         <style>{`
+            .custom-scrollbar::-webkit-scrollbar { width: 4px; }
+            .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+            .custom-scrollbar::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 10px; }
+         `}</style>
       </div>
    );
 };

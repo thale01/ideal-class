@@ -24,15 +24,25 @@ const upload = multer({ storage: storage });
 
 // Create Subject
 router.post('/', async (req, res) => {
-  const { name, category, color, icon, description } = req.body;
+  console.log('📥 Incoming Subject Request:', req.body);
+  const { name, category, color, icon, description, courseId } = req.body;
   
   if (mongoose.connection.readyState !== 1) {
-    const mockRes = mockDb.save('subjects', { name, category, color, icon, description, resources: { notes: [], videos: [] } });
+    const mockRes = mockDb.save('subjects', { 
+      name, 
+      category, 
+      color, 
+      icon, 
+      description, 
+      courseId,
+      resources: { notes: [], videos: [] } 
+    });
+    console.log('✅ Mock DB Saved:', mockRes);
     return res.json(mockRes);
   }
 
   try {
-    const subject = new Subject({ name, category, color, icon, description });
+    const subject = new Subject({ name, category, color, icon, description, courseId });
     await subject.save();
     res.json(subject);
   } catch (err) {
