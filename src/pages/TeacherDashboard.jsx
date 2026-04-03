@@ -691,48 +691,55 @@ const TeacherDashboard = () => {
                {activeTab === 'admissions' && (
                   <div className="space-y-6">
                      <h3 className="text-2xl font-bold text-bright mb-8">Admission Flow</h3>
-                     {applications.length === 0 && <div className="card-premium text-center py-16 text-dim italic">No pending requests.</div>}
-                     <div className="grid grid-cols-1 gap-4">
-                        {filteredItems(applications.filter(a => (a.status || 'pending') === 'pending'), 'name').map((app, i) => (
-                           <div key={app._id || i} className="card-premium flex flex-col md:flex-row md:items-center justify-between gap-6 hover:border-primary/30">
-                              <div className="flex items-center gap-5">
-                                 <div className="w-14 h-14 rounded-2xl bg-alt flex items-center justify-center text-dim font-bold text-xl border border-subtle">
-                                    {app.name?.charAt(0) || 'U'}
-                                 </div>
-                                 <div>
-                                    <h4 className="text-lg font-bold text-bright">{app.name}</h4>
-                                    <p className="text-xs text-dim font-medium">{app.email} • {app.phone}</p>
-                                    <div className="flex gap-3 mt-2">
-                                       <span className="badge-premium badge-primary">{app.classApplied}</span>
-                                       {app.batch && <span className="badge-premium badge-success">{app.batch}</span>}
+                     {applications.filter(a => (a.status || 'pending') === 'pending').length === 0 ? (
+                        <div className="card-premium text-center py-20 bg-slate-900/40 border-dashed border-slate-800 rounded-[2.5rem]">
+                           <CheckCircle2 size={48} className="mx-auto text-slate-800 mb-6 opacity-30" />
+                           <h4 className="text-xl font-black text-slate-600 uppercase tracking-widest">Workspace Clear</h4>
+                           <p className="text-slate-500 text-[10px] mt-2 font-black uppercase tracking-[0.2em] opacity-40">All Admission Sequences Processed</p>
+                           <button onClick={() => setActiveTab('students')} className="mt-8 btn-premium py-2 px-6 text-xs border-primary/20 text-primary hover:bg-primary/5">View Student Registry</button>
+                        </div>
+                     ) : (
+                        <div className="grid grid-cols-1 gap-4">
+                           {filteredItems(applications.filter(a => (a.status || 'pending') === 'pending'), 'name').map((app, i) => (
+                              <div key={app._id || i} className="card-premium flex flex-col md:flex-row md:items-center justify-between gap-6 hover:border-primary/30">
+                                 <div className="flex items-center gap-5">
+                                    <div className="w-14 h-14 rounded-2xl bg-alt flex items-center justify-center text-dim font-bold text-xl border border-subtle">
+                                       {app.name?.charAt(0) || 'U'}
+                                    </div>
+                                    <div>
+                                       <h4 className="text-lg font-bold text-bright">{app.name}</h4>
+                                       <p className="text-xs text-dim font-medium">{app.email} • {app.phone}</p>
+                                       <div className="flex gap-3 mt-2">
+                                          <span className="badge-premium badge-primary">{app.classApplied}</span>
+                                          {app.batch && <span className="badge-premium badge-success">{app.batch}</span>}
+                                       </div>
                                     </div>
                                  </div>
+                                 <div className="flex items-center gap-3 w-full md:w-auto">
+                                    <button 
+                                       onClick={async () => {
+                                          setMessage({ text: 'Processing Approval & Sending Notification...', type: 'success' });
+                                          const ok = await updateAppStatus(app._id, 'approved');
+                                          if (ok) {
+                                             fetchStudents();
+                                             setMessage({ text: 'Application Approved: Email Dispatched to Student', type: 'success' });
+                                          } else {
+                                             setMessage({ text: 'Approval Link Failure - Check Server Connection', type: 'error' });
+                                          }
+                                          setTimeout(() => setMessage({ text: '', type: '' }), 4000);
+                                       }} 
+                                       className="btn-premium btn-premium-primary flex-1 md:flex-none py-3 md:py-2.5 px-6 text-sm md:text-xs"
+                                    >
+                                       Approve
+                                    </button>
+                                    <button onClick={() => removeApplication(app._id)} className="w-12 h-12 md:w-10 md:h-10 rounded-xl bg-alt border border-subtle flex-center text-dim hover:text-danger hover:border-danger/30 transition-all shrink-0">
+                                       <Trash2 size={18} />
+                                    </button>
+                                 </div>
                               </div>
-                              <div className="flex items-center gap-3 w-full md:w-auto">
-                                 <button 
-                                    onClick={async () => {
-                                       setMessage({ text: 'Processing Approval & Sending Notification...', type: 'success' });
-                                       const ok = await updateAppStatus(app._id, 'approved');
-                                       if (ok) {
-                                          fetchStudents();
-                                          setMessage({ text: 'Application Approved: Email Dispatched to Student', type: 'success' });
-                                       } else {
-                                          setMessage({ text: 'Approval Link Failure - Check Server Connection', type: 'error' });
-                                       }
-                                       setTimeout(() => setMessage({ text: '', type: '' }), 4000);
-                                    }} 
-                                    className="btn-premium btn-premium-primary flex-1 md:flex-none py-3 md:py-2.5 px-6 text-sm md:text-xs"
-                                 >
-                                    Approve
-                                 </button>
-                                 <button onClick={() => removeApplication(app._id)} className="w-12 h-12 md:w-10 md:h-10 rounded-xl bg-alt border border-subtle flex-center text-dim hover:text-danger hover:border-danger/30 transition-all shrink-0">
-                                    <Trash2 size={18} />
-                                 </button>
-                              </div>
-                           </div>
-                        ))}
-                     </div>
-                  </div>
+                           ))}
+                        </div>
+                     )}
                )}
 
                {activeTab === 'doubts' && (

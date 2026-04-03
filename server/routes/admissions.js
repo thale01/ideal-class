@@ -36,22 +36,24 @@ router.get('/', async (req, res) => {
   }
 });
 
-// Approve application - Creates student account automatically
+// Approve application - Creates student account & sends Gmail notification
 const User = require('../models/User');
+const nodemailer = require('nodemailer');
+
+// Setup Nodemailer (Admin logic: Set GMAIL_USER and GMAIL_PASS in your .env/Railway dashboard)
+const transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: process.env.GMAIL_USER || 'your-email@gmail.com',
+    pass: process.env.GMAIL_PASS || 'your-app-password'
+  }
+});
+
 router.patch('/:id/approve', async (req, res) => {
   if (mongoose.connection.readyState !== 1) {
     const app = mockDb.update('admissions', req.params.id, item => {
        item.status = 'approved';
        return item;
-    });
-    // For mock mode, we'll try to find or create a mock student too
-    mockDb.save('students', { 
-       name: app.name, 
-       email: app.email, 
-       phone: app.phone, 
-       studentClass: app.classApplied,
-       role: 'student',
-       active: true 
     });
     return res.json(app);
   }
@@ -71,12 +73,39 @@ router.patch('/:id/approve', async (req, res) => {
         email: admission.email,
         phone: admission.phone,
         studentClass: admission.classApplied,
-        batch: admission.batch || 'NEW BATCH',
+        batch: admission.batch || 'DEFAULT BATCH',
         role: 'student',
-        password: 'student123' // Default password for new admissions
+        password: 'student123'
       });
       await student.save();
     }
+
+    // 3. Send Email Notification
+    const mailOptions = {
+      from: process.env.GMAIL_USER,
+      to: admission.email,
+      subject: 'Admission Approved - Ideal Classes',
+      html: `
+        <div style="font-family: Arial, sans-serif; padding: 20px; border: 1px solid #ddd; border-radius: 10px;">
+          <h2 style="color: #4a90e2;">Congratulations ${admission.name}!</h2>
+          <p>We are pleased to inform you that your admission for <b>${admission.classApplied}</b> at <b>Ideal Classes</b> has been approved!</p>
+          <p><b>Your student account is now active:</b></p>
+          <ul>
+            <li><b>Login ID:</b> ${admission.email}</li>
+            <li><b>Temporary Password:</b> student123</li>
+          </ul>
+          <p>Please login to the portal to access your study material and lectures.</p>
+          <br/>
+          <p>Best Regards,</p>
+          <p><b>Ideal Classes Team</b></p>
+        </div>
+      `
+    };
+
+    transporter.sendMail(mailOptions, (err, info) => {
+      if (err) console.error("❌ Email failed to send:", err.message);
+      else console.log("✅ Admission email sent to:", admission.email);
+    });
     
     res.json(admission);
   } catch (err) {
