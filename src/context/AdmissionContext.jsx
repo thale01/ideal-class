@@ -51,9 +51,14 @@ export const AdmissionProvider = ({ children }) => {
         },
         body: JSON.stringify({ status })
       });
-      if (res.ok) fetchApplications();
+      if (res.ok) {
+        fetchApplications();
+        return true;
+      }
+      return false;
     } catch (err) {
       console.error("Status update failed", err);
+      return false;
     }
   };
 

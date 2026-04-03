@@ -712,8 +712,12 @@ const TeacherDashboard = () => {
                                  <button 
                                     onClick={async () => {
                                        setMessage({ text: 'Processing Approval & Sending Notification...', type: 'success' });
-                                       await updateAppStatus(app._id, 'approved');
-                                       setMessage({ text: 'Application Approved: Email Dispatched to Student', type: 'success' });
+                                       const ok = await updateAppStatus(app._id, 'approved');
+                                       if (ok) {
+                                          setMessage({ text: 'Application Approved: Email Dispatched to Student', type: 'success' });
+                                       } else {
+                                          setMessage({ text: 'Approval Link Failure - Check Server Connection', type: 'error' });
+                                       }
                                        setTimeout(() => setMessage({ text: '', type: '' }), 4000);
                                     }} 
                                     className="btn-premium btn-premium-primary flex-1 md:flex-none py-3 md:py-2.5 px-6 text-sm md:text-xs"
