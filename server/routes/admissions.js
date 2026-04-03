@@ -36,20 +36,51 @@ router.get('/', async (req, res) => {
   }
 });
 
-// Approve application
+// Approve application - Creates student account automatically
+const User = require('../models/User');
 router.patch('/:id/approve', async (req, res) => {
   if (mongoose.connection.readyState !== 1) {
     const app = mockDb.update('admissions', req.params.id, item => {
        item.status = 'approved';
        return item;
     });
+    // For mock mode, we'll try to find or create a mock student too
+    mockDb.save('students', { 
+       name: app.name, 
+       email: app.email, 
+       phone: app.phone, 
+       studentClass: app.classApplied,
+       role: 'student',
+       active: true 
+    });
     return res.json(app);
   }
   try {
-    const app = await Admission.findByIdAndUpdate(req.params.id, { status: 'approved' }, { new: true });
-    res.json(app);
+    const admission = await Admission.findById(req.params.id);
+    if (!admission) return res.status(404).json({ message: 'Admission record not found' });
+
+    // 1. Update Admission Status
+    admission.status = 'approved';
+    await admission.save();
+
+    // 2. Create Student Account if it doesn't already exist
+    let student = await User.findOne({ email: admission.email, role: 'student' });
+    if (!student) {
+      student = new User({
+        name: admission.name,
+        email: admission.email,
+        phone: admission.phone,
+        studentClass: admission.classApplied,
+        batch: admission.batch || 'NEW BATCH',
+        role: 'student',
+        password: 'student123' // Default password for new admissions
+      });
+      await student.save();
+    }
+    
+    res.json(admission);
   } catch (err) {
-    res.status(404).json({ message: 'Application not found or error approving.' });
+    res.status(400).json({ message: err.message });
   }
 });
 

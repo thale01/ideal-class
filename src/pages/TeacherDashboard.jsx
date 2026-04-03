@@ -23,7 +23,7 @@ import { API_URL as BASE_URL } from '../config/api';
 const API_BASE = BASE_URL.replace('/api', '');
 
 const TeacherDashboard = () => {
-   const { user, logout } = useAuth();
+   const { user, logout, fetchStudents } = useAuth();
    const { 
       subjects, courses, 
       deleteSubject, addSubject, updateSubject,
@@ -693,7 +693,7 @@ const TeacherDashboard = () => {
                      <h3 className="text-2xl font-bold text-bright mb-8">Admission Flow</h3>
                      {applications.length === 0 && <div className="card-premium text-center py-16 text-dim italic">No pending requests.</div>}
                      <div className="grid grid-cols-1 gap-4">
-                        {filteredItems(applications, 'name').map((app, i) => (
+                        {filteredItems(applications.filter(a => (a.status || 'pending') === 'pending'), 'name').map((app, i) => (
                            <div key={app._id || i} className="card-premium flex flex-col md:flex-row md:items-center justify-between gap-6 hover:border-primary/30">
                               <div className="flex items-center gap-5">
                                  <div className="w-14 h-14 rounded-2xl bg-alt flex items-center justify-center text-dim font-bold text-xl border border-subtle">
@@ -714,6 +714,7 @@ const TeacherDashboard = () => {
                                        setMessage({ text: 'Processing Approval & Sending Notification...', type: 'success' });
                                        const ok = await updateAppStatus(app._id, 'approved');
                                        if (ok) {
+                                          fetchStudents();
                                           setMessage({ text: 'Application Approved: Email Dispatched to Student', type: 'success' });
                                        } else {
                                           setMessage({ text: 'Approval Link Failure - Check Server Connection', type: 'error' });
