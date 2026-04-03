@@ -685,10 +685,10 @@ const TeacherDashboard = () => {
                            </table>
                         </div>
                      </div>
-                  </div>
-               )}
+                   </div>
+                )}
 
-               {activeTab === 'admissions' && (
+                {activeTab === 'admissions' && (
                   <div className="space-y-6">
                      <h3 className="text-2xl font-bold text-bright mb-8">Admission Flow</h3>
                      {applications.filter(a => (a.status || 'pending') === 'pending').length === 0 ? (
@@ -740,6 +740,7 @@ const TeacherDashboard = () => {
                            ))}
                         </div>
                      )}
+                  </div>
                )}
 
                {activeTab === 'doubts' && (
