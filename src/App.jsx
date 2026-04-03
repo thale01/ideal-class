@@ -1,3 +1,5 @@
+// Ideal Classes Portal - Deployment Sync v1.0.4 - Built at 2026-04-03
+import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { CourseProvider } from './context/CourseContext';
