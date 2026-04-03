@@ -51,15 +51,16 @@ const Navbar = () => {
     <header className={`landing-nav ${isScrolled ? 'scrolled' : ''}`}>
       <div className="container nav-content">
         {/* Logo Section - Triggers Professional Contact Modal */}
-        <div onClick={() => setShowContactModal(true)} className="logo-group select-none cursor-pointer group transition-transform hover:scale-105 active:scale-95">
-          <div className="logo-icon flex items-center justify-center" style={{ width: 'auto', height: 'auto', background: 'none', boxShadow: 'none' }}>
+        <div onClick={() => setShowContactModal(true)} className="logo-group select-none cursor-pointer group transition-transform hover:scale-105 active:scale-95 flex-shrink-0">
+          <div className="logo-icon flex items-center justify-center p-0" style={{ width: 'auto', height: 'auto', background: 'none', boxShadow: 'none' }}>
             <img 
               src="/logo.png" 
               alt="Ideal Logo" 
               className="object-contain mix-blend-screen" 
               style={{ 
-                width: isScrolled ? '100px' : '120px', 
+                width: isScrolled ? '80px' : '90px', 
                 height: 'auto',
+                maxWidth: '120px',
                 transition: 'all 0.4s ease',
                 filter: 'drop-shadow(0 4px 15px rgba(0,0,0,0.2))' 
               }} 
@@ -88,10 +89,10 @@ const Navbar = () => {
           {/* Theme Toggle */}
           <button
             onClick={toggleTheme}
-            className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl bg-slate-100 dark:bg-white/5 flex items-center justify-center text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-white/10 transition-all duration-300 shadow-sm border border-slate-200/50 dark:border-white/10"
+            className="w-9 h-9 sm:w-12 sm:h-12 rounded-lg sm:rounded-2xl bg-slate-100 dark:bg-white/5 flex items-center justify-center text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-white/10 transition-all duration-300 shadow-sm border border-slate-200/50 dark:border-white/10 flex-shrink-0"
             title="Toggle Theme"
           >
-            {theme === 'light' ? <Moon size={18} /> : <Sun size={18} />}
+            {theme === 'light' ? <Moon size={16} /> : <Sun size={16} />}
           </button>
 
           {/* Auth Section (Desktop/Tablet) */}
@@ -133,10 +134,10 @@ const Navbar = () => {
 
           {/* Mobile Menu Toggle */}
           <button 
-            className="lg:hidden w-10 h-10 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl bg-primary text-white flex items-center justify-center shadow-lg transition-transform active:scale-90"
+            className="lg:hidden w-9 h-9 sm:w-12 sm:h-12 rounded-lg sm:rounded-2xl bg-primary text-white flex items-center justify-center shadow-lg transition-transform active:scale-90 flex-shrink-0"
             onClick={() => setIsMobileMenuOpen(true)}
           >
-            <Menu size={20} />
+            <Menu size={18} />
           </button>
         </div>
 

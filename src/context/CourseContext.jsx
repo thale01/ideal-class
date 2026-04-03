@@ -97,19 +97,33 @@ export const CourseProvider = ({ children }) => {
   };
 
   const addSubject = async (subjectData) => {
+    const tempId = 'temp-' + Math.random().toString(36).substr(2, 9);
+    const optimisticSubject = { ...subjectData, _id: tempId, resources: { notes: [], videos: [] }, createdAt: new Date().toISOString() };
+    
+    // Optimistic Update
+    setSubjects(prev => [...prev, optimisticSubject]);
+
     try {
       const res = await fetch(API_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(subjectData)
       });
-      if (res.ok) fetchSubjects();
+      if (res.ok) {
+        fetchSubjects();
+      } else {
+        // Rollback
+        setSubjects(prev => prev.filter(s => s._id !== tempId));
+      }
     } catch (err) {
       console.error("Add subject failed", err);
+      setSubjects(prev => prev.filter(s => s._id !== tempId));
     }
   };
 
   const addResource = async (subjectId, resourceData) => {
+    // Note: Optimistic update for FormData is complex due to file handling, 
+    // so we'll stick to robust fetch here but ensure UI shows loading.
     try {
       const formData = new FormData();
       Object.keys(resourceData).forEach(key => {
@@ -124,18 +138,27 @@ export const CourseProvider = ({ children }) => {
         method: 'POST',
         body: formData
       });
-      if (res.ok) fetchSubjects();
+      if (res.ok) {
+        await fetchSubjects();
+        return true;
+      }
+      return false;
     } catch (err) {
       console.error("Add resource failed", err);
+      return false;
     }
   };
 
   const deleteSubject = async (id) => {
+    const originalSubjects = [...subjects];
+    setSubjects(prev => prev.filter(s => s._id !== id));
+
     try {
       const res = await fetch(`${API_URL}/${id}`, { method: 'DELETE' });
-      if (res.ok) fetchSubjects();
+      if (!res.ok) setSubjects(originalSubjects);
     } catch (err) {
       console.error("Delete subject failed", err);
+      setSubjects(originalSubjects);
     }
   };
 

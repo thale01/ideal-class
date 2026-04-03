@@ -1,5 +1,4 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { CourseProvider } from './context/CourseContext';
 import { ThemeProvider } from './context/ThemeContext';
@@ -13,7 +12,8 @@ import { DoubtProvider } from './context/DoubtContext';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import Admission from './pages/AdmissionForm';
-import TeacherDashboard from './pages/TeacherDashboard';
+import TeacherDashboard from './pages/admin/AdminDashboard';
+import SubjectPage from './pages/admin/SubjectPage';
 import ManageCourse from './pages/ManageCourse';
 import StudentDashboard from './pages/StudentDashboard';
 import CourseViewer from './pages/CourseViewer';
@@ -35,10 +35,15 @@ const ProtectedRoute = ({ children, role }) => {
 
 const MainLayout = ({ children }) => {
   const { user } = useAuth();
+  const location = useLocation();
+  const isDashboard = location.pathname.startsWith('/admin') || 
+                      location.pathname.startsWith('/student') || 
+                      location.pathname.startsWith('/manage-course');
+
   return (
     <div className="min-h-screen bg-main transition-colors duration-500">
-      {user && <Navbar />}
-      <main className="container py-8">{children}</main>
+      {user && !isDashboard && <Navbar />}
+      <main className={isDashboard ? "w-full" : "container py-8"}>{children}</main>
     </div>
   );
 };
@@ -70,6 +75,16 @@ function App() {
                             <ProtectedRoute role="admin">
                               <MainLayout>
                                 <TeacherDashboard />
+                              </MainLayout>
+                            </ProtectedRoute>
+                          }
+                        />
+                        <Route
+                          path="/admin/subject/:id"
+                          element={
+                            <ProtectedRoute role="admin">
+                              <MainLayout>
+                                <SubjectPage />
                               </MainLayout>
                             </ProtectedRoute>
                           }
