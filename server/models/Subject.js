@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const subjectSchema = new mongoose.Schema({
   name: { type: String, required: true },
-  courseId: { type: mongoose.Schema.Types.ObjectId, ref: 'Course', required: false }, // Made optional for backward compatibility
+  courseId: { type: String, required: false }, // Using String for flexibility with mock and real IDs
   description: { type: String },
   category: { type: String, required: true }, // e.g. "SSC", "HSC"
   color: { type: String, default: '#4CAF50' }, // For colored cards

@@ -24,7 +24,11 @@ const upload = multer({ storage: storage });
 
 // Create Subject
 router.post('/', async (req, res) => {
-  console.log('📥 Incoming Subject Request:', req.body);
+  console.log('-------------------------------------------');
+  console.log('📥 SUBJECT CREATION REQUEST RECEIVED');
+  console.log('Timestamp:', new Date().toISOString());
+  console.log('Payload:', JSON.stringify(req.body, null, 2));
+  
   const { name, category, color, icon, description, courseId } = req.body;
   
   if (mongoose.connection.readyState !== 1) {
@@ -44,8 +48,10 @@ router.post('/', async (req, res) => {
   try {
     const subject = new Subject({ name, category, color, icon, description, courseId });
     await subject.save();
+    console.log('✅ Subject saved to MongoDB:', subject._id);
     res.json(subject);
   } catch (err) {
+    console.error('❌ MongoDB Save Error:', err.message);
     res.status(400).json({ message: err.message });
   }
 });
@@ -69,14 +75,21 @@ router.put('/:id', async (req, res) => {
 
 // Get all Subjects
 router.get('/', async (req, res) => {
+  const dbStatus = mongoose.connection.readyState === 1 ? 'MONGODB' : 'MOCK';
+  console.log(`🔍 FETCHING SUBJECTS DATA (Source: ${dbStatus})`);
+
   if (mongoose.connection.readyState !== 1) {
-    return res.json(mockDb.get('subjects'));
+    const mockData = mockDb.get('subjects');
+    console.log(`✅ Returned ${mockData.length} records from MOCK DB`);
+    return res.json(mockData);
   }
 
   try {
     const subjects = await Subject.find();
+    console.log(`✅ Successfully retrieved ${subjects.length} subjects from MongoDB`);
     res.json(subjects);
   } catch (err) {
+    console.error('❌ MongoDB Fetch Error:', err.message);
     res.status(500).json({ message: err.message });
   }
 });

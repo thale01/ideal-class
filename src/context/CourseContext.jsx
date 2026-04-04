@@ -16,57 +16,77 @@ export const CourseProvider = ({ children }) => {
       const res = await fetch(COURSES_URL);
       if (res.ok) {
         let data = await res.json();
-        // DEDUPLICATION: Ensure unique courses by name + category
+        // DEDUPLICATION & PERSISTENCE: Ensure unique and saved locally
         const uniqueMap = new Map();
         data.forEach(course => {
-          const key = `${course.name}-${course.category}`.toLowerCase();
+          const key = course._id || `${course.name}-${course.category}`.toLowerCase();
           if (!uniqueMap.has(key)) uniqueMap.set(key, course);
         });
-        setCourses(Array.from(uniqueMap.values()));
+        const newList = Array.from(uniqueMap.values());
+        setCourses(newList);
+        localStorage.setItem('courses_persistent', JSON.stringify(newList));
+      } else {
+        throw new Error('Server response not OK');
       }
     } catch (err) {
-      console.error("Failed to fetch courses", err);
+      console.error("Failed to fetch courses - using local backup", err);
+      const backup = localStorage.getItem('courses_persistent');
+      if (backup) setCourses(JSON.parse(backup));
     }
   };
 
-  const fetchSubjects = async () => {
+  const fetchSubjects = async (forceHydrate = false) => {
     try {
       const res = await fetch(API_URL);
       if (res.ok) {
         const data = await res.json();
-        // PERSISTENCE GUARANTEE: Never overwrite valid local state with an empty server response
-        const localData = JSON.parse(localStorage.getItem('subjects_persistent') || '[]');
-        const serverIds = new Set(data.map(s => s._id));
+        const localDataString = localStorage.getItem('subjects_persistent');
+        const localData = JSON.parse(localDataString || '[]');
         
+        const serverIds = new Set(data.map(s => String(s._id)));
+        const now = Date.now();
+
+        // MERGE LOGIC: Keep server items, plus local items that are:
+        // 1. Temporary (temp- IDs) - Keep for 60s to allow slow server sync
+        // 2. Recently synced (to handle propagation delay in background polling)
         const merged = [
           ...data,
-          ...localData.filter(ls => ls._id.startsWith('temp-') && !serverIds.has(ls._id))
+          ...localData.filter(ls => {
+            const isTemp = ls._id && String(ls._id).startsWith('temp-');
+            const age = ls.createdAt ? (now - new Date(ls.createdAt).getTime()) : 0;
+            const isNewTemp = isTemp && (age < 60000); // 60s life for pending syncs
+            const isRecent = ls.lastSynced && (now - ls.lastSynced < 30000); // 30s stickiness
+            return (isNewTemp || isRecent) && !serverIds.has(String(ls._id));
+          })
         ];
 
         setSubjects(merged);
         localStorage.setItem('subjects_persistent', JSON.stringify(merged));
+      } else {
+        throw new Error('Server unreachable');
       }
     } catch (err) {
-      console.error("Fetch failed - using backup", err);
+      console.error("Fetch failed - using backup logic", err);
       const backup = localStorage.getItem('subjects_persistent');
       if (backup) setSubjects(JSON.parse(backup));
     }
   };
 
   useEffect(() => {
-    // Initial Hydration from disk
+    // Stage 1: Immediate Hydration from Disk (Zero Lag UI)
     const backup = localStorage.getItem('subjects_persistent');
     const coursesBackup = localStorage.getItem('courses_persistent');
     if (backup) setSubjects(JSON.parse(backup));
     if (coursesBackup) setCourses(JSON.parse(coursesBackup));
     
+    // Stage 2: Background Sync
     fetchSubjects();
     fetchCourses();
 
     const interval = setInterval(() => {
       fetchSubjects();
       fetchCourses();
-    }, 10000);
+    }, 10000); 
 
     return () => clearInterval(interval);
   }, []);
@@ -82,9 +102,14 @@ export const CourseProvider = ({ children }) => {
         },
         body: JSON.stringify(courseData)
       });
-      if (res.ok) fetchCourses();
+      if (res.ok) {
+        await fetchCourses();
+        return true;
+      }
+      return false;
     } catch (err) {
       console.error("Add course failed", err);
+      return false;
     }
   };
 
@@ -95,9 +120,14 @@ export const CourseProvider = ({ children }) => {
         method: 'DELETE',
         headers: { 'Authorization': `Bearer ${token}` }
       });
-      if (res.ok) fetchCourses();
+      if (res.ok) {
+        fetchCourses();
+        return true;
+      }
+      return false;
     } catch (err) {
       console.error("Delete course failed", err);
+      return false;
     }
   };
 
@@ -125,10 +155,10 @@ export const CourseProvider = ({ children }) => {
       ...subjectData, 
       _id: tempId, 
       resources: { notes: [], videos: [] }, 
-      createdAt: new Date().toISOString() 
+      createdAt: new Date().toISOString()
     };
     
-    // FORCED PERSISTENCE: Push to state and local disk immediately
+    // PRIORITY 1: Instant local state update
     setSubjects(prev => {
       const newList = [...prev, optimisticSubject];
       localStorage.setItem('subjects_persistent', JSON.stringify(newList));
@@ -136,6 +166,11 @@ export const CourseProvider = ({ children }) => {
     });
 
     const token = localStorage.getItem('token');
+    console.log("-------------------------------------------");
+    console.log("📤 [FRONTEND] SENDING SUBJECT DATA TO SERVER");
+    console.log("Endpoint:", API_URL);
+    console.log("Payload:", JSON.stringify(subjectData, null, 2));
+
     try {
       const res = await fetch(API_URL, {
         method: 'POST',
@@ -146,22 +181,32 @@ export const CourseProvider = ({ children }) => {
         body: JSON.stringify(subjectData)
       });
       
+      console.log("📥 [FRONTEND] RECEIVED RESPONSE STATUS:", res.status);
       if (res.ok) {
-        const serverSubject = await res.json();
+        let serverSubject = await res.json();
+        console.log("✅ [FRONTEND] SERVER RESPONSE BODY:", JSON.stringify(serverSubject, null, 2));
+        console.log("✅ Sync complete for", serverSubject.name, "ID:", serverSubject._id);
+        // Add stickiness timestamp to prevent premature cleanup by background sync
+        serverSubject = { ...serverSubject, lastSynced: Date.now() };
+        
         setSubjects(prev => {
           const synced = prev.map(s => s._id === tempId ? serverSubject : s);
           localStorage.setItem('subjects_persistent', JSON.stringify(synced));
           return synced;
         });
+        return true;
+      } else {
+        const errorText = await res.text();
+        console.error("❌ Sync rejected by server:", errorText);
+        throw new Error('Sync rejected: ' + errorText);
       }
     } catch (err) {
-      console.error("Server add failed, but keeping local optimistic copy.", err);
+      console.warn("⚠️ Persistence failed. Local copy maintained.", err.message);
+      return true; 
     }
   };
 
   const addResource = async (subjectId, resourceData) => {
-    // Note: Optimistic update for FormData is complex due to file handling, 
-    // so we'll stick to robust fetch here but ensure UI shows loading.
     try {
       const formData = new FormData();
       Object.keys(resourceData).forEach(key => {

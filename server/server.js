@@ -55,16 +55,28 @@ const startServer = (mode) => {
 };
 
 // Database Connection
-mongoose.connect(process.env.MONGODB_URI, { serverSelectionTimeoutMS: 2000 })
+mongoose.connect(process.env.MONGODB_URI, { 
+  serverSelectionTimeoutMS: 5000, 
+  connectTimeoutMS: 10000,
+  family: 4 // Force IPv4 to resolve SRV issues
+})
   .then(async () => {
-    console.log('✅ Connected to MongoDB: Ideal Classes Cluster');
+    console.log('✅ Status: Connected to MongoDB successfully.');
+    console.log('--- DB CLUSTER: cluster0.hvbousk.mongodb.net ---');
     await seedAdmin();
-    startServer('ready');
+    if (process.env.NODE_ENV !== 'production' || !process.env.VERCEL) {
+        startServer('ready');
+    }
   })
   .catch(err => {
-    console.error('❌ MongoDB Connection Error:', err.message);
-    startServer('running in failover/mock mode');
+    console.error('❌ Status: Connection Failed to MongoDB.');
+    console.error('Error Trace:', err.message);
+    if (process.env.NODE_ENV !== 'production' || !process.env.VERCEL) {
+        startServer('running (in failover/mock mode)');
+    }
   });
 
 // Simple Static Uploads
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
+module.exports = app;

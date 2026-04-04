@@ -9,7 +9,8 @@ import {
   LogOut,
   Trophy,
   CreditCard,
-  MessageSquare
+  MessageSquare,
+  X
 } from 'lucide-react';
 
 const Sidebar = ({ onClose }) => {
