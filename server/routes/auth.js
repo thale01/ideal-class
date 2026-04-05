@@ -95,6 +95,26 @@ router.post('/admin/change-password', authAdmin, async (req, res) => {
   }
 });
 
+// Admin reset any Student Password
+router.put('/admin/reset-student-password', authAdmin, async (req, res) => {
+  const { studentId, newPassword } = req.body;
+  try {
+    const user = await User.findById(studentId);
+    if (!user || user.role !== 'student') {
+        return res.status(404).json({ message: 'Student not found' });
+    }
+    
+    // Hash new password
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    user.password = hashedPassword;
+    await user.save();
+    
+    res.json({ message: 'Password updated successfully' });
+  } catch (err) {
+    res.status(500).json({ message: 'Server error resetting student password' });
+  }
+});
+
 // Student Login
 router.post('/student/login', async (req, res) => {
   const { name, email, phone, password } = req.body;

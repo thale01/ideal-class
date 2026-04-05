@@ -45,6 +45,27 @@ app.use('/api/doubts', doubtRoutes);
 app.use('/api/courses', courseRoutes);
 app.use('/api/folders', courseRoutes); // Alias for consistency with user request
 
+// Secure Admin-Only Password Reset for Students
+const { authAdmin } = require('./middleware/auth');
+const User = require('./models/User');
+const bcrypt = require('bcryptjs');
+
+app.put('/api/admin/change-student-password', authAdmin, async (req, res) => {
+  const { studentId, newPassword } = req.body;
+  try {
+     const user = await User.findById(studentId);
+     if (!user || user.role !== 'student') {
+        return res.status(404).json({ message: 'Scholar Record Not Found' });
+     }
+     const hashedPassword = await bcrypt.hash(newPassword, 10);
+     user.password = hashedPassword;
+     await user.save();
+     res.json({ message: 'Security Token Reset Successful' });
+  } catch (err) {
+     res.status(500).json({ message: 'Internal Security Failure' });
+  }
+});
+
 const startServer = (mode) => {
   const server = app.listen(PORT, () => console.log(`🚀 Server ${mode} on http://localhost:${PORT}`))
     .on('error', (e) => {

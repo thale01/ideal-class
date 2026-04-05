@@ -1136,7 +1136,7 @@ const TeacherDashboard = () => {
                                              <td className="px-8 py-5">
                                                 <div className="flex justify-end gap-2.5">
                                                    <button onClick={() => { setSelectedStudent(st); setShowEditStudentModal(true); }} className="w-10 h-10 rounded-xl bg-surface border border-subtle text-dim hover:text-primary transition-all flex items-center justify-center"><Edit2 size={16} /></button>
-                                                   <button onClick={() => { setSelectedStudent(st); setShowResetPassModal(true); }} className="w-10 h-10 rounded-xl bg-surface border border-subtle text-dim hover:text-success transition-all flex items-center justify-center"><Award size={16} /></button>
+                                                   <button onClick={() => { setSelectedStudent(st); setShowResetPassModal(true); }} className="w-10 h-10 rounded-xl bg-surface border border-subtle text-dim hover:text-success transition-all flex items-center justify-center"><ShieldCheck size={16} /></button>
                                                    <button onClick={() => { if (window.confirm(`Terminate ${st.name}?`)) deleteStudent(st._id); }} className="w-10 h-10 rounded-xl bg-surface border border-subtle text-dim hover:text-danger transition-all flex items-center justify-center"><Trash2 size={16} /></button>
                                                 </div>
                                              </td>
@@ -1528,8 +1528,14 @@ const TeacherDashboard = () => {
                            onClick={async () => {
                               const pass = document.getElementById('resetPassInput').value;
                               if (!pass) return;
-                              await resetStudentPassword(selectedStudent._id, pass);
+                              const success = await resetStudentPassword(selectedStudent._id, pass);
+                              if (success) {
+                                 setMessage({ text: 'Access token successfully overwritten', type: 'success' });
+                              } else {
+                                 setMessage({ text: 'Security override failed: System mismatch', type: 'error' });
+                              }
                               setShowResetPassModal(false);
+                              setTimeout(() => setMessage({ text: '', type: '' }), 4000);
                            }}
                            className="flex-1 btn-premium py-5 text-[10px] font-black bg-danger text-white hover:bg-red-600 transition-all shadow-[0_12px_24px_rgba(239,68,68,0.25)]"
                         >

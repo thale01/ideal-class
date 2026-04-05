@@ -103,17 +103,18 @@ export const AuthProvider = ({ children }) => {
   const resetStudentPassword = async (id, newPassword) => {
     const token = localStorage.getItem('token');
     try {
-      const res = await fetch(`${API_URL}/students/${id}/reset-password`, {
-        method: 'PATCH',
+      // Points to the new secure route
+      const res = await fetch(`${API_URL.replace('/api', '')}/api/admin/change-student-password`, {
+        method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`
         },
-        body: JSON.stringify({ newPassword })
+        body: JSON.stringify({ studentId: id, newPassword })
       });
       return res.ok;
     } catch (err) {
-      console.error("Reset password failed", err);
+      console.error("Master Reset failed", err);
     }
     return false;
   };
