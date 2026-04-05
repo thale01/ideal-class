@@ -10,18 +10,21 @@ const JWT_SECRET = process.env.JWT_SECRET || 'fallback_secret';
 // Ensure Admin User Exists in DB (Seed)
 const seedAdmin = async () => {
   try {
-    // Seed 'siddhithale01@gmail.com' as the root administrator for guaranteed management access
-    const mainAdminExists = await User.findOne({ email: 'siddhithale01@gmail.com', role: 'admin' });
+    // Seed root administrator dynamically from environment configuration
+    const adminEmail = process.env.ADMIN_EMAIL || 'admin@idealclasses.com';
+    const adminName = process.env.ADMIN_NAME || 'Director';
+    
+    const mainAdminExists = await User.findOne({ email: adminEmail, role: 'admin' });
     if (!mainAdminExists) {
       const hashedPassword = await bcrypt.hash(process.env.ADMIN_PASSWORD || 'IdealPass123', 10);
       await User.create({
-        name: 'Siddharth Thale',
-        email: 'siddhithale01@gmail.com',
-        phone: '1234567890',
+        name: adminName,
+        email: adminEmail,
+        phone: '0000000000',
         role: 'admin',
         password: hashedPassword
       });
-      console.log('✅ Institutional Administrator seeded: siddhithale01@gmail.com');
+      console.log(`✅ Institutional Administrator seeded: ${adminEmail}`);
     }
   } catch (err) {
     console.error('❌ Admin seed failed:', err.message);
