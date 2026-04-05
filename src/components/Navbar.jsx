@@ -40,7 +40,7 @@ const Navbar = () => {
         {/* Logo Section */}
         <Link to="/" className="logo-link">
           <img 
-            src="/src/assets/logo-main.png?v=5.1" 
+            src="/logo-main.png?v=5.2" 
             alt="Ideal Classes" 
             className="official-logo" 
           />
