@@ -13,7 +13,7 @@ import {
   ShieldCheck,
   ChevronRight
 } from 'lucide-react';
-import logo from '../../assets/app-icon.jpg';
+import logo from '../../assets/logo-main.png';
 
 const Sidebar = ({ onClose }) => {
   const location = useLocation();

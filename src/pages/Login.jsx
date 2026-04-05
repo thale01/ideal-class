@@ -3,7 +3,7 @@ import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
 import { GraduationCap, Sun, Moon, Lock, Mail, ChevronRight, User, Phone, ShieldCheck } from 'lucide-react';
-import logo from '../assets/app-icon.jpg';
+import logo from '../assets/logo-main.png';
 
 const Login = () => {
   const { user, login, error: authError } = useAuth();
