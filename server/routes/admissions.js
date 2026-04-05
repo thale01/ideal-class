@@ -99,16 +99,20 @@ router.patch('/:id/approve', async (req, res) => {
     await admission.save();
 
     // 2. Create Student Account if it doesn't already exist
-    let student = await User.findOne({ email: admission.email, role: 'student' });
+    const bcrypt = require('bcryptjs');
+    const trimmedEmail = admission.email?.trim().toLowerCase();
+    let student = await User.findOne({ email: trimmedEmail, role: 'student' });
+    
     if (!student) {
+      const hashedPassword = await bcrypt.hash('student123', 10);
       student = new User({
         name: admission.name,
-        email: admission.email,
+        email: trimmedEmail,
         phone: admission.phone,
         studentClass: admission.classApplied,
         batch: admission.batch || 'DEFAULT BATCH',
         role: 'student',
-        password: 'student123'
+        password: hashedPassword
       });
       await student.save();
     }

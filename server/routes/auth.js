@@ -120,9 +120,19 @@ router.post('/student/login', async (req, res) => {
   const { name, email, phone, password } = req.body;
   const mongoose = require('mongoose');
 
+  // DEBUG LOGS
+  console.log('--- STUDENT LOGIN ATTEMPT ---');
+  console.log('DB CONNECTION STATUS:', mongoose.connection.readyState === 1 ? 'CONNECTED' : 'DISCONNECTED');
+  console.log('REQUEST DATA:', { 
+    name: name?.trim(), 
+    email: email?.trim().toLowerCase(), 
+    phone: phone?.trim(), 
+    passwordLength: password?.length 
+  });
+
   try {
     if (mongoose.connection.readyState !== 1) {
-      // Mock failover
+      console.log('MOCK FAILOVER ACTIVATED: Database not ready');
       const studentPassword = process.env.STUDENT_PASSWORD || 'student123';
       if (password === studentPassword) {
         const token = jwt.sign({ role: 'student', email, name }, JWT_SECRET, { expiresIn: '1d' });
@@ -131,31 +141,46 @@ router.post('/student/login', async (req, res) => {
       return res.status(401).json({ message: 'Invalid Credentials (Mock Mode)' });
     }
 
-    const user = await User.findOne({ name, email, phone, role: 'student' });
-    if (user) {
-      // Check approval status
-      if (user.status === 'pending') {
-        return res.status(403).json({ message: 'Your account is not approved yet' });
-      }
+    // SEARCH STRATEGY: Use unique email first for lookup
+    const trimmedEmail = email?.trim().toLowerCase();
+    const user = await User.findOne({ email: trimmedEmail, role: 'student' });
 
-      // Try bcrypt first, fallback to plain text for legacy/existing accounts
-      let isMatch = false;
-      try {
-        isMatch = await bcrypt.compare(password, user.password);
-      } catch (e) {
-        isMatch = (password === user.password);
-      }
-
-      const globalPass = process.env.STUDENT_PASSWORD || 'student123';
-      if (isMatch || password === globalPass) {
-        const token = jwt.sign({ id: user._id, role: 'student', email: user.email, name: user.name }, JWT_SECRET, { expiresIn: '1d' });
-        return res.json({ token, user: { name: user.name, role: 'student', email: user.email, phone: user.phone, id: user._id } });
-      }
+    if (!user) {
+       console.log('USER STATUS: NOT FOUND (email mismatch)');
+       return res.status(401).json({ message: 'No student account found with this email' });
     }
 
-    res.status(401).json({ message: 'Invalid Student Credentials' });
+    console.log('USER STATUS: FOUND - Name:', user.name);
+
+    // APPROVAL CHECK
+    if (user.status === 'pending') {
+      console.log('USER STATUS: BLOCKED (Pending Approval)');
+      return res.status(403).json({ message: 'Your account is not approved yet' });
+    }
+
+    // PASSWORD VERIFICATION
+    let isMatch = false;
+    try {
+      isMatch = await bcrypt.compare(password, user.password);
+      console.log('BCRYPT MATCH:', isMatch);
+    } catch (e) {
+      // Fallback for plain-text password for legacy/manually added records
+      isMatch = (password === user.password);
+      console.log('PLAIN-TEXT MATCH (Fallback):', isMatch);
+    }
+
+    const globalPass = process.env.STUDENT_PASSWORD || 'student123';
+    if (isMatch || password === globalPass) {
+      console.log('LOGIN STATUS: VERIFIED');
+      const token = jwt.sign({ id: user._id, role: 'student', email: user.email, name: user.name }, JWT_SECRET, { expiresIn: '1d' });
+      return res.json({ token, user: { name: user.name, role: 'student', email: user.email, phone: user.phone, id: user._id } });
+    }
+
+    console.log('LOGIN STATUS: FAILED (Password Mismatch)');
+    res.status(401).json({ message: 'Invalid Credentials - Check your password' });
   } catch (err) {
-    res.status(500).json({ message: 'Server Error during login' });
+    console.error('LOGIN ERROR:', err);
+    res.status(500).json({ message: 'Server Internal Error during authentication' });
   }
 });
 

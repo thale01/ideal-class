@@ -53,13 +53,20 @@ router.post('/', authAdmin, async (req, res) => {
     const mockRes = mockDb.save('students', { name, email, phone, role: 'student', password, studentClass, batch });
     return res.status(201).json(mockRes);
   }
+  // 2. Hash Password and Create Student
+  const bcrypt = require('bcryptjs');
+  const trimmedEmail = email?.trim().toLowerCase();
+  
   try {
+    const hashedPassword = await bcrypt.hash(password, 10);
     const newStudent = new User({
-      name, email, phone, role: 'student', password, studentClass, batch
+      name, email: trimmedEmail, phone, role: 'student', password: hashedPassword, studentClass, batch
     });
     await newStudent.save();
+    console.log('✅ Student account created manually:', trimmedEmail);
     res.status(201).json(newStudent);
   } catch (err) {
+    console.error('❌ Error adding student:', err.message);
     res.status(400).json({ message: 'Error adding student. Please ensure unique email.' });
   }
 });
