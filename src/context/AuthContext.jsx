@@ -73,17 +73,23 @@ export const AuthProvider = ({ children }) => {
         return false;
       }
     } catch (err) {
-      console.error("Firebase Auth Failure Code:", err.code);
-      console.error("Firebase Auth Message:", err.message);
+      console.error("CRITICAL: Authentication Handshake Failed");
+      console.error("Firebase Error Code:", err.code);
+      console.error("Firebase Error Message:", err.message);
       
-      if (err.code === 'auth/user-not-found') {
-        setError("Account not found in secure registry.");
+      // Detailed logging for environmental troubleshooting
+      if (err.code === 'auth/api-key-not-valid' || err.code === 'auth/invalid-api-key') {
+        setError("Security Configuration Error: API credentials invalid.");
+      } else if (err.code === 'auth/network-request-failed') {
+        setError("Network Error: Connectivity to secure registry lost.");
+      } else if (err.code === 'auth/user-not-found') {
+        setError("Invalid email"); // Synchronized with Django snippet req
       } else if (err.code === 'auth/wrong-password') {
-        setError("Invalid credentials for this session.");
+        setError("Incorrect password"); // Synchronized with Django snippet req
       } else if (err.code === 'auth/invalid-email') {
-        setError("Invalid email format detected.");
+        setError("Invalid email format");
       } else {
-        setError("Access Denied: Authentication services unavailable.");
+        setError(`Access Denied: ${err.message || "Authentication services unavailable."}`);
       }
       return false;
     }
