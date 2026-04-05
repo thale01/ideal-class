@@ -47,8 +47,17 @@ export const AuthProvider = ({ children }) => {
     try {
       // 1. Primary Authentication via Firebase
       console.log('Initiating Firebase Handshake...');
-      const firebaseRes = await signInWithEmailAndPassword(auth, email.trim(), password.trim());
-      console.log('Firebase Identity Verified:', firebaseRes.user.uid);
+      let firebaseVerified = false;
+      try {
+        const firebaseRes = await signInWithEmailAndPassword(auth, email.trim(), password.trim());
+        console.log('Firebase Identity Verified:', firebaseRes.user.uid);
+        firebaseVerified = true;
+      } catch (fbErr) {
+        console.error('Firebase Check Rejected:', fbErr.code);
+        // FOR ADMINS: We allow fallback for immediate access if Firebase is not yet synced
+        if (role !== 'admin') throw fbErr;
+        console.log('ADMIN BYPASS: Proceeding with local credential verification...');
+      }
 
       // 2. Local Backend Session & Metadata Sync
       const endpoint = role === 'admin' ? '/auth/admin/login' : '/auth/student/login';
@@ -59,7 +68,7 @@ export const AuthProvider = ({ children }) => {
           ...credentials, 
           email: email.trim(), 
           password: password.trim(),
-          isFirebaseVerified: true // Signal to backend that Firebase already approved this
+          isFirebaseVerified: firebaseVerified // Signal to backend if Firebase already approved this
         })
       });
       
