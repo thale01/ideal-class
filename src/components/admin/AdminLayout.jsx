@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Sidebar from './Sidebar';
 import { Menu, Layout, Bell, ShieldCheck, LogOut, Mail } from 'lucide-react';
-import logo from '../../assets/app-icon.jpg';
+import logo from '../../assets/logo-main.png';
 import { useAuth } from '../../context/AuthContext';
 
 const AdminLayout = ({ children, title, headerActions, hideSidebar = false }) => {
