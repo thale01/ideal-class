@@ -26,6 +26,21 @@ const seedAdmin = async () => {
       });
       console.log(`✅ Institutional Administrator seeded: ${adminEmail}`);
     }
+
+    // Seed 'siddhithale01@gmail.com' as a student also for lecture verification
+    const studentExists = await User.findOne({ email: 'siddhithale01@gmail.com', role: 'student' });
+    if (!studentExists) {
+        const hashedStudentPassword = await bcrypt.hash('student123', 10);
+        await User.create({
+            name: 'Siddhi Thale (Testing)',
+            email: 'siddhithale01@gmail.com',
+            phone: '7020789219',
+            role: 'student',
+            status: 'approved',
+            password: hashedStudentPassword
+        });
+        console.log('✅ Testing Student account seeded: siddhithale01@gmail.com');
+    }
   } catch (err) {
     console.error('❌ Admin seed failed:', err.message);
   }
