@@ -879,6 +879,109 @@ button {
 }
 
 /* Magnetic Repulsion Class (Calculated in JS) */
-.repulse {
-  transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1) !important;
+/* Brand Synchronized Navbar Styles v5.2 */
+.navbar-official {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  z-index: 1000;
+  background: rgba(255, 255, 255, 0.02);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  transition: all 0.4s ease;
+}
+
+.nav-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  width: 100%;
+  padding: 0 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo-link {
+  height: min-content;
+  display: flex;
+  align-items: center;
+}
+
+.official-logo {
+  height: 48px;
+  width: auto;
+  object-fit: contain;
+  background-color: #020d24; /* Dark navy for the logo area as per screenshot */
+  padding: 8px 16px;
+  border-radius: 8px;
+}
+
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+}
+
+.theme-toggle-nav {
+  width: 48px;
+  height: 48px;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #64748b;
+  border: none;
+  transition: all 0.3s ease;
+}
+
+.theme-toggle-nav:hover {
+  transform: translateY(-2px);
+  background: #ffffff;
+}
+
+.btn-log-in {
+  color: #ffffff;
+  font-weight: 800;
+  text-transform: uppercase;
+  font-size: 14px;
+  letter-spacing: 0.1em;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.btn-log-in:hover {
+  color: var(--primary-accent);
+}
+
+.btn-apply-gradient {
+  background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+  color: #ffffff;
+  padding: 12px 32px;
+  border-radius: 16px;
+  font-weight: 800;
+  text-transform: uppercase;
+  font-size: 14px;
+  letter-spacing: 0.1em;
+  box-shadow: 0 10px 20px rgba(139, 92, 246, 0.2);
+  transition: all 0.3s ease;
+  border: none;
+}
+
+.btn-apply-gradient:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 15px 30px rgba(139, 92, 246, 0.3);
+  filter: brightness(1.1);
+}
+
+@media (max-width: 768px) {
+  .nav-container { padding: 0 20px; }
+  .btn-apply-gradient { padding: 10px 20px; font-size: 11px; }
+  .btn-log-in { font-size: 11px; }
+  .nav-right { gap: 16px; }
+  .official-logo { height: 40px; padding: 6px 12px; }
 }
