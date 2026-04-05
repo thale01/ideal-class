@@ -1,8 +1,9 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-
-const AuthContext = createContext();
+import { auth } from '../config/firebase';
+import { signInWithEmailAndPassword } from 'firebase/auth';
 import API_URL from '../config/api';
 
+const AuthContext = createContext();
 export const useAuth = () => useContext(AuthContext);
 
 export const AuthProvider = ({ children }) => {
@@ -35,13 +36,28 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (role, credentials) => {
     setError(null);
-    const endpoint = role === 'admin' ? '/auth/admin/login' : '/auth/student/login';
+    const { email, password } = credentials;
+    
+    // DEBUG LOGS
+    console.log('--- AUTH ATTEMPT ---');
+    console.log('Role:', role);
+    console.log('Email Input:', email?.trim());
+    console.log('Password Input Length:', password?.trim()?.length);
+
     try {
+      // 1. Primary Authentication via Firebase
+      console.log('Initiating Firebase Handshake...');
+      const firebaseRes = await signInWithEmailAndPassword(auth, email.trim(), password.trim());
+      console.log('Firebase Identity Verified:', firebaseRes.user.uid);
+
+      // 2. Local Backend Session & Metadata Sync
+      const endpoint = role === 'admin' ? '/auth/admin/login' : '/auth/student/login';
       const res = await fetch(`${API_URL}${endpoint}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(credentials)
+        body: JSON.stringify({ ...credentials, email: email.trim(), password: password.trim() })
       });
+      
       const data = await res.json();
       if (res.ok) {
         setUser(data.user);
@@ -52,7 +68,18 @@ export const AuthProvider = ({ children }) => {
         return false;
       }
     } catch (err) {
-      setError("Server connection failed");
+      console.error("Firebase Auth Failure Code:", err.code);
+      console.error("Firebase Auth Message:", err.message);
+      
+      if (err.code === 'auth/user-not-found') {
+        setError("Account not found in secure registry.");
+      } else if (err.code === 'auth/wrong-password') {
+        setError("Invalid credentials for this session.");
+      } else if (err.code === 'auth/invalid-email') {
+        setError("Invalid email format detected.");
+      } else {
+        setError("Access Denied: Authentication services unavailable.");
+      }
       return false;
     }
   };

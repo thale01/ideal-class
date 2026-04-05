@@ -30,12 +30,14 @@ const Login = () => {
     setLoading(true);
     setErrorMessage('');
     
+    console.log('Login attempt:', { role, email: email.trim(), hasPassword: !!password });
+    
     try {
       const credentials = {
          name: role === 'student' ? name : 'Admin',
-         email,
+         email: email.trim(),
          phone: role === 'student' ? phone : '9999999999',
-         password
+         password: password.trim()
       };
 
       const success = await login(role, credentials);
