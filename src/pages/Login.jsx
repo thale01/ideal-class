@@ -157,7 +157,7 @@ const Login = () => {
              </form>
 
              <footer className="mt-12 pt-8 border-t border-slate-100 text-center">
-                <p className="text-[10px] font-black text-primary-accent uppercase tracking-[0.4em] mb-4 italic animate-pulse">Academy Network Reboot v6.0</p>
+                <p className="text-[10px] font-black text-primary-accent uppercase tracking-[0.4em] mb-4 italic animate-pulse">Academy Network Reboot v6.2</p>
                 <Link to="/admission" className="text-[10px] font-black text-primary-accent hover:text-primary uppercase tracking-[0.2em] transition-all flex items-center justify-center gap-2 group">
                    Apply for Clearance <ChevronRight size={14} className="group-hover:translate-x-1 transition-transform" />
                 </Link>

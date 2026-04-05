@@ -1,4 +1,4 @@
-// Ideal Classes Portal - Synchronization V6.0 - Rebooted at 2026-04-05
+// Ideal Classes Portal - Synchronization V6.2 - Rebooted at 2026-04-05
 import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';

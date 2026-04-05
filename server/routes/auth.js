@@ -10,36 +10,52 @@ const JWT_SECRET = process.env.JWT_SECRET || 'fallback_secret';
 // Ensure Admin User Exists in DB (Seed)
 const seedAdmin = async () => {
   try {
-    // Seed root administrator dynamically from environment configuration
+    // SEED: Institutional Administrator
     const adminEmail = process.env.ADMIN_EMAIL || 'admin@idealclasses.com';
     const adminName = process.env.ADMIN_NAME || 'Director';
+    const adminPass = process.env.ADMIN_PASSWORD || 'IdealPass123';
     
-    const mainAdminExists = await User.findOne({ email: adminEmail, role: 'admin' });
-    if (!mainAdminExists) {
-      const hashedPassword = await bcrypt.hash(process.env.ADMIN_PASSWORD || 'IdealPass123', 10);
+    let mainAdmin = await User.findOne({ email: adminEmail, role: 'admin' });
+    const hashedAdminPassword = await bcrypt.hash(adminPass, 10);
+
+    if (!mainAdmin) {
       await User.create({
         name: adminName,
         email: adminEmail,
         phone: '0000000000',
         role: 'admin',
-        password: hashedPassword
+        password: hashedAdminPassword
       });
-      console.log(`✅ Institutional Administrator seeded: ${adminEmail}`);
+      console.log(`✅ Admin seeded: ${adminEmail}`);
+    } else {
+      // Force update password to ensure access
+      mainAdmin.password = hashedAdminPassword;
+      await mainAdmin.save();
+      console.log(`✅ Admin sync: ${adminEmail}`);
     }
 
-    // Seed 'siddhithale01@gmail.com' as a student also for lecture verification
-    const studentExists = await User.findOne({ email: 'siddhithale01@gmail.com', role: 'student' });
-    if (!studentExists) {
-        const hashedStudentPassword = await bcrypt.hash('student123', 10);
+    // SEED: Testing Student for 'siddhithale01@gmail.com'
+    const studentEmail = 'siddhithale01@gmail.com';
+    const studentPass = 'student123';
+    let testStudent = await User.findOne({ email: studentEmail, role: 'student' });
+    const hashedStudentPassword = await bcrypt.hash(studentPass, 10);
+
+    if (!testStudent) {
         await User.create({
             name: 'Siddhi Thale (Testing)',
-            email: 'siddhithale01@gmail.com',
+            email: studentEmail,
             phone: '7020789219',
             role: 'student',
             status: 'approved',
             password: hashedStudentPassword
         });
-        console.log('✅ Testing Student account seeded: siddhithale01@gmail.com');
+        console.log(`✅ Student seeded: ${studentEmail}`);
+    } else {
+        // Force update password to 'student123'
+        testStudent.password = hashedStudentPassword;
+        testStudent.status = 'approved'; // Ensure it's not pending
+        await testStudent.save();
+        console.log(`✅ Student sync: ${studentEmail}`);
     }
   } catch (err) {
     console.error('❌ Admin seed failed:', err.message);
