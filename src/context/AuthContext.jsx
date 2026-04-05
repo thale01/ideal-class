@@ -54,9 +54,15 @@ export const AuthProvider = ({ children }) => {
         firebaseVerified = true;
       } catch (fbErr) {
         console.error('Firebase Check Rejected:', fbErr.code);
-        // FOR ADMINS: We allow fallback for immediate access if Firebase is not yet synced
-        if (role !== 'admin') throw fbErr;
-        console.log('ADMIN BYPASS: Proceeding with local credential verification...');
+        
+        // ALLOW FALLBACK: If credentials match in MongoDB, we ignore Firebase sync lag
+        const isCredentialError = ['auth/invalid-credential', 'auth/user-not-found', 'auth/wrong-password', 'auth/invalid-email'].includes(fbErr.code);
+        
+        if (!isCredentialError) {
+          throw fbErr; // Re-throw network or API errors
+        }
+        
+        console.log('IDENTITY FAILOVER: Proceeding with local registry verification...');
       }
 
       // 2. Local Backend Session & Metadata Sync
