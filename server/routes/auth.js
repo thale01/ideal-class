@@ -150,7 +150,7 @@ router.post('/student/login', async (req, res) => {
 
     if (!user) {
        console.log('USER STATUS: NOT FOUND (email mismatch)');
-       return res.status(401).json({ message: 'No student account found with this email' });
+       return res.status(401).json({ message: 'Invalid email' });
     }
 
     console.log('USER STATUS: FOUND - Name:', user.name);
@@ -184,7 +184,7 @@ router.post('/student/login', async (req, res) => {
     }
 
     console.log('LOGIN STATUS: FAILED (Password Mismatch)');
-    res.status(401).json({ message: 'Invalid Credentials - Check your password' });
+    res.status(401).json({ message: 'Incorrect password' });
   } catch (err) {
     console.error('LOGIN ERROR:', err);
     res.status(500).json({ message: 'Server Internal Error during authentication' });
