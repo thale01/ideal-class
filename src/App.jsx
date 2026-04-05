@@ -1,5 +1,5 @@
-// Ideal Classes Portal - Deployment Sync v1.0.4 - Built at 2026-04-03
-import React from 'react';
+// Ideal Classes Portal - Synchronization V5.1 - Built at 2026-04-05
+import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { CourseProvider } from './context/CourseContext';
@@ -51,6 +51,12 @@ const MainLayout = ({ children }) => {
 };
 
 function App() {
+  useEffect(() => {
+    console.log("%c IDEAL CLASSES SYNC v5.1 ", "background: #10b981; color: #fff; font-weight: bold; padding: 4px; border-radius: 4px;");
+    console.log("Status: Official Brand & Identity Handshake Active");
+    console.log("Timestamp: " + new Date().toLocaleString());
+  }, []);
+
   return (
     <ThemeProvider>
       <AuthProvider>
