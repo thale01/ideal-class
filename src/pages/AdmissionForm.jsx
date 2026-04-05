@@ -3,7 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { useAdmission } from '../context/AdmissionContext';
 import { useTheme } from '../context/ThemeContext';
 import { FileText, User, Mail, Phone, GraduationCap, ArrowLeft, Send, CheckCircle, Sun, Moon } from 'lucide-react';
-import logo from '../assets/logo.png';
+import logo from '../assets/app-icon.jpg';
 
 const AdmissionForm = () => {
    const { submitApplication } = useAdmission();

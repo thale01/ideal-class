@@ -43,6 +43,7 @@ app.use('/api/toppers', topperRoutes);
 app.use('/api/updates', updateRoutes);
 app.use('/api/doubts', doubtRoutes);
 app.use('/api/courses', courseRoutes);
+app.use('/api/folders', courseRoutes); // Alias for consistency with user request
 
 const startServer = (mode) => {
   const server = app.listen(PORT, () => console.log(`🚀 Server ${mode} on http://localhost:${PORT}`))

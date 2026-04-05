@@ -11,7 +11,7 @@ const mongoose = require('mongoose');
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
-    user: process.env.GMAIL_USER || 'your-email@gmail.com',
+    user: process.env.GMAIL_USER || 'idealclass1110.ic@gmail.com',
     pass: process.env.GMAIL_PASS || 'your-app-password'
   }
 });
@@ -50,19 +50,19 @@ router.get('/', async (req, res) => {
 // Setup Email Notification Helper
 const sendApprovalEmail = (name, email, classApplied) => {
   const mailOptions = {
-    from: process.env.GMAIL_USER,
+    from: process.env.GMAIL_USER || 'idealclass1110.ic@gmail.com',
     to: email,
     subject: 'Admission Approved - Ideal Classes',
     html: `
       <div style="font-family: Arial, sans-serif; padding: 20px; border: 1px solid #ddd; border-radius: 10px;">
         <h2 style="color: #4a90e2;">Congratulations ${name}!</h2>
         <p>We are pleased to inform you that your admission for <b>${classApplied}</b> at <b>Ideal Classes</b> has been approved!</p>
-        <p><b>Your student account is now active:</b></p>
+        <p><b>Your student account has been created and is currently pending activation:</b></p>
         <ul>
           <li><b>Login ID:</b> ${email}</li>
           <li><b>Temporary Password:</b> student123</li>
         </ul>
-        <p>Please login to the portal to access your study material and lectures.</p>
+        <p>We will send you another email once your account is fully activated. Please wait for final approval.</p>
         <br/>
         <p>Best Regards,</p>
         <p><b>Ideal Classes Team</b></p>

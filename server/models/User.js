@@ -15,6 +15,7 @@ const userSchema = new mongoose.Schema({
     paid: { type: Number, default: 0 },
     history: [{ date: Date, amount: Number, method: String, note: String }]
   },
+  status: { type: String, enum: ['pending', 'approved'], default: 'pending' },
   createdAt: { type: Date, default: Date.now }
 });
 

@@ -113,6 +113,11 @@ router.post('/student/login', async (req, res) => {
 
     const user = await User.findOne({ name, email, phone, role: 'student' });
     if (user) {
+      // Check approval status
+      if (user.status === 'pending') {
+        return res.status(403).json({ message: 'Your account is not approved yet' });
+      }
+
       // Try bcrypt first, fallback to plain text for legacy/existing accounts
       let isMatch = false;
       try {

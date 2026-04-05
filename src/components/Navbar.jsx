@@ -54,7 +54,7 @@ const Navbar = () => {
         <div onClick={() => setShowContactModal(true)} className="logo-group select-none cursor-pointer group transition-transform hover:scale-105 active:scale-95 flex-shrink-0">
           <div className="logo-icon flex items-center justify-center p-0" style={{ width: 'auto', height: 'auto', background: 'none', boxShadow: 'none' }}>
             <img 
-              src="/logo.png" 
+              src="/app-icon.jpg" 
               alt="Ideal Logo" 
               className="object-contain mix-blend-screen" 
               style={{ 
@@ -152,7 +152,7 @@ const Navbar = () => {
             
             <div className="relative h-full flex flex-col p-8 sm:p-12">
               <div className="flex justify-between items-center mb-16">
-                <img src="/logo.png" alt="Logo" className="h-10 w-auto mix-blend-screen" />
+                <img src="/app-icon.jpg" alt="Logo" className="h-10 w-auto mix-blend-screen" />
                 <button 
                   onClick={() => setIsMobileMenuOpen(false)}
                   className="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center text-white border border-white/20"

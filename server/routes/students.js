@@ -3,6 +3,29 @@ const router = express.Router();
 const User = require('../models/User');
 
 const { authAdmin } = require('../middleware/auth');
+const nodemailer = require('nodemailer');
+
+const transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: process.env.GMAIL_USER || 'idealclass1110.ic@gmail.com',
+    pass: process.env.GMAIL_PASS || 'your-app-password'
+  }
+});
+
+const sendFinalApprovalEmail = (name, email) => {
+  const mailOptions = {
+    from: process.env.GMAIL_USER || 'idealclass1110.ic@gmail.com',
+    to: email,
+    subject: 'Account Approved',
+    text: `Your account has been approved. You can now login using your password.`
+  };
+
+  transporter.sendMail(mailOptions, (err, info) => {
+    if (err) console.log("❌ Email failed to send:", err.message);
+    else console.log("✅ Approval email sent to:", email);
+  });
+};
 
 
 const mockDb = require('../mock-db');
@@ -48,6 +71,21 @@ router.patch('/:id', authAdmin, async (req, res) => {
     res.json(updated);
   } catch (err) {
     res.status(404).json({ message: 'Student record not found.' });
+  }
+});
+
+// APPROVE student account
+router.patch('/:id/approve', authAdmin, async (req, res) => {
+  try {
+    const student = await User.findByIdAndUpdate(req.params.id, { status: 'approved' }, { new: true });
+    if (!student) return res.status(404).json({ message: 'Student not found' });
+    
+    // SEND email notification
+    sendFinalApprovalEmail(student.name, student.email);
+
+    res.json({ message: 'Student approved and notification sent.', student });
+  } catch (err) {
+    res.status(500).json({ message: 'Error approving student.' });
   }
 });
 

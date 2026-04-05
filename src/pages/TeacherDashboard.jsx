@@ -37,7 +37,7 @@ const TeacherDashboard = () => {
    const { toppers, deleteTopper, addTopper } = useGallery();
    const { updates } = useUpdate();
    const { doubts, replyToDoubt } = useDoubt();
-   const { students, deleteStudent, updateStudent, resetStudentPassword, changeAdminPassword } = useAuth();
+   const { students, deleteStudent, updateStudent, approveStudent, resetStudentPassword, changeAdminPassword } = useAuth();
    const { announcements, addAnnouncement, removeAnnouncement } = useAnnouncement();
    const { theme, toggleTheme } = useTheme();
    const navigate = useNavigate();
@@ -198,58 +198,71 @@ const TeacherDashboard = () => {
       { id: 'fees', label: 'Fees Management', icon: CreditCard },
       { id: 'doubts', label: 'Doubt Desk', icon: MessageSquareShare },
       { id: 'announcements', label: 'Announcements', icon: Bell },
-      { id: 'halloffame', label: 'Hall of Fame', icon: Award },
+      { id: 'halloffame', label: 'Hall of Fame', icon: Trophy },
       { id: 'settings', label: 'Settings', icon: Settings },
    ];
 
    return (
       <div className="min-h-screen bg-main flex flex-col md:flex-row transition-colors duration-500 overflow-x-hidden">
          {/* Sidebar Nav */}
-         <aside className={`fixed inset-y-0 left-0 md:relative md:translate-x-0 sidebar-premium flex flex-col h-screen z-[10002] transition-all duration-300 ease-in-out ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} ${isSidebarCollapsed ? 'md:w-24' : 'md:w-80'} shrink-0 shadow-2xl md:shadow-none border-r border-subtle overflow-hidden`}>
+         <aside className={`fixed inset-y-0 left-0 md:relative md:translate-x-0 bg-[#0a1120] flex flex-col h-screen z-[10002] transition-all duration-300 ease-in-out ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} ${isSidebarCollapsed ? 'md:w-28' : 'md:w-80'} shrink-0 shadow-2xl md:shadow-none border-r border-white/5 overflow-hidden`}>
             <div className={`p-6 transition-all duration-300 ${isSidebarCollapsed ? 'px-4' : 'p-8'}`}>
-               <div className="flex items-center justify-between mb-2">
-                  <div className="flex items-center gap-3 overflow-hidden">
+               <div className="flex items-center justify-between mb-8">
+                  <div className="flex items-center gap-4 overflow-hidden">
                      <button
                         onClick={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
-                        className="p-2.5 rounded-xl bg-alt/50 border border-subtle text-bright hover:bg-primary/10 hover:text-primary transition-all hidden md:flex items-center justify-center shrink-0"
+                        className="p-3 rounded-2xl bg-white/5 border border-white/10 text-white hover:bg-white/10 transition-all hidden md:flex items-center justify-center shrink-0 shadow-lg"
                         title={isSidebarCollapsed ? "Expand Sidebar" : "Collapse Sidebar"}
                      >
                         <Menu size={20} />
                      </button>
-                     <img src={logo} alt="Ideal Classes Logo" className={`h-10 w-auto object-contain transition-all duration-500 hover:scale-105 ${isSidebarCollapsed ? 'scale-0 w-0' : 'scale-100'}`} />
                      {!isSidebarCollapsed && (
-                        <div className="animate-fadeIn">
-                           <h1 className="text-xl font-bold text-bright tracking-tight whitespace-nowrap">Ideal Classes</h1>
-                           <p className="badge-premium badge-primary text-[8px] font-bold uppercase tracking-widest mt-0.5 px-2.5 py-0.5 whitespace-nowrap">Admin Portal</p>
+                        <div className="animate-fadeIn flex flex-col items-start gap-2">
+                           <div className="flex items-center gap-3">
+                              <img src={logo} alt="Logo" className="h-9 w-auto object-contain drop-shadow-sm transition-transform hover:scale-105" />
+                              <div className="h-6 w-px bg-white/20"></div>
+                              <h1 className="text-sm font-black text-white tracking-widest uppercase leading-none">IDEAL</h1>
+                           </div>
+                           <p className="text-[10px] font-black text-blue-400 uppercase tracking-[0.3em] opacity-90">CLASSES SECURE</p> 
                         </div>
                      )}
                   </div>
-                  <button onClick={() => setIsSidebarOpen(false)} className="md:hidden p-2 rounded-xl bg-alt/50 text-dim">
+                  <button onClick={() => setIsSidebarOpen(false)} className="md:hidden p-3 rounded-2xl bg-white/5 text-white/60">
                      <X size={20} />
                   </button>
                </div>
             </div>
 
-            <nav className="flex-1 p-4 space-y-1 overflow-y-auto no-scrollbar">
-               {menuItems.map(item => (
-                  <button
-                     key={item.id}
-                     onClick={() => { setActiveTab(item.id); setSearchTerm(''); setIsSidebarOpen(false); }}
-                     className={`sidebar-item w-full group overflow-hidden ${activeTab === item.id ? 'active bg-primary/10 text-primary' : 'text-dim hover:bg-alt/50 hover:text-bright'}`}
-                     title={isSidebarCollapsed ? item.label : ""}
-                  >
-                     <div className={`p-2 rounded-lg transition-all shrink-0 ${activeTab === item.id ? 'bg-primary text-white shadow-md shadow-primary/20' : 'bg-transparent text-dim group-hover:text-primary'}`}>
-                        <item.icon size={18} />
-                     </div>
-                     <span className={`font-semibold ml-3 text-sm transition-all duration-300 ${isSidebarCollapsed ? 'opacity-0 -translate-x-10 pointer-events-none' : 'opacity-100 translate-x-0'}`}>{item.label}</span>
-                  </button>
-               ))}
+            <nav className="flex-1 px-4 space-y-3 overflow-y-auto no-scrollbar pb-8">
+               {menuItems.map(item => {
+                  const active = activeTab === item.id || (item.id === 'directory' && activeTab === 'students'); 
+                  return (
+                    <button
+                        key={item.id}
+                        onClick={() => { setActiveTab(item.id); setSearchTerm(''); setIsSidebarOpen(false); }}
+                        className={`w-full group flex items-center gap-4 px-6 py-4 rounded-2xl font-bold text-sm transition-all duration-300
+                        ${active 
+                          ? 'bg-slate-100 text-blue-700 shadow-xl shadow-black/40' 
+                          : 'bg-white/5 text-slate-400 hover:bg-white/10 hover:text-white'}`}
+                        title={isSidebarCollapsed ? item.label : ""}
+                    >
+                        <div className={`p-2.5 rounded-xl transition-all duration-300 shrink-0 ${active ? 'bg-blue-600 text-white shadow-lg shadow-blue-400/30' : 'bg-slate-800 text-slate-400 group-hover:bg-slate-700'}`}>
+                            <item.icon size={18} />
+                        </div>
+                        <span className={`tracking-tight transition-all duration-300 ${isSidebarCollapsed ? 'opacity-0 scale-0 w-0' : 'opacity-100 scale-100'}`}>
+                           {item.label}
+                        </span>
+                    </button>
+                  )
+               })}
             </nav>
 
-            <div className={`p-6 border-t border-subtle transition-all duration-300 ${isSidebarCollapsed ? 'px-4 text-center' : 'p-6'}`}>
-               <button onClick={logout} className="sidebar-item w-full transition-all group hover:bg-danger/10 text-danger" title={isSidebarCollapsed ? "Terminate Session" : ""}>
-                  <LogOut size={18} className="shrink-0" />
-                  <span className={`font-semibold text-sm ml-3 transition-all duration-300 ${isSidebarCollapsed ? 'hidden' : 'inline'}`}>Discard Session</span>
+            <div className={`p-6 border-t border-white/5 transition-all duration-300 ${isSidebarCollapsed ? 'px-4 text-center' : 'p-6'}`}>
+               <button onClick={logout} className="flex items-center gap-4 px-6 py-4 rounded-2xl font-bold text-sm text-slate-400 bg-white/5 hover:bg-red-500/10 hover:text-red-500 transition-all duration-300 group w-full" title={isSidebarCollapsed ? "Terminate Session" : ""}>
+                  <div className="p-2.5 bg-slate-800 rounded-xl group-hover:bg-red-600/20 transition-colors">
+                     <LogOut size={18} />
+                  </div>
+                  <span className={`tracking-tight transition-all duration-300 ${isSidebarCollapsed ? 'opacity-0 scale-0 w-0' : 'opacity-100 scale-100'}`}>Sign Out</span>
                </button>
             </div>
          </aside>
@@ -264,56 +277,57 @@ const TeacherDashboard = () => {
 
          {/* Main Main Area */}
          <main className="flex-1 min-h-screen min-w-0 overflow-x-hidden">
-            <header className="header-premium border-b border-subtle sticky top-0 bg-surface/90 backdrop-blur-md z-[1000]">
+            <header className="header-premium border-b border-subtle sticky top-0 bg-surface/90 backdrop-blur-md z-[1000] h-20">
                <div className="px-6 lg:px-12 flex items-center justify-between w-full h-full">
-                  <div className="flex items-center gap-2 sm:gap-4">
+                  <div className="flex items-center gap-6">
                      <button
                         onClick={() => setIsSidebarOpen(true)}
                         className="md:hidden p-2 rounded-lg bg-alt/50 border border-subtle text-bright"
                      >
                         <Menu size={20} />
                      </button>
-                     <div className="flex items-center gap-2 sm:gap-3">
+                     <div className="flex items-center gap-4">
                         <img
                            src={logo}
                            alt="Logo"
                            className="md:hidden block object-contain"
-                           style={{ height: '28px', maxWidth: '100px' }}
+                           style={{ height: '32px', maxWidth: '120px' }}
                         />
                         <div className="py-2 hidden md:block">
-                           <h2 className="text-xl font-bold text-bright tracking-tight capitalize">{activeTab}</h2>
-                           <p className="text-[10px] text-dim font-medium uppercase tracking-wider">Academic Portal</p>
+                           <h2 className="text-xl font-bold text-bright tracking-tight capitalize leading-none mb-1">{activeTab}</h2>
+                           <p className="text-[10px] text-dim font-medium uppercase tracking-widest opacity-60">Academic Portal</p>
                         </div>
                      </div>
                   </div>
 
-                  <div className="flex items-center gap-2 sm:gap-4">
-                     <div className="relative group hidden sm:block">
+                  <div className="flex items-center gap-6 h-11">
+                     <div className="relative group hidden sm:block h-full">
                         <input
                            type="text"
                            placeholder={`Search entries...`}
-                           className="input-premium py-2.5 pl-10 w-64 bg-alt/50 border-subtle text-sm"
+                           className="input-premium h-full py-0 pl-12 w-80 bg-alt/50 border-subtle text-sm"
                            value={searchTerm}
                            onChange={e => setSearchTerm(e.target.value)}
                         />
-                        <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 text-dim group-focus-within:text-primary transition-colors" size={16} />
+                        <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-dim group-focus-within:text-primary transition-colors" size={18} />
                      </div>
 
-                     <div className="flex items-center gap-1.5 sm:gap-2 pr-2 sm:pr-4 border-r border-subtle mr-1 sm:mr-2">
-                        <button onClick={toggleTheme} className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-alt border border-subtle flex-center text-white hover:text-primary transition-all">
-                           {theme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
+                     <div className="flex items-center gap-2 sm:gap-3 pr-6 border-r border-subtle h-full">
+                        <button onClick={toggleTheme} className="w-11 h-11 rounded-xl bg-alt border border-subtle flex items-center justify-center text-white hover:text-primary transition-all">
+                           {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
                         </button>
-                        <button className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-alt border border-subtle flex-center text-white hover:text-primary transition-all">
-                           <Bell size={16} />
+                        <button className="w-11 h-11 rounded-xl bg-alt border border-subtle flex items-center justify-center text-white hover:text-primary transition-all relative">
+                           <Bell size={18} />
+                           <div className="absolute top-3.5 right-3.5 w-1.5 h-1.5 bg-primary-accent rounded-full border border-surface"></div>
                         </button>
                      </div>
 
-                     <div className="flex items-center gap-2 sm:gap-3">
-                        <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-grad-main flex items-center justify-center font-bold text-white shadow-md text-xs sm:text-base">
+                     <div className="flex items-center gap-3 h-full">
+                        <div className="w-11 h-11 rounded-xl bg-grad-main flex items-center justify-center font-bold text-white shadow-md text-base overflow-hidden">
                            {user?.name?.charAt(0) || 'A'}
                         </div>
                         <div className="hidden xl:block">
-                           <p className="text-sm font-bold text-bright leading-none mb-1">{user?.name || 'Administrator'}</p>
+                           <p className="text-sm font-bold text-bright leading-none mb-0.5">{user?.name || 'Administrator'}</p>
                            <span className="badge-premium badge-primary text-[8px] font-bold uppercase tracking-widest px-2.5 py-0.5">Verified Admin</span>
                         </div>
                      </div>
@@ -321,92 +335,103 @@ const TeacherDashboard = () => {
                </div>
             </header>
 
-            <div className="px-4 md:px-8 lg:px-12 py-10 animate-fadeUp max-w-[1800px] mx-auto">
+            <div className="px-6 md:px-10 lg:px-12 py-10 animate-fadeUp max-w-[1800px] mx-auto min-h-[calc(100vh-5rem)]">
                {activeTab === 'subjects' && (
                   <>
                      {!selectedCourseId ? (
-                        <div className="space-y-8 animate-fadeIn">
-                           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 sm:gap-12">
-                              <div className="space-y-1 sm:space-y-2">
+                        <div className="space-y-10 animate-fadeIn">
+                           <div className="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-8">
+                              <div className="space-y-2">
                                  <h3 className="text-xl sm:text-4xl font-black text-bright tracking-tight uppercase leading-tight italic">Secure Repository</h3>
-                                 <p className="text-[10px] sm:text-[12px] font-black text-dim uppercase tracking-[0.2em] sm:tracking-[0.4em] [word-spacing:0.4em] opacity-60">
+                                 <p className="text-[10px] sm:text-[12px] font-black text-dim uppercase tracking-[0.4em] [word-spacing:0.4em] opacity-60">
                                     Level 2: Academic Subjects Access & Dynamic Catalog
                                  </p>
                               </div>
 
-                              <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 w-full sm:w-auto">
-                                 <div className="relative w-full sm:w-80">
+                              <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-6 sm:gap-8">
+                                 <div className="relative w-full sm:w-80 h-12 sm:h-14">
                                     <input
                                        type="text"
                                        placeholder="Dynamic filter..."
-                                       className="input-premium py-4 sm:py-5 pl-12 text-sm bg-alt/40 border-subtle"
+                                       className="input-premium h-full w-full py-0 pl-12 pr-4 text-sm bg-alt/40 border-subtle"
                                        value={searchTerm}
                                        onChange={e => setSearchTerm(e.target.value)}
                                     />
-                                    <Search className="absolute left-5 top-1/2 -translate-y-1/2 text-dim" size={18} />
+                                    <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-dim" size={18} />
                                  </div>
-                                 <button onClick={() => setShowCourseModal(true)} className="btn-premium btn-premium-primary px-8 sm:px-10 py-4 sm:py-5 flex items-center gap-3 shadow-lg">
+                                 <button onClick={() => setShowCourseModal(true)} className="btn-premium btn-premium-primary h-12 sm:h-14 px-8 flex items-center justify-center gap-3 shadow-lg whitespace-nowrap">
                                     <PlusCircle size={18} /> <span className="font-bold">NEW BATCH</span>
                                  </button>
                               </div>
                            </div>
 
-                           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-responsive">
+                           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 pt-4">
                               {/* Create Folder Card */}
-                              <div onClick={() => setShowCourseModal(true)} className="card-premium flex flex-col items-center justify-center border-dashed border-primary/30 hover:border-primary/60 cursor-pointer p-12 group bg-primary/5 hover:bg-primary/10 transition-all duration-500 hover:-translate-y-2">
-                                 <div className="w-20 h-20 rounded-[2.5rem] bg-primary flex items-center justify-center text-white shadow-2xl relative">
-                                    <Plus size={40} className="relative z-10" />
+                              <div onClick={() => setShowCourseModal(true)} className="card-premium h-[260px] flex flex-col items-center justify-center border-dashed border-primary/30 hover:border-primary/60 cursor-pointer p-8 group bg-primary/5 hover:bg-primary/10 transition-all duration-500 hover:-translate-y-2">
+                                 <div className="w-16 h-16 rounded-[1.25rem] bg-primary flex items-center justify-center text-white shadow-2xl relative transition-transform duration-500 group-hover:scale-110">
+                                    <Plus size={32} className="relative z-10" />
                                  </div>
-                                 <span className="text-[11px] font-black text-primary mt-8 uppercase tracking-[0.4em] text-center w-full">Initialize Folder</span>
+                                 <span className="text-[11px] font-black text-primary mt-6 uppercase tracking-[0.4em] text-center w-full">Initialize Folder</span>
                               </div>
 
-                              {filteredItems(courses).map((course, i) => (
+                              {filteredItems(courses).map((course, j) => (
                                  <div
-                                    key={course._id || i}
+                                    key={course._id || j}
                                     onClick={() => setSelectedCourseId(course._id)}
-                                    className="card-premium group cursor-pointer hover:border-primary/40 hover:-translate-y-2 transition-all p-8 relative overflow-hidden"
+                                    className="card-premium h-[260px] group cursor-pointer hover:border-primary/40 hover:-translate-y-2 transition-all p-6 relative overflow-hidden flex flex-col justify-between"
                                  >
-                                    <div className="flex items-center justify-between mb-8 relative z-10">
-                                       <div className="w-16 h-16 rounded-2xl bg-surface border border-subtle flex items-center justify-center text-4xl shadow-sm group-hover:scale-110 transition-transform">
-                                          {course.icon || '📂'}
+                                    <div className="relative z-10">
+                                       <div className="flex items-center justify-between mb-6">
+                                          <div className="w-14 h-14 rounded-2xl bg-surface border border-subtle flex items-center justify-center text-3xl shadow-sm group-hover:scale-110 transition-transform">
+                                             {course.icon || '📂'}
+                                          </div>
+                                          <div className="flex gap-2 relative z-10">
+                                             <button onClick={(e) => {
+                                                e.stopPropagation();
+                                                setEditingId(course._id);
+                                                setEditValue(course.name);
+                                             }} className="w-9 h-9 rounded-xl bg-surface flex items-center justify-center text-dim hover:text-primary transition-all border border-subtle shadow-sm" title="Edit Folder"><Edit2 size={14} /></button>
+                                             <button onClick={async (e) => {
+                                                e.stopPropagation();
+                                                if (window.confirm(`PERMANENT ERASE: Completely wipe "${course.name}"?`)) {
+                                                   const ok = await deleteCourse(course._id);
+                                                   console.log(ok ? "✅ Folder wiped." : "❌ Wipe failed.");
+                                                }
+                                             }} className="w-9 h-9 rounded-xl bg-danger/5 flex items-center justify-center text-danger hover:text-white hover:bg-danger transition-all border border-danger/10 shadow-sm" title="Erase Folder"><Trash2 size={14} /></button>
+                                          </div>
                                        </div>
-                                       <div className="flex gap-2">
-                                          <button onClick={(e) => {
-                                             e.stopPropagation();
-                                             setEditingId(course._id);
-                                             setEditValue(course.name);
-                                          }} className="w-10 h-10 rounded-xl bg-surface flex items-center justify-center text-dim hover:text-primary transition-all border border-subtle"><Edit2 size={16} /></button>
-                                       </div>
-                                    </div>
-                                    {editingId === course._id ? (
-                                       <input
-                                          autoFocus
-                                          className="text-xl font-black text-bright mb-1 uppercase tracking-tight leading-tight bg-alt border border-primary px-2 py-1 rounded w-full outline-none"
-                                          value={editValue}
-                                          onChange={e => setEditValue(e.target.value)}
-                                          onClick={e => e.stopPropagation()}
-                                          onBlur={async () => {
-                                             if (editValue.trim() && editValue !== course.name) {
-                                                await updateCourse(course._id, { name: editValue });
-                                             }
-                                             setEditingId(null);
-                                          }}
-                                          onKeyDown={async e => {
-                                             if (e.key === 'Enter') {
+                                       
+                                       {editingId === course._id ? (
+                                          <input
+                                             autoFocus
+                                             className="text-xl font-black text-bright mb-1 uppercase tracking-tight leading-tight bg-alt border border-primary px-2 py-1 rounded w-full outline-none"
+                                             value={editValue}
+                                             onChange={e => setEditValue(e.target.value)}
+                                             onClick={e => e.stopPropagation()}
+                                             onBlur={async () => {
                                                 if (editValue.trim() && editValue !== course.name) {
                                                    await updateCourse(course._id, { name: editValue });
                                                 }
                                                 setEditingId(null);
-                                             }
-                                          }}
-                                       />
-                                    ) : (
-                                       <h4 className="text-xl font-black text-bright mb-1 uppercase tracking-tight leading-tight">{course.name}</h4>
-                                    )}
-                                    <p className="text-[10px] font-black text-dim uppercase tracking-widest opacity-80">{course.category || 'Strategic Area'}</p>
-                                    <div className="pt-6 mt-6 border-t border-subtle flex items-center justify-between">
+                                             }}
+                                             onKeyDown={async e => {
+                                                if (e.key === 'Enter') {
+                                                   if (editValue.trim() && editValue !== course.name) {
+                                                      await updateCourse(course._id, { name: editValue });
+                                                   }
+                                                   setEditingId(null);
+                                                }
+                                             }}
+                                          />
+                                       ) : (
+                                          <h4 className="text-xl font-black text-bright mb-1 uppercase tracking-tight leading-tight line-clamp-1">{course.name}</h4>
+                                       )}
+                                       <p className="text-[10px] font-black text-dim uppercase tracking-widest opacity-80">{course.category || 'Strategic Area'}</p>
+                                    </div>
+
+                                    <div className="pt-4 border-t border-subtle flex items-center justify-between relative z-10">
                                        <span className="badge-premium badge-primary px-3 py-1 font-black text-[9px]">{subjects.filter(s => s.courseId === course._id).length} MODULES</span>
-                                       <ChevronRight size={18} className="text-dim group-hover:text-primary transition-all" />
+                                       <ChevronRight size={18} className="text-dim group-hover:text-primary transition-all translate-x-0 group-hover:translate-x-1" />
                                     </div>
                                  </div>
                               ))}
@@ -414,8 +439,8 @@ const TeacherDashboard = () => {
                         </div>
                      ) : (
                         <div className="folder-isolated-view">
-                           <div className="max-w-7xl mx-auto w-full px-6 py-12 md:py-20 animate-fadeIn">
-                              <div className="flex flex-col md:flex-row md:items-center justify-between gap-10 mb-20 px-2">
+                           <div className="max-w-[1400px] mx-auto w-full px-6 lg:px-12 py-12 animate-fadeIn">
+                              <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8 mb-16 border-b border-subtle pb-12">
                                  <div className="flex flex-col items-start gap-8">
                                     <button
                                        onClick={() => {
@@ -423,42 +448,40 @@ const TeacherDashboard = () => {
                                           else if (selectedSubjectId) setSelectedSubjectId(null);
                                           else setSelectedCourseId(null);
                                        }}
-                                       className="btn-back px-6 py-4"
+                                       className="btn-back"
                                     >
-                                       <ArrowLeft size={18} />
-                                       <span className="font-black">BACK TO DIRECTORY</span>
+                                       <ArrowLeft size={16} /> BACK TO DIRECTORY
                                     </button>
                                     <div>
-                                       <h2 className="text-4xl md:text-6xl font-black text-black uppercase tracking-tighter leading-none mb-4 italic">
+                                       <h2 className="text-5xl md:text-7xl font-black text-bright uppercase tracking-tighter leading-none mb-4 italic">
                                           {selectedChapterName || subjects.find(s => s._id === selectedSubjectId)?.name || courses.find(c => c._id === selectedCourseId)?.name}
                                        </h2>
-                                       <div className="flex items-center gap-3">
-                                          <div className="w-3 h-3 rounded-full bg-blue-600"></div>
-                                          <p className="text-[11px] font-black uppercase tracking-[0.3em] text-slate-400">
+                                       <div className="flex items-center gap-4">
+                                          <div className="badge-premium badge-primary px-4 py-1.5 font-black text-[10px]">
                                              {selectedChapterName ? 'Secure Repository: Resource Level' : selectedSubjectId ? 'Level 3: Module Control' : 'Level 2: Academic Subjects Access'}
-                                          </p>
+                                          </div>
                                        </div>
                                     </div>
                                  </div>
 
-                                 <div className="flex flex-col sm:flex-row items-center gap-4">
-                                    <div className="relative w-full sm:w-80">
+                                 <div className="flex items-center gap-4 h-[56px] w-full lg:w-auto">
+                                    <div className="relative flex-1 lg:w-80 h-full">
                                        <input
                                           type="text"
-                                          placeholder="Search inside folder..."
-                                          className="w-full bg-slate-50 border border-slate-200 rounded-[1.5rem] py-5 pl-14 pr-6 text-black font-black placeholder:text-slate-300 focus:bg-white focus:ring-4 focus:ring-blue-50 transition-all outline-none"
+                                          placeholder="Filter modules..."
+                                          className="input-premium h-full py-0 pl-12 pr-4 text-sm bg-alt/50"
                                           value={searchTerm}
                                           onChange={e => setSearchTerm(e.target.value)}
                                        />
-                                       <Search className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-400" size={20} />
+                                       <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-dim" size={18} />
                                     </div>
                                     {!selectedSubjectId ? (
-                                       <button onClick={() => setShowAddModal(true)} className="w-full sm:w-auto bg-black text-white px-10 py-5 rounded-[1.5rem] font-black uppercase text-[11px] tracking-[0.2em] hover:bg-slate-800 transition-all shadow-2xl">
-                                          Add New Subject
+                                       <button onClick={() => setShowAddModal(true)} className="btn-premium btn-premium-primary h-full px-8 shadow-xl">
+                                          <PlusCircle size={18} /> <span className="font-bold">ADD NEW SUBJECT</span>
                                        </button>
                                     ) : (
-                                       <button onClick={() => navigate(`/manage-course/${selectedSubjectId}`)} className="w-full sm:w-auto bg-black text-white px-10 py-5 rounded-[1.5rem] font-black uppercase text-[11px] tracking-[0.2em] hover:bg-slate-800 transition-all shadow-2xl">
-                                          Add New Asset
+                                       <button onClick={() => navigate(`/manage-course/${selectedSubjectId}`)} className="btn-premium btn-premium-primary h-full px-8 shadow-xl">
+                                          <PlusCircle size={18} /> <span className="font-bold">ADD NEW ASSET</span>
                                        </button>
                                     )}
                                  </div>
@@ -491,14 +514,24 @@ const TeacherDashboard = () => {
 
                               {selectedSubjectId && !showResourceForm && (
                                  <div className="col-span-full">
-                                    <div className="flex items-center gap-6 mb-12 border-b border-slate-100 pb-4">
-                                       <button onClick={() => setActiveResourceTab('notes')} className={`text-sm font-black uppercase tracking-widest pb-4 border-b-4 transition-all ${activeResourceTab === 'notes' ? 'border-black text-black' : 'border-transparent text-slate-300'}`}>Notes & PDF</button>
-                                       <button onClick={() => setActiveResourceTab('videos')} className={`text-sm font-black uppercase tracking-widest pb-4 border-b-4 transition-all ${activeResourceTab === 'videos' ? 'border-black text-black' : 'border-transparent text-slate-300'}`}>Video Lectures</button>
-                                       <div className="flex-1"></div>
-                                       <button onClick={() => setShowResourceForm(true)} className="bg-black text-white px-6 py-3 rounded-xl font-black uppercase text-[10px] tracking-widest shadow-xl flex items-center gap-2">
-                                          <Plus size={16} /> Add Asset
-                                       </button>
-                                    </div>
+                                     <div className="tabs-premium mb-12">
+                                        <button 
+                                          onClick={() => setActiveResourceTab('notes')} 
+                                          className={`tab-item-premium ${activeResourceTab === 'notes' ? 'active' : ''}`}
+                                        >
+                                          Notes & PDF
+                                        </button>
+                                        <button 
+                                          onClick={() => setActiveResourceTab('videos')} 
+                                          className={`tab-item-premium ${activeResourceTab === 'videos' ? 'active' : ''}`}
+                                        >
+                                          Video Lectures
+                                        </button>
+                                        <div className="flex-1"></div>
+                                        <button onClick={() => setShowResourceForm(true)} className="btn-premium btn-premium-primary !px-6 !py-2.5 shadow-sm text-[10px]">
+                                           <Plus size={14} /> Add Asset
+                                        </button>
+                                     </div>
 
                                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
                                        {(() => {
@@ -512,19 +545,19 @@ const TeacherDashboard = () => {
                                           );
 
                                           return assets.map((asset, i) => (
-                                             <div key={i} className="card-clean p-8 flex items-center gap-6 group border-slate-100 hover:border-black">
-                                                <div className={`w-16 h-16 rounded-2xl flex items-center justify-center text-3xl shadow-sm ${activeResourceTab === 'notes' ? 'bg-blue-50 text-blue-600' : 'bg-red-50 text-red-600'}`}>
-                                                   {activeResourceTab === 'notes' ? <FileText size={28} /> : <Play size={28} />}
+                                             <div key={i} className="card-clean flex items-center gap-6 group">
+                                                <div className={`w-14 h-14 rounded-2xl flex items-center justify-center text-2xl shadow-sm bg-alt/80 border border-subtle transition-all group-hover:scale-110 ${activeResourceTab === 'notes' ? 'text-blue-500' : 'text-red-500'}`}>
+                                                   {activeResourceTab === 'notes' ? <FileText size={24} /> : <Play size={24} />}
                                                 </div>
                                                 <div className="flex-1 min-w-0">
-                                                   <h5 className="font-black text-black uppercase text-sm truncate mb-1">{asset.title}</h5>
-                                                   <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest">{activeResourceTab === 'notes' ? 'PDF/Image' : asset.dataType || 'Video Link'}</p>
+                                                   <h5 className="font-black text-bright uppercase text-xs truncate mb-1">{asset.title}</h5>
+                                                   <p className="text-[9px] font-black text-dim uppercase tracking-widest opacity-60">{activeResourceTab === 'notes' ? 'PDF DOCUMENT' : asset.dataType || 'DIRECT LINK'}</p>
                                                 </div>
                                                 <div className="flex gap-2">
-                                                   <a href={activeResourceTab === 'notes' ? `${API_BASE}${asset.fileUrl}` : asset.url} target="_blank" rel="noreferrer" className="w-10 h-10 rounded-xl bg-black text-white flex items-center justify-center shadow-lg">
-                                                      <Play size={18} />
+                                                   <a href={activeResourceTab === 'notes' ? `${API_BASE}${asset.fileUrl}` : asset.url} target="_blank" rel="noreferrer" className="w-10 h-10 rounded-xl bg-primary text-white flex items-center justify-center shadow-lg hover:scale-110 transition-all">
+                                                      <Play size={16} />
                                                    </a>
-                                                   <button onClick={async () => { if (window.confirm('Erase this asset?')) await deleteResource(selectedSubjectId, asset._id, activeResourceTab === 'notes' ? 'note' : 'video'); }} className="w-10 h-10 rounded-xl bg-slate-50 text-slate-400 hover:text-red-500 flex items-center justify-center border border-slate-100"><Trash2 size={18} /></button>
+                                                   <button onClick={async () => { if (window.confirm('Erase this asset?')) await deleteResource(selectedSubjectId, asset._id, activeResourceTab === 'notes' ? 'note' : 'video'); }} className="w-10 h-10 rounded-xl bg-alt text-dim hover:text-danger flex items-center justify-center border border-subtle hover:bg-surface transition-all"><Trash2 size={16} /></button>
                                                 </div>
                                              </div>
                                           ));
@@ -535,48 +568,59 @@ const TeacherDashboard = () => {
 
                               {showResourceForm && (
                                  <div className="col-span-full max-w-2xl mx-auto w-full animate-fadeUp">
-                                    <div className="card-clean p-10 border-black shadow-2xl relative">
-                                       <button onClick={() => setShowResourceForm(false)} className="absolute top-8 right-8 text-slate-300 hover:text-black transition-all"><X size={24} /></button>
-                                       <h3 className="text-2xl font-black text-black uppercase italic tracking-tight mb-8">Deploy Digital Asset</h3>
-                                       <form onSubmit={handleAddRes} className="space-y-6">
-                                          <div className="grid grid-cols-2 gap-4 bg-slate-50 p-2 rounded-2xl mb-8">
-                                             <button type="button" onClick={() => setNewResource({ ...newResource, type: 'note' })} className={`flex-1 py-4 rounded-xl font-black uppercase text-[10px] tracking-widest transition-all ${newResource.type === 'note' ? 'bg-black text-white shadow-lg' : 'text-slate-400 hover:text-black'}`}>Note / PDF</button>
-                                             <button type="button" onClick={() => setNewResource({ ...newResource, type: 'video' })} className={`flex-1 py-4 rounded-xl font-black uppercase text-[10px] tracking-widest transition-all ${newResource.type === 'video' ? 'bg-black text-white shadow-lg' : 'text-slate-400 hover:text-black'}`}>Video Tutorial</button>
+                                    <div className="card-premium p-8 md:p-12 border-subtle shadow-2xl relative overflow-hidden bg-grad-surface">
+                                       <button onClick={() => setShowResourceForm(false)} className="absolute top-8 right-8 text-dim hover:text-primary transition-all"><X size={24} /></button>
+                                       <div className="mb-10">
+                                          <h3 className="text-3xl font-black text-bright uppercase italic tracking-tighter leading-none mb-3">Deploy Digital Asset</h3>
+                                          <p className="text-[10px] text-primary font-black uppercase tracking-[0.3em] opacity-80">Repository Addition Sequence</p>
+                                       </div>
+                                       
+                                       <form onSubmit={handleAddRes} className="space-y-10">
+                                          <div className="grid grid-cols-2 gap-4 bg-alt/50 p-2 rounded-2xl mb-8 border border-subtle">
+                                             <button type="button" onClick={() => setNewResource({ ...newResource, type: 'note' })} className={`flex-1 py-4 rounded-xl font-black uppercase text-[10px] tracking-widest transition-all ${newResource.type === 'note' ? 'bg-primary text-white shadow-lg' : 'text-dim hover:text-bright'}`}>Note / PDF Archive</button>
+                                             <button type="button" onClick={() => setNewResource({ ...newResource, type: 'video' })} className={`flex-1 py-4 rounded-xl font-black uppercase text-[10px] tracking-widest transition-all ${newResource.type === 'video' ? 'bg-primary text-white shadow-lg' : 'text-dim hover:text-bright'}`}>Video Intel</button>
                                           </div>
 
-                                          <div>
-                                             <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 block">Asset Designation</label>
-                                             <input className="w-full bg-slate-50 border border-slate-200 rounded-[1.5rem] py-5 px-6 font-black text-black outline-none focus:bg-white transition-all" placeholder="E.G. SEMESTER 1 HANDOUT" value={newResource.title} onChange={e => setNewResource({ ...newResource, title: e.target.value })} required />
-                                          </div>
-
-                                          {newResource.type === 'video' && (
-                                             <div className="space-y-6">
-                                                <div className="flex gap-4">
-                                                   <label className="flex items-center gap-2 cursor-pointer">
-                                                      <input type="radio" checked={newResource.videoType === 'youtube'} onChange={() => setNewResource({ ...newResource, videoType: 'youtube' })} />
-                                                      <span className="text-[10px] font-black uppercase tracking-widest">YouTube Link</span>
-                                                   </label>
-                                                   <label className="flex items-center gap-2 cursor-pointer">
-                                                      <input type="radio" checked={newResource.videoType === 'file'} onChange={() => setNewResource({ ...newResource, videoType: 'file' })} />
-                                                      <span className="text-[10px] font-black uppercase tracking-widest">Upload File</span>
-                                                   </label>
-                                                </div>
-                                                {newResource.videoType === 'youtube' ? (
-                                                   <input className="w-full bg-slate-50 border border-slate-200 rounded-[1.5rem] py-5 px-6 font-black text-black outline-none" placeholder="PASTE YOUTUBE URL..." value={newResource.url} onChange={e => setNewResource({ ...newResource, url: e.target.value })} required />
-                                                ) : (
-                                                   <input type="file" className="w-full bg-slate-50 border border-slate-200 rounded-[1.5rem] py-5 px-6 font-black" onChange={e => setNewResource({ ...newResource, file: e.target.files[0] })} required />
-                                                )}
+                                          <div className="space-y-6">
+                                             <div>
+                                                <label className="text-[10px] font-black text-dim uppercase tracking-widest mb-3 block">Asset Designation</label>
+                                                <input className="input-premium py-5 px-6 italic text-bright bg-alt/30" placeholder="E.G. SEMESTER 1 HANDOUT" value={newResource.title} onChange={e => setNewResource({ ...newResource, title: e.target.value })} required />
                                              </div>
-                                          )}
 
-                                          {newResource.type === 'note' && (
-                                             <input type="file" className="w-full bg-slate-50 border border-slate-200 rounded-[1.5rem] py-5 px-6 font-black" onChange={e => setNewResource({ ...newResource, file: e.target.files[0] })} required />
-                                          )}
+                                             {newResource.type === 'video' && (
+                                                <div className="space-y-8 animate-fadeIn">
+                                                   <div className="flex gap-8 px-2">
+                                                      <label className="flex items-center gap-3 cursor-pointer group">
+                                                         <input type="radio" className="w-5 h-5 accent-primary" checked={newResource.videoType === 'youtube'} onChange={() => setNewResource({ ...newResource, videoType: 'youtube' })} />
+                                                         <span className="text-[10px] font-black uppercase tracking-widest text-dim group-hover:text-bright transition-colors">YouTube Link</span>
+                                                      </label>
+                                                      <label className="flex items-center gap-3 cursor-pointer group">
+                                                         <input type="radio" className="w-5 h-5 accent-primary" checked={newResource.videoType === 'file'} onChange={() => setNewResource({ ...newResource, videoType: 'file' })} />
+                                                         <span className="text-[10px] font-black uppercase tracking-widest text-dim group-hover:text-bright transition-colors">Direct Upload</span>
+                                                      </label>
+                                                   </div>
+                                                   {newResource.videoType === 'youtube' ? (
+                                                      <input className="input-premium py-5 px-6 italic text-bright bg-alt/30" placeholder="PASTE CLOUD-STREAM URL..." value={newResource.url} onChange={e => setNewResource({ ...newResource, url: e.target.value })} required />
+                                                   ) : (
+                                                      <div className="relative group">
+                                                         <input type="file" className="input-premium py-4 px-6 text-[10px] uppercase font-black cursor-pointer bg-alt/30 file:mr-6 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-[10px] file:font-black file:bg-primary file:text-white file:cursor-pointer" onChange={e => setNewResource({ ...newResource, file: e.target.files[0] })} required />
+                                                      </div>
+                                                   )}
+                                                </div>
+                                             )}
 
-                                          <div className="flex gap-4 pt-4 border-t border-slate-100">
-                                             <button type="button" onClick={() => setShowResourceForm(false)} className="flex-1 bg-slate-50 text-slate-400 py-5 rounded-2xl font-black uppercase text-[10px] tracking-widest">Abort</button>
-                                             <button type="submit" disabled={isLoading} className="flex-1 bg-black text-white py-5 rounded-2xl font-black uppercase text-[10px] tracking-widest shadow-2xl disabled:opacity-50">
-                                                {isLoading ? 'Encrypting...' : 'Deploy Asset'}
+                                             {newResource.type === 'note' && (
+                                                <div className="animate-fadeIn">
+                                                   <label className="text-[10px] font-black text-dim uppercase tracking-widest mb-3 block">PDF Repository Source</label>
+                                                   <input type="file" className="input-premium py-4 px-6 text-[10px] uppercase font-black cursor-pointer bg-alt/30 file:mr-6 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-[10px] file:font-black file:bg-primary file:text-white file:cursor-pointer" onChange={e => setNewResource({ ...newResource, file: e.target.files[0] })} required />
+                                                </div>
+                                             )}
+                                          </div>
+
+                                          <div className="flex gap-6 pt-8 border-t border-subtle">
+                                             <button type="button" onClick={() => setShowResourceForm(false)} className="flex-1 btn-premium btn-premium-secondary py-5 text-[10px] font-black">ABORT MISSION</button>
+                                             <button type="submit" disabled={isLoading} className="flex-1 btn-premium btn-premium-primary py-5 text-[10px] font-black shadow-[0_12px_24px_rgba(37,99,235,0.25)]">
+                                                {isLoading ? 'ENCRYPTING...' : 'DEPLOY ASSET'}
                                              </button>
                                           </div>
                                        </form>
@@ -614,9 +658,9 @@ const TeacherDashboard = () => {
                         </button>
                      </div>
 
-                     <div className="card-premium p-0 overflow-hidden shadow-sm">
-                        <div className="overflow-x-auto">
-                           <table className="w-full text-left">
+                     <div className="card-premium p-0 overflow-hidden shadow-sm border-subtle">
+                        <div className="overflow-x-auto custom-scrollbar">
+                           <table className="w-full text-left min-w-[900px] border-collapse">
                               <thead className="bg-alt border-b border-subtle">
                                  <tr>
                                     <th className="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-dim">Student Identity</th>
@@ -641,9 +685,27 @@ const TeacherDashboard = () => {
                                        </td>
                                        <td className="px-6 py-4 font-bold text-xs text-bright">{st.studentClass || 'N/A'}</td>
                                        <td className="px-6 py-4 font-bold text-xs text-dim">{st.phone}</td>
-                                       <td className="px-6 py-4"><span className="badge-premium badge-success">Active</span></td>
+                                       <td className="px-6 py-4">
+                                           {st.status === 'approved' ? (
+                                              <span className="badge-premium badge-success">Approved</span>
+                                           ) : (
+                                              <span className="px-3 py-1 bg-yellow-500/20 text-yellow-500 rounded-lg text-[9px] font-black uppercase tracking-wider">Pending</span>
+                                           )}
+                                       </td>
                                        <td className="px-6 py-4 text-right">
                                           <div className="flex justify-end gap-2">
+                                             {st.status !== 'approved' && (
+                                                <button onClick={async () => {
+                                                   if (window.confirm(`Grant official clearance to ${st.name}?`)) {
+                                                      const ok = await approveStudent(st._id);
+                                                      if (ok) setMessage({ text: 'Protocol Complete: Student identity verified & notified', type: 'success' });
+                                                      else setMessage({ text: 'Link Failure: Could not finalize approval', type: 'error' });
+                                                      setTimeout(() => setMessage({ text: '', type: '' }), 4000);
+                                                   }
+                                                }} className="w-9 h-9 rounded-lg bg-green-500 text-white flex items-center justify-center shadow-lg hover:scale-110 transition-all" title="Approve Access">
+                                                   <Check size={16} />
+                                                </button>
+                                             )}
                                              <button onClick={() => { setSelectedStudent(st); setShowAssignModal(true); }} className="w-9 h-9 rounded-lg bg-surface flex items-center justify-center text-dim hover:text-primary transition-all border border-subtle" title="Assign Courses">
                                                 <Folder size={16} /></button>
                                              <button onClick={() => deleteStudent(st._id)} className="w-9 h-9 rounded-lg bg-surface flex items-center justify-center text-dim hover:text-danger transition-all border border-subtle">
@@ -1104,49 +1166,49 @@ const TeacherDashboard = () => {
          {/* Add Subject Modal */}
          {showAddModal && (
             <div className="fixed inset-0 z-[10001] flex items-center justify-center p-6 sm:p-8 bg-black/80 animate-fadeIn">
-               <div className="w-full max-w-lg modal-high-contrast rounded-[2.5rem] p-8 sm:p-12 animate-fadeUp relative">
+               <div className="w-full max-w-lg modal-high-contrast rounded-3xl p-8 md:p-12 animate-fadeUp relative overflow-hidden">
                   <div className="flex items-start justify-between gap-8 mb-10">
                      <div className="text-left flex-1">
-                        <h2 className="text-3xl font-black text-black tracking-tight uppercase leading-none mb-2 italic">Create Subject</h2>
-                        <p className="text-[10px] text-slate-500 font-black uppercase tracking-widest">Protocol Initialization</p>
+                        <h2 className="text-3xl font-black text-bright tracking-tight uppercase leading-none mb-2 italic">Create Subject</h2>
+                        <p className="text-[10px] text-primary font-black uppercase tracking-widest opacity-80">Protocol Initialization</p>
                      </div>
                      <button
                         onClick={() => setShowAddModal(false)}
-                        className="w-11 h-11 rounded-2xl bg-slate-50 border border-slate-200 flex items-center justify-center text-slate-400 hover:bg-slate-100 hover:text-black transition-all shadow-sm shrink-0"
+                        className="w-11 h-11 rounded-2xl bg-alt border border-subtle flex items-center justify-center text-dim hover:text-primary transition-all shadow-sm shrink-0"
                      >
                         <X size={20} />
                      </button>
                   </div>
-                  <form onSubmit={handleAddSubject} className="space-y-8">
+                  <form onSubmit={handleAddSubject} className="space-y-10">
                      <div className="space-y-6">
                         <div>
-                           <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3 block">Subject Nomenclature</label>
-                           <input className="w-full bg-slate-50 border border-slate-200 rounded-2xl py-5 px-6 text-black font-black focus:bg-white transition-all outline-none" placeholder="e.g. ADVANCED CALCULUS" value={newSubject.name} onChange={e => setNewSubject({ ...newSubject, name: e.target.value })} required />
+                           <label className="text-[10px] font-black text-dim uppercase tracking-widest mb-3 block">Subject Nomenclature</label>
+                           <input className="input-premium py-5 px-6 italic text-bright" placeholder="e.g. ADVANCED CALCULUS" value={newSubject.name} onChange={e => setNewSubject({ ...newSubject, name: e.target.value })} required />
                         </div>
                         <div>
-                           <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3 block">Academic Board</label>
-                           <input className="w-full bg-slate-50 border border-slate-200 rounded-2xl py-5 px-6 text-black font-black focus:bg-white transition-all outline-none" placeholder="e.g. CBSE XII 2026" value={newSubject.category} onChange={e => setNewSubject({ ...newSubject, category: e.target.value })} required />
+                           <label className="text-[10px] font-black text-dim uppercase tracking-widest mb-3 block">Academic Board</label>
+                           <input className="input-premium py-5 px-6 italic text-bright" placeholder="e.g. CBSE XII 2026" value={newSubject.category} onChange={e => setNewSubject({ ...newSubject, category: e.target.value })} required />
                         </div>
                      </div>
-                     <div className="grid grid-cols-2 gap-6">
+                     <div className="grid grid-cols-2 gap-8">
                         <div>
-                           <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3 block">Avatar Icon</label>
-                           <select className="w-full bg-slate-50 border border-slate-200 rounded-2xl h-16 px-6 text-black font-black focus:bg-white transition-all outline-none" value={newSubject.icon} onChange={e => setNewSubject({ ...newSubject, icon: e.target.value })}>
+                           <label className="text-[10px] font-black text-dim uppercase tracking-widest mb-3 block">Avatar Icon</label>
+                           <select className="input-premium h-[64px] px-6 text-bright bg-alt/50" value={newSubject.icon} onChange={e => setNewSubject({ ...newSubject, icon: e.target.value })}>
                               <option>📘</option><option>🧪</option><option>🔢</option><option>🌍</option><option>⚖️</option><option>🧬</option><option>⚛️</option>
                            </select>
                         </div>
                         <div>
-                           <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3 block">Brand color</label>
-                           <div className="flex items-center h-16 gap-4">
-                              <input type="color" className="w-14 h-14 bg-transparent border-none cursor-pointer" value={newSubject.color} onChange={e => setNewSubject({ ...newSubject, color: e.target.value })} />
-                              <span className="text-xs font-black text-black uppercase tracking-widest">{newSubject.color}</span>
+                           <label className="text-[10px] font-black text-dim uppercase tracking-widest mb-3 block">Brand color</label>
+                           <div className="flex items-center h-[64px] gap-4 bg-alt/50 rounded-2xl px-4 border border-subtle">
+                              <input type="color" className="w-10 h-10 bg-transparent border-none cursor-pointer" value={newSubject.color} onChange={e => setNewSubject({ ...newSubject, color: e.target.value })} />
+                              <span className="text-[10px] font-black text-bright uppercase tracking-widest font-mono">{newSubject.color}</span>
                            </div>
                         </div>
                      </div>
-                     <div className="flex gap-4 pt-4">
-                        <button type="button" onClick={() => setShowAddModal(false)} className="flex-1 bg-slate-100 text-slate-400 py-5 rounded-2xl font-black uppercase text-[10px] tracking-widest hover:bg-slate-200 transition-all">Cancel</button>
-                        <button type="submit" disabled={isLoading} className="flex-1 bg-black text-white py-5 rounded-2xl font-black uppercase text-[10px] tracking-widest shadow-2xl disabled:opacity-50">
-                           {isLoading ? 'In Progress...' : 'Confirm Entry'}
+                     <div className="flex gap-6 pt-6 border-t border-subtle">
+                        <button type="button" onClick={() => setShowAddModal(false)} className="flex-1 btn-premium btn-premium-secondary py-5 text-[10px] font-black">ABORT SEQUENCE</button>
+                        <button type="submit" disabled={isLoading} className="flex-1 btn-premium btn-premium-primary py-5 text-[10px] font-black shadow-[0_12px_24px_rgba(37,99,235,0.25)] disabled:opacity-50">
+                           {isLoading ? 'ESTABLISHING...' : 'CONFIRM ENTRY'}
                         </button>
                      </div>
                   </form>
@@ -1157,42 +1219,68 @@ const TeacherDashboard = () => {
          {/* Add Course Modal */}
          {showCourseModal && (
             <div className="fixed inset-0 z-[10001] flex items-center justify-center p-4 sm:p-8 bg-black/80 animate-fadeIn overflow-hidden">
-               <div className="w-full max-w-lg modal-high-contrast rounded-[2.5rem] shadow-2xl animate-fadeUp p-8 sm:p-12 relative">
-                  <div className="flex items-start justify-between gap-8 mb-12">
+               <div className="w-full max-w-lg modal-high-contrast rounded-3xl shadow-2xl animate-fadeUp p-8 md:p-12 relative overflow-hidden">
+                  <div className="flex items-start justify-between gap-8 mb-10">
                      <div className="text-left flex-1">
-                        <h2 className="text-3xl font-black text-black tracking-tight uppercase leading-none mb-3 italic">Create Folder/Course</h2>
-                        <p className="text-[11px] text-slate-500 font-black uppercase tracking-[0.3em] opacity-80">Initialize academic structure</p>
+                        <h2 className="text-3xl font-black text-bright tracking-tight uppercase leading-none mb-3 italic">Create Folder/Course</h2>
+                        <p className="text-[11px] text-primary font-black uppercase tracking-[0.3em] opacity-80">Initialize academic structure</p>
                      </div>
                      <button
                         onClick={() => setShowCourseModal(false)}
-                        className="w-11 h-11 rounded-2xl bg-slate-50 border border-slate-200 flex items-center justify-center text-slate-400 hover:bg-slate-100 hover:text-black transition-all shadow-sm shrink-0"
+                        className="w-11 h-11 rounded-2xl bg-alt border border-subtle flex items-center justify-center text-dim hover:text-primary transition-all shadow-sm shrink-0"
                      >
                         <X size={20} />
                      </button>
                   </div>
 
-                  <form onSubmit={handleAddCourse} className="space-y-8">
+                  <form onSubmit={handleAddCourse} className="space-y-10">
                      <div className="space-y-6">
                         <div>
-                           <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-3 block">Folder Name</label>
-                           <input className="w-full bg-slate-50 border border-slate-200 rounded-2xl py-5 px-6 text-black font-black placeholder:text-slate-300 focus:bg-white transition-all outline-none" value={newCourse.name} onChange={e => setNewCourse({ ...newCourse, name: e.target.value })} required />
+                           <label className="text-[10px] font-black text-dim uppercase tracking-widest mb-3 block">Folder Name</label>
+                           <input 
+                              className="input-premium py-5 px-6 italic text-bright" 
+                              placeholder="e.g. SEMESTER 1 ARCHIVE"
+                              value={newCourse.name} 
+                              onChange={e => setNewCourse({ ...newCourse, name: e.target.value })} 
+                              required 
+                           />
                         </div>
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
                            <div>
-                              <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-3 block">Icon</label>
-                              <select className="w-full bg-slate-50 border border-slate-200 rounded-2xl h-16 px-6 text-black font-black focus:bg-white transition-all outline-none" value={newCourse.icon} onChange={e => setNewCourse({ ...newCourse, icon: e.target.value })}>
+                              <label className="text-[10px] font-black text-dim uppercase tracking-widest mb-3 block">Icon</label>
+                              <select 
+                                 className="input-premium h-[64px] px-6 text-bright bg-alt/50 cursor-pointer" 
+                                 value={newCourse.icon} 
+                                 onChange={e => setNewCourse({ ...newCourse, icon: e.target.value })}
+                              >
                                  <option>📂</option><option>📁</option><option>🚀</option><option>🎓</option><option>🔬</option>
                               </select>
                            </div>
                            <div>
-                              <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-3 block">Category</label>
-                              <input className="w-full bg-slate-50 border border-slate-200 rounded-2xl h-16 px-6 text-black font-black placeholder:text-slate-300 focus:bg-white transition-all outline-none" value={newCourse.category} onChange={e => setNewCourse({ ...newCourse, category: e.target.value })} />
+                              <label className="text-[10px] font-black text-dim uppercase tracking-widest mb-3 block">Category</label>
+                              <input 
+                                 className="input-premium h-[64px] px-6 text-bright bg-alt/50 placeholder:opacity-40" 
+                                 placeholder="Academic Sector"
+                                 value={newCourse.category} 
+                                 onChange={e => setNewCourse({ ...newCourse, category: e.target.value })} 
+                              />
                            </div>
                         </div>
                      </div>
-                     <div className="flex gap-4 pt-4">
-                        <button type="button" onClick={() => setShowCourseModal(false)} className="flex-1 bg-slate-100 text-slate-600 py-5 rounded-2xl font-black uppercase text-[10px] tracking-widest">Cancel</button>
-                        <button type="submit" className="flex-1 bg-black text-white py-5 rounded-2xl font-black uppercase text-[10px] tracking-widest shadow-xl">Establish</button>
+                     <div className="flex gap-6 pt-6 border-t border-subtle">
+                        <button 
+                           type="button" 
+                           onClick={() => setShowCourseModal(false)} 
+                           className="flex-1 btn-premium btn-premium-secondary py-5 text-[10px] font-black"
+                        >
+                           ABORT SEQUENCE
+                        </button>
+                        <button 
+                           type="submit" 
+                           className="flex-1 btn-premium btn-premium-primary py-5 text-[10px] font-black shadow-[0_12px_24px_rgba(37,99,235,0.25)]"
+                        >
+                           ESTABLISH FOLDER
+                        </button>
                      </div>
                   </form>
                </div>
@@ -1202,40 +1290,54 @@ const TeacherDashboard = () => {
          {/* Assign Course Permissions Modal */}
          {showAssignModal && selectedStudent && (
             <div className="fixed inset-0 z-[10001] flex items-center justify-center p-6 sm:p-8 bg-black/80 animate-fadeIn">
-               <div className="w-full max-w-lg modal-high-contrast rounded-[2.5rem] p-8 sm:p-12 animate-fadeUp relative">
-                  <div className="flex items-start justify-between gap-8 mb-8">
-                     <div className="flex-1">
-                        <h2 className="text-2xl font-black text-black tracking-tight uppercase leading-none italic">Assign Permissions</h2>
-                        <p className="text-[10px] text-slate-500 font-black uppercase tracking-widest mt-2">{selectedStudent.name}</p>
+               <div className="w-full max-w-lg modal-high-contrast rounded-3xl p-8 md:p-12 animate-fadeUp relative overflow-hidden">
+                  <div className="flex items-start justify-between gap-8 mb-10">
+                     <div className="flex-1 text-left">
+                        <h2 className="text-2xl font-black text-bright tracking-tight uppercase leading-none italic mb-2">Assign Permissions</h2>
+                        <p className="text-[10px] text-primary font-black uppercase tracking-widest opacity-80">{selectedStudent.name}</p>
                      </div>
                      <button
                         onClick={() => setShowAssignModal(false)}
-                        className="w-11 h-11 rounded-2xl bg-slate-50 border border-slate-200 flex items-center justify-center text-slate-400 hover:bg-slate-100 hover:text-black transition-all shadow-sm shrink-0"
+                        className="w-11 h-11 rounded-2xl bg-alt border border-subtle flex items-center justify-center text-dim hover:text-primary transition-all shadow-sm shrink-0"
                      >
                         <X size={20} />
                      </button>
                   </div>
-                  <form onSubmit={handleAssignCourses} className="space-y-8">
-                     <div className="space-y-3 max-h-[40vh] overflow-y-auto pr-2 custom-scrollbar">
+                  <form onSubmit={handleAssignCourses} className="space-y-10">
+                     <div className="space-y-4 max-h-[40vh] overflow-y-auto pr-3 custom-scrollbar">
                         {courses.map(course => (
-                           <label key={course._id} className="flex items-center justify-between p-5 rounded-2xl bg-slate-50 border border-slate-100 hover:border-black cursor-pointer group transition-all">
-                              <div className="flex items-center gap-4">
-                                 <div className="w-12 h-12 rounded-xl bg-white border border-slate-200 flex items-center justify-center text-xl shadow-sm">{course.icon}</div>
-                                 <span className="font-black text-black text-sm uppercase tracking-tight">{course.name}</span>
+                           <label key={course._id} className="flex items-center justify-between p-5 rounded-2xl bg-alt/50 border border-subtle hover:border-primary cursor-pointer group transition-all">
+                              <div className="flex items-center gap-6">
+                                 <div className="w-14 h-14 rounded-xl bg-surface border border-subtle flex items-center justify-center text-2xl shadow-sm text-bright transition-all group-hover:scale-110">{course.icon}</div>
+                                 <div className="flex flex-col">
+                                    <span className="font-black text-bright text-sm uppercase tracking-tight leading-none mb-1">{course.name}</span>
+                                    <span className="text-[8px] font-black text-dim uppercase tracking-widest opacity-60">{course.category || 'ACADEMIC MODULE'}</span>
+                                 </div>
                               </div>
                               <input
                                  type="checkbox"
                                  name="assignedCourses"
                                  value={course._id}
-                                 className="w-6 h-6 accent-black"
+                                 className="w-6 h-6 border-2 border-primary-accent rounded-lg bg-alt/40 checked:bg-primary transition-all cursor-pointer"
                                  defaultChecked={selectedStudent.assignedCourses?.includes(course._id)}
                               />
                            </label>
                         ))}
                      </div>
-                     <div className="flex gap-4 pt-4 border-t border-slate-100">
-                        <button type="button" onClick={() => setShowAssignModal(false)} className="flex-1 bg-slate-100 text-slate-600 py-5 rounded-2xl font-black uppercase text-[10px] tracking-widest">Abort</button>
-                        <button type="submit" className="flex-1 bg-black text-white py-5 rounded-2xl font-black uppercase text-[10px] tracking-widest shadow-xl">Apply Changes</button>
+                     <div className="flex gap-6 pt-6 border-t border-subtle">
+                        <button 
+                           type="button" 
+                           onClick={() => setShowAssignModal(false)} 
+                           className="flex-1 btn-premium btn-premium-secondary py-5 text-[10px] font-black"
+                        >
+                           ABORT SEQUENCE
+                        </button>
+                        <button 
+                           type="submit" 
+                           className="flex-1 btn-premium btn-premium-primary py-5 text-[10px] font-black shadow-[0_12px_24px_rgba(37,99,235,0.25)]"
+                        >
+                           GRANT ACCESS
+                        </button>
                      </div>
                   </form>
                </div>
@@ -1245,37 +1347,40 @@ const TeacherDashboard = () => {
          {/* Add Announcement Modal */}
          {showAnnounceModal && (
             <div className="fixed inset-0 z-[10001] flex items-center justify-center p-6 sm:p-8 bg-black/80 animate-fadeIn">
-               <div className="w-full max-w-lg modal-high-contrast rounded-[2.5rem] p-8 sm:p-12 animate-fadeUp relative">
-                  <div className="flex items-start justify-between gap-8 mb-8">
-                     <h2 className="text-2xl font-black text-black tracking-tight uppercase italic leading-none flex-1">Deploy Broadcast</h2>
+               <div className="w-full max-w-lg modal-high-contrast rounded-3xl p-8 md:p-12 animate-fadeUp relative overflow-hidden">
+                  <div className="flex items-start justify-between gap-8 mb-10">
+                     <div className="text-left flex-1">
+                        <h2 className="text-2xl font-black text-bright tracking-tight uppercase leading-none italic mb-2">Deploy Broadcast</h2>
+                        <p className="text-[10px] text-primary font-black uppercase tracking-widest opacity-80">Global Notification Protocol</p>
+                     </div>
                      <button
                         onClick={() => setShowAnnounceModal(false)}
-                        className="w-11 h-11 rounded-2xl bg-slate-50 border border-slate-200 flex items-center justify-center text-slate-400 hover:bg-slate-100 hover:text-black transition-all shadow-sm shrink-0"
+                        className="w-11 h-11 rounded-2xl bg-alt border border-subtle flex items-center justify-center text-dim hover:text-primary transition-all shadow-sm shrink-0"
                      >
                         <X size={20} />
                      </button>
                   </div>
                   <form onSubmit={handleAddAnnouncement} className="space-y-6">
                      <div>
-                        <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 block">Protocol Title</label>
-                        <input className="w-full bg-slate-50 border border-slate-200 rounded-2xl py-5 px-6 text-black font-black focus:bg-white transition-all outline-none" placeholder="TITLE OF NOTICE" value={newAnnouncement.title} onChange={e => setNewAnnouncement({ ...newAnnouncement, title: e.target.value })} required />
+                        <label className="text-[10px] font-black text-dim uppercase tracking-widest mb-3 block">Protocol Title</label>
+                        <input className="input-premium py-5 px-6 italic text-bright" placeholder="TITLE OF NOTICE" value={newAnnouncement.title} onChange={e => setNewAnnouncement({ ...newAnnouncement, title: e.target.value })} required />
                      </div>
                      <div>
-                        <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 block">Instruction Content</label>
-                        <textarea className="w-full bg-slate-50 border border-slate-200 rounded-2xl py-5 px-6 text-black font-black focus:bg-white transition-all outline-none min-h-[140px]" placeholder="DRAFT CONTENT..." value={newAnnouncement.content} onChange={e => setNewAnnouncement({ ...newAnnouncement, content: e.target.value })} required />
+                        <label className="text-[10px] font-black text-dim uppercase tracking-widest mb-3 block">Instruction Content</label>
+                        <textarea className="input-premium py-5 px-6 text-bright min-h-[140px] resize-none" placeholder="DRAFT CONTENT..." value={newAnnouncement.content} onChange={e => setNewAnnouncement({ ...newAnnouncement, content: e.target.value })} required />
                      </div>
                      <div>
-                        <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 block">Priority Classification</label>
-                        <select className="w-full bg-slate-50 border border-slate-200 rounded-2xl h-16 px-6 text-black font-black" value={newAnnouncement.type} onChange={e => setNewAnnouncement({ ...newAnnouncement, type: e.target.value })}>
+                        <label className="text-[10px] font-black text-dim uppercase tracking-widest mb-3 block">Priority Classification</label>
+                        <select className="input-premium h-[64px] px-6 text-bright bg-alt/50" value={newAnnouncement.type} onChange={e => setNewAnnouncement({ ...newAnnouncement, type: e.target.value })}>
                            <option value="general">GENERAL PROTOCOL</option>
                            <option value="urgent">URGENT ALERT</option>
                            <option value="holiday">ACADEMIC HOLIDAY</option>
                            <option value="event">CAMPUS EVENT</option>
                         </select>
                      </div>
-                     <div className="flex gap-4 pt-4 border-t border-slate-100">
-                        <button type="button" onClick={() => setShowAnnounceModal(false)} className="flex-1 bg-slate-100 text-slate-600 py-5 rounded-2xl font-black uppercase text-[10px] tracking-widest">Abort</button>
-                        <button type="submit" className="flex-1 bg-black text-white py-5 rounded-2xl font-black uppercase text-[10px] tracking-widest shadow-xl">Transmit</button>
+                     <div className="flex gap-6 pt-6 border-t border-subtle">
+                        <button type="button" onClick={() => setShowAnnounceModal(false)} className="flex-1 btn-premium btn-premium-secondary py-5 text-[10px] font-black">ABORT</button>
+                        <button type="submit" className="flex-1 btn-premium btn-premium-primary py-5 text-[10px] font-black shadow-[0_12px_24px_rgba(37,99,235,0.25)]">TRANSMIT</button>
                      </div>
                   </form>
                </div>
@@ -1285,47 +1390,50 @@ const TeacherDashboard = () => {
          {/* Post Payment Modal */}
          {showFeeModal && (
             <div className="fixed inset-0 z-[10001] flex items-center justify-center p-6 sm:p-8 bg-black/80 animate-fadeIn">
-               <div className="w-full max-w-lg modal-high-contrast rounded-[2.5rem] p-8 sm:p-12 animate-fadeUp relative">
-                  <div className="flex items-start justify-between gap-8 mb-8">
-                     <h2 className="text-2xl font-black text-black tracking-tight uppercase italic leading-none flex-1">Record Payment</h2>
+               <div className="w-full max-w-lg modal-high-contrast rounded-3xl p-8 md:p-12 animate-fadeUp relative overflow-hidden">
+                  <div className="flex items-start justify-between gap-8 mb-10">
+                     <div className="text-left flex-1">
+                        <h2 className="text-2xl font-black text-bright tracking-tight uppercase leading-none italic mb-2">Record Payment</h2>
+                        <p className="text-[10px] text-primary font-black uppercase tracking-widest opacity-80">Financial Transaction Registry</p>
+                     </div>
                      <button
                         onClick={() => setShowFeeModal(false)}
-                        className="w-11 h-11 rounded-2xl bg-slate-50 border border-slate-200 flex items-center justify-center text-slate-400 hover:bg-slate-100 hover:text-black transition-all shadow-sm shrink-0"
+                        className="w-11 h-11 rounded-2xl bg-alt border border-subtle flex items-center justify-center text-dim hover:text-primary transition-all shadow-sm shrink-0"
                      >
                         <X size={20} />
                      </button>
                   </div>
                   <form onSubmit={handleAddFee} className="space-y-6">
                      <div>
-                        <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 block">Student Name</label>
-                        <input className="w-full bg-slate-50 border border-slate-200 rounded-2xl py-5 px-6 text-black font-black" placeholder="FULL NAME" value={newFee.studentName} onChange={e => setNewFee({ ...newFee, studentName: e.target.value })} required />
+                        <label className="text-[10px] font-black text-dim uppercase tracking-widest mb-2 block">Student Name</label>
+                        <input className="input-premium py-5 px-6 italic text-bright" placeholder="FULL NAME" value={newFee.studentName} onChange={e => setNewFee({ ...newFee, studentName: e.target.value })} required />
                      </div>
                      <div>
-                        <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 block">Mail Vector</label>
-                        <input type="email" className="w-full bg-slate-50 border border-slate-200 rounded-2xl py-5 px-6 text-black font-black" placeholder="SCHOLAR@DOMAIN.COM" value={newFee.email} onChange={e => setNewFee({ ...newFee, email: e.target.value })} required />
+                        <label className="text-[10px] font-black text-dim uppercase tracking-widest mb-2 block">Mail Vector</label>
+                        <input type="email" className="input-premium py-5 px-6 italic text-bright" placeholder="SCHOLAR@DOMAIN.COM" value={newFee.email} onChange={e => setNewFee({ ...newFee, email: e.target.value })} required />
                      </div>
-                     <div className="grid grid-cols-2 gap-6">
+                     <div className="grid grid-cols-2 gap-8">
                         <div>
-                           <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 block">Amount Received</label>
-                           <input type="number" className="w-full bg-slate-50 border border-slate-200 rounded-2xl py-5 px-6 text-black font-black" placeholder="₹" value={newFee.paidAmount} onChange={e => setNewFee({ ...newFee, paidAmount: e.target.value })} required />
+                           <label className="text-[10px] font-black text-dim uppercase tracking-widest mb-2 block">Amount Received</label>
+                           <input type="number" className="input-premium py-5 px-6 text-bright bg-alt/50" placeholder="₹" value={newFee.paidAmount} onChange={e => setNewFee({ ...newFee, paidAmount: e.target.value })} required />
                         </div>
                         <div>
-                           <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 block">Outstanding</label>
-                           <input type="number" className="w-full bg-slate-50 border border-slate-200 rounded-2xl py-5 px-6 text-black font-black" placeholder="₹" value={newFee.pendingFees} onChange={e => setNewFee({ ...newFee, pendingFees: e.target.value })} />
+                           <label className="text-[10px] font-black text-dim uppercase tracking-widest mb-2 block">Outstanding</label>
+                           <input type="number" className="input-premium py-5 px-6 text-bright bg-alt/50" placeholder="₹" value={newFee.pendingFees} onChange={e => setNewFee({ ...newFee, pendingFees: e.target.value })} />
                         </div>
                      </div>
                      <div>
-                        <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 block">Payment Protocol</label>
-                        <select className="w-full bg-slate-50 border border-slate-200 rounded-2xl h-16 px-6 text-black font-black" value={newFee.paymentMode} onChange={e => setNewFee({ ...newFee, paymentMode: e.target.value })}>
+                        <label className="text-[10px] font-black text-dim uppercase tracking-widest mb-2 block">Payment Protocol</label>
+                        <select className="input-premium h-[64px] px-6 text-bright bg-alt/50" value={newFee.paymentMode} onChange={e => setNewFee({ ...newFee, paymentMode: e.target.value })}>
                            <option value="UPI/Online">UPI / ONLINE GATEWAY</option>
                            <option value="Cash">DIRECT CASH DEPOSIT</option>
                            <option value="Cheque">BANK CHEQUE</option>
                            <option value="Transfer">NEFT/IMPS TRANSFER</option>
                         </select>
                      </div>
-                     <div className="flex gap-4 pt-4 border-t border-slate-100">
-                        <button type="button" onClick={() => setShowFeeModal(false)} className="flex-1 bg-slate-100 text-slate-600 py-5 rounded-2xl font-black uppercase text-[10px] tracking-widest">Cancel</button>
-                        <button type="submit" className="flex-1 bg-black text-white py-5 rounded-2xl font-black uppercase text-[10px] tracking-widest shadow-xl">Finalize</button>
+                     <div className="flex gap-6 pt-6 border-t border-subtle">
+                        <button type="button" onClick={() => setShowFeeModal(false)} className="flex-1 btn-premium btn-premium-secondary py-5 text-[10px] font-black">CANCEL</button>
+                        <button type="submit" className="flex-1 btn-premium btn-premium-primary py-5 text-[10px] font-black shadow-[0_12px_24px_rgba(37,99,235,0.25)]">FINALIZE</button>
                      </div>
                   </form>
                </div>
@@ -1335,12 +1443,15 @@ const TeacherDashboard = () => {
          {/* Edit Student Detail Modal */}
          {showEditStudentModal && selectedStudent && (
             <div className="fixed inset-0 z-[10001] flex items-center justify-center p-6 sm:p-8 bg-black/80 animate-fadeIn">
-               <div className="w-full max-w-lg modal-high-contrast rounded-[2.5rem] p-8 sm:p-12 animate-fadeUp relative">
+               <div className="w-full max-w-lg modal-high-contrast rounded-3xl p-8 md:p-12 animate-fadeUp relative overflow-hidden">
                   <div className="flex items-start justify-between gap-8 mb-10">
-                     <h2 className="text-2xl font-black text-black tracking-tight uppercase italic leading-none flex-1">Update Identity</h2>
+                     <div className="text-left flex-1">
+                        <h2 className="text-2xl font-black text-bright tracking-tight uppercase italic leading-none mb-2">Update Identity</h2>
+                        <p className="text-[10px] text-primary font-black uppercase tracking-widest opacity-80">{selectedStudent.name}</p>
+                     </div>
                      <button
                         onClick={() => setShowEditStudentModal(false)}
-                        className="w-11 h-11 rounded-2xl bg-slate-50 border border-slate-200 flex items-center justify-center text-slate-400 hover:bg-slate-100 hover:text-black transition-all shadow-sm shrink-0"
+                        className="w-11 h-11 rounded-2xl bg-alt border border-subtle flex items-center justify-center text-dim hover:text-primary transition-all shadow-sm shrink-0"
                      >
                         <X size={20} />
                      </button>
@@ -1358,27 +1469,27 @@ const TeacherDashboard = () => {
                   }} className="space-y-8">
                      <div className="space-y-6">
                         <div>
-                           <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 block">Full Nomenclature</label>
-                           <input name="name" className="w-full bg-slate-50 border border-slate-200 rounded-2xl py-5 px-6 text-black font-black" defaultValue={selectedStudent.name} required />
+                           <label className="text-[10px] font-black text-dim uppercase tracking-widest mb-3 block">Full Nomenclature</label>
+                           <input name="name" className="input-premium py-5 px-6 italic text-bright" defaultValue={selectedStudent.name} required />
                         </div>
-                        <div className="grid grid-cols-2 gap-6">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
                            <div>
-                              <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 block">Email Address</label>
-                              <input name="email" type="email" className="w-full bg-slate-50 border border-slate-200 rounded-2xl py-5 px-6 text-black font-black" defaultValue={selectedStudent.email} required />
+                              <label className="text-[10px] font-black text-dim uppercase tracking-widest mb-3 block">Email Address</label>
+                              <input name="email" type="email" className="input-premium py-5 px-6 text-bright bg-alt/50" defaultValue={selectedStudent.email} required />
                            </div>
                            <div>
-                              <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 block">Contact Vector</label>
-                              <input name="phone" className="w-full bg-slate-50 border border-slate-200 rounded-2xl py-5 px-6 text-black font-black" defaultValue={selectedStudent.phone} required />
+                              <label className="text-[10px] font-black text-dim uppercase tracking-widest mb-3 block">Contact Vector</label>
+                              <input name="phone" className="input-premium py-5 px-6 text-bright bg-alt/50" defaultValue={selectedStudent.phone} required />
                            </div>
                         </div>
                         <div>
-                           <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 block">Board / Class</label>
-                           <input name="studentClass" className="w-full bg-slate-50 border border-slate-200 rounded-2xl py-5 px-6 text-black font-black" defaultValue={selectedStudent.studentClass} />
+                           <label className="text-[10px] font-black text-dim uppercase tracking-widest mb-3 block">Board / Class</label>
+                           <input name="studentClass" className="input-premium py-5 px-6 text-bright italic bg-alt/50" defaultValue={selectedStudent.studentClass} />
                         </div>
                      </div>
-                     <div className="flex gap-4 pt-4 border-t border-slate-100">
-                        <button type="button" onClick={() => setShowEditStudentModal(false)} className="flex-1 bg-slate-100 text-slate-600 py-5 rounded-2xl font-black uppercase text-[10px] tracking-widest">Abort</button>
-                        <button type="submit" className="flex-1 bg-black text-white py-5 rounded-2xl font-black uppercase text-[10px] tracking-widest shadow-xl">Deploy</button>
+                     <div className="flex gap-6 pt-6 border-t border-subtle">
+                        <button type="button" onClick={() => setShowEditStudentModal(false)} className="flex-1 btn-premium btn-premium-secondary py-5 text-[10px] font-black">ABORT</button>
+                        <button type="submit" className="flex-1 btn-premium btn-premium-primary py-5 text-[10px] font-black shadow-[0_12px_24px_rgba(37,99,235,0.25)]">DEPLOY UPDATE</button>
                      </div>
                   </form>
                </div>
@@ -1388,28 +1499,41 @@ const TeacherDashboard = () => {
          {/* Reset Password Modal */}
          {showResetPassModal && selectedStudent && (
             <div className="fixed inset-0 z-[10001] flex items-center justify-center p-6 sm:p-8 bg-black/80 animate-fadeIn">
-               <div className="w-full max-w-sm modal-high-contrast rounded-[2.5rem] p-8 sm:p-12 animate-fadeUp relative">
+               <div className="w-full max-w-md modal-high-contrast rounded-3xl p-8 md:p-12 animate-fadeUp relative overflow-hidden">
                   <div className="flex items-start justify-between gap-8 mb-10">
-                     <h2 className="text-xl font-black text-black uppercase tracking-tight italic">Access Override</h2>
-                     <button onClick={() => setShowResetPassModal(false)} className="w-11 h-11 rounded-2xl bg-slate-50 border border-slate-200 flex items-center justify-center text-slate-400 hover:text-black shadow-sm"><X size={20} /></button>
-                  </div>
-                  <div className="space-y-8">
-                     <div className="text-center">
-                        <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3 block">New Access Key</label>
-                        <input id="resetPassInput" type="text" className="w-full bg-slate-50 border border-slate-200 rounded-2xl py-5 text-center text-black font-black tracking-[0.2em]" placeholder="G-8A9K2M" />
+                     <div className="text-left flex-1">
+                        <h2 className="text-xl font-black text-bright tracking-tight uppercase italic leading-none mb-1">Access Override</h2>
+                        <p className="text-[10px] text-danger font-black uppercase tracking-widest opacity-80">Security Protocol Alpha</p>
                      </div>
-                     <div className="flex gap-3 pt-4">
-                        <button onClick={() => setShowResetPassModal(false)} className="flex-1 bg-slate-100 text-slate-600 py-5 rounded-2xl font-black uppercase text-[10px] tracking-widest">Cancel</button>
-                        <button
+                     <button
+                        onClick={() => setShowResetPassModal(false)}
+                        className="w-11 h-11 rounded-2xl bg-alt border border-subtle flex items-center justify-center text-dim hover:text-danger transition-all shadow-sm shrink-0"
+                     >
+                        <X size={20} />
+                     </button>
+                  </div>
+                  <div className="space-y-10">
+                     <div>
+                        <label className="text-[10px] font-black text-dim uppercase tracking-widest mb-3 block text-center">New Master Identity Key</label>
+                        <input 
+                           id="resetPassInput" 
+                           type="text" 
+                           className="input-premium py-5 text-center text-bright font-black tracking-[0.3em] uppercase bg-alt/30" 
+                           placeholder="G-8A9K2M" 
+                        />
+                     </div>
+                     <div className="flex gap-6 pt-6 border-t border-subtle">
+                        <button type="button" onClick={() => setShowResetPassModal(false)} className="flex-1 btn-premium btn-premium-secondary py-5 text-[10px] font-black">CANCEL</button>
+                        <button 
                            onClick={async () => {
                               const pass = document.getElementById('resetPassInput').value;
                               if (!pass) return;
                               await resetStudentPassword(selectedStudent._id, pass);
                               setShowResetPassModal(false);
                            }}
-                           className="flex-1 bg-black text-white py-5 rounded-2xl font-black uppercase text-[10px] tracking-widest shadow-xl"
+                           className="flex-1 btn-premium py-5 text-[10px] font-black bg-danger text-white hover:bg-red-600 transition-all shadow-[0_12px_24px_rgba(239,68,68,0.25)]"
                         >
-                           Overwrite
+                           OVERWRITE
                         </button>
                      </div>
                   </div>
@@ -1420,26 +1544,38 @@ const TeacherDashboard = () => {
          {/* Add Topper Modal */}
          {showGalleryModal && (
             <div className="fixed inset-0 z-[10001] flex items-center justify-center p-6 sm:p-8 bg-black/60 backdrop-blur-md animate-fadeIn">
-               <div className="w-full max-w-lg glass-card p-10 sm:p-12 animate-vacuum-pop relative border-white/20 shadow-[0_0_50px_rgba(138,43,226,0.3)]">
+               <div className="w-full max-w-lg modal-high-contrast rounded-3xl p-10 md:p-12 animate-fadeUp relative border-subtle shadow-2xl overflow-hidden bg-grad-surface">
                   <div className="flex items-start justify-between gap-8 mb-10">
                      <div className="text-left flex-1">
-                        <h2 className="text-3xl font-black text-white tracking-tighter uppercase leading-none mb-2 italic">Archive Excellence</h2>
-                        <p className="text-[10px] text-violet-400 font-black uppercase tracking-[0.3em]">Scholar Data Input</p>
+                        <h2 className="text-3xl font-black text-bright tracking-tighter uppercase leading-none mb-2 italic">Archive Excellence</h2>
+                        <p className="text-[10px] text-primary font-black uppercase tracking-[0.3em] opacity-80">Scholar Data Input</p>
                      </div>
-                     <button onClick={() => setShowGalleryModal(false)} className="w-11 h-11 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-white/40 shadow-sm shrink-0"><X size={20} /></button>
+                     <button onClick={() => setShowGalleryModal(false)} className="w-11 h-11 rounded-2xl bg-alt border border-subtle flex items-center justify-center text-dim hover:text-primary transition-all shadow-sm shrink-0"><X size={20} /></button>
                   </div>
                   <form onSubmit={handleAddTopper} className="space-y-8">
                      <div className="space-y-6">
-                        <input className="w-full bg-white/5 border border-white/10 rounded-2xl py-5 px-6 text-white font-black outline-none" placeholder="Scholar Name" value={newTopper.name} onChange={e => setNewTopper({ ...newTopper, name: e.target.value })} required />
-                        <div className="grid grid-cols-2 gap-6">
-                           <input className="w-full bg-white/5 border border-white/10 rounded-2xl py-5 px-6 text-white font-black" placeholder="Exam Category" value={newTopper.exam} onChange={e => setNewTopper({ ...newTopper, exam: e.target.value })} required />
-                           <input className="w-full bg-white/5 border border-white/10 rounded-2xl py-5 px-6 text-white font-black" placeholder="Score (%)" value={newTopper.marks} onChange={e => setNewTopper({ ...newTopper, marks: e.target.value })} required />
+                        <div>
+                           <label className="text-[10px] font-black text-dim uppercase tracking-widest mb-3 block">Scholar Identity</label>
+                           <input className="input-premium py-5 px-6 italic text-bright bg-alt/30" placeholder="FULL NAME" value={newTopper.name} onChange={e => setNewTopper({ ...newTopper, name: e.target.value })} required />
                         </div>
-                        <input type="file" className="w-full bg-white/5 border border-white/10 rounded-2xl py-6 px-6 text-white font-black" onChange={e => setNewTopper({ ...newTopper, photo: e.target.files[0] })} required />
+                        <div className="grid grid-cols-2 gap-8">
+                           <div>
+                              <label className="text-[10px] font-black text-dim uppercase tracking-widest mb-3 block">Exam Category</label>
+                              <input className="input-premium py-5 px-6 text-bright bg-alt/30" placeholder="e.g. JEE 2026" value={newTopper.exam} onChange={e => setNewTopper({ ...newTopper, exam: e.target.value })} required />
+                           </div>
+                           <div>
+                              <label className="text-[10px] font-black text-dim uppercase tracking-widest mb-3 block">Score (%)</label>
+                              <input className="input-premium py-5 px-6 text-bright bg-alt/30" placeholder="00.00" value={newTopper.marks} onChange={e => setNewTopper({ ...newTopper, marks: e.target.value })} required />
+                           </div>
+                        </div>
+                        <div>
+                           <label className="text-[10px] font-black text-dim uppercase tracking-widest mb-3 block">Portfolio Imagery</label>
+                           <input type="file" className="input-premium py-4 px-6 text-[10px] uppercase font-black cursor-pointer bg-alt/30 file:mr-6 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-[10px] file:font-black file:bg-primary file:text-white file:cursor-pointer" onChange={e => setNewTopper({ ...newTopper, photo: e.target.files[0] })} required />
+                        </div>
                      </div>
-                     <div className="flex gap-4 pt-4">
-                        <button type="button" onClick={() => setShowGalleryModal(false)} className="flex-1 bg-white/5 text-white/40 py-5 rounded-2xl font-black uppercase text-[10px] tracking-widest">Abort</button>
-                        <button type="submit" disabled={isLoading} className="flex-1 bg-violet-600 text-white py-5 rounded-2xl font-black uppercase text-[10px] tracking-widest shadow-[0_0_30px_rgba(138,43,226,0.3)] disabled:opacity-50">Archive</button>
+                     <div className="flex gap-6 pt-6 border-t border-subtle">
+                        <button type="button" onClick={() => setShowGalleryModal(false)} className="flex-1 btn-premium btn-premium-secondary py-5 text-[10px] font-black">ABORT</button>
+                        <button type="submit" disabled={isLoading} className="flex-1 btn-premium btn-premium-primary py-5 text-[10px] font-black shadow-[0_12px_24px_rgba(37,99,235,0.25)] disabled:opacity-50">ARCHIVE DATA</button>
                      </div>
                   </form>
                </div>

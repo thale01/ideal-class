@@ -3,7 +3,7 @@ import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
 import { GraduationCap, Sun, Moon, Lock, Mail, ChevronRight, User, Phone, ShieldCheck } from 'lucide-react';
-import logo from '../assets/logo.png';
+import logo from '../assets/app-icon.jpg';
 
 const Login = () => {
   const { user, login, error: authError } = useAuth();
@@ -52,102 +52,115 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen bg-main flex flex-col transition-colors duration-500">
-      {/* Dynamic Navigation */}
-      <nav className="fixed top-0 w-full p-6 md:p-8 flex justify-between items-center z-50">
-         <div className="flex items-center gap-3">
-            <img src={logo} alt="Ideal Classes Logo" className="h-10 w-auto object-contain" />
+    <div className="min-h-screen bg-main flex flex-col transition-colors duration-500 overflow-hidden relative">
+      {/* Cinematic Background Elements */}
+      <div className="absolute top-0 left-0 w-full h-[500px] bg-primary/5 -translate-y-1/2 blur-[120px] rounded-full"></div>
+      <div className="absolute bottom-0 right-0 w-[600px] h-[600px] bg-primary-accent/5 translate-y-1/2 translate-x-1/4 blur-[140px] rounded-full"></div>
+
+      <nav className="relative w-full p-8 flex justify-between items-center z-50">
+         <div className="flex items-center gap-4">
+            <img src={logo} alt="L" className="h-10 w-auto object-contain drop-shadow-sm" />
+            <div className="h-8 w-px bg-slate-200 hidden sm:block"></div>
+            <div className="hidden sm:block">
+               <h1 className="text-xs font-black text-primary tracking-[0.3em] uppercase leading-none italic">Ideal Classes</h1>
+               <p className="text-[10px] font-bold text-dim uppercase tracking-widest mt-1 opacity-60">Admin Protocol</p>
+            </div>
          </div>
          <button 
            onClick={toggleTheme} 
-           className="w-12 h-12 rounded-xl bg-surface border border-subtle flex items-center justify-center text-dim hover:text-primary hover:border-primary/30 transition-all shadow-sm"
+           className="w-12 h-12 rounded-2xl bg-white border border-subtle flex items-center justify-center text-primary group-hover:text-primary-accent transition-all shadow-sm active:scale-95"
          >
             {theme === 'dark' ? <Sun size={20}/> : <Moon size={20}/>}
          </button>
       </nav>
 
-      <div className="flex-1 flex items-center justify-center p-6 mt-16 md:mt-20">
-        <div className="w-full max-w-lg card-premium fade-up relative overflow-hidden">
-          {/* Subtle Background Ornament */}
-          <div className="absolute -top-24 -right-24 w-48 h-48 bg-primary/5 rounded-full blur-3xl"></div>
-          
-          <header className="mb-8 text-center">
-             <div className="inline-block mb-4">
-                <span className={`badge-premium ${role === 'admin' ? 'badge-danger' : 'badge-primary'}`}>
-                  {role === 'admin' ? 'Master Access' : 'Scholar Portal'}
-                </span>
-             </div>
-             <h2 className="text-4xl font-bold text-bright tracking-tight mb-2">Welcome Back</h2>
-             <p className="text-dim text-sm font-medium">Please enter your verified academic credentials</p>
-          </header>
+      <div className="flex-1 flex items-center justify-center p-6 relative z-10">
+        <div className="w-full max-w-lg animate-fadeUp">
+          <div className="card-premium shadow-2xl relative overflow-hidden p-10 sm:p-14 border-slate-100">
+             <header className="mb-12 text-center">
+                <div className="mb-6">
+                   <span className={`badge-premium ${role === 'admin' ? 'badge-danger' : 'badge-primary'}`}>
+                     {role === 'admin' ? 'Strategic Access' : 'Scholar Gateway'}
+                   </span>
+                </div>
+                <h2 className="text-4xl font-black text-primary tracking-tighter uppercase italic leading-tight mb-3">Identity <span className="text-primary-accent not-italic">Check</span></h2>
+                <p className="text-dim text-xs font-bold uppercase tracking-widest opacity-60">Authorize your academic credentials</p>
+             </header>
 
-          <div className="grid grid-cols-2 gap-2 bg-alt p-1 rounded-xl mb-10">
-             <button 
-               onClick={() => { setRole('student'); setErrorMessage(''); }}
-               className={`py-3 rounded-lg font-bold text-xs uppercase tracking-widest transition-all ${role === 'student' ? 'bg-primary text-white shadow-lg' : 'text-dim hover:text-primary hover:bg-primary/5'}`}
-             >
-               Student
-             </button>
-             <button 
-               onClick={() => { setRole('admin'); setErrorMessage(''); }}
-               className={`py-3 rounded-lg font-bold text-xs uppercase tracking-widest transition-all ${role === 'admin' ? 'bg-primary text-white shadow-lg' : 'text-dim hover:text-primary hover:bg-primary/5'}`}
-             >
-               Admin
-             </button>
+             <div className="grid grid-cols-2 gap-3 p-1.5 bg-alt rounded-2xl mb-12">
+                <button 
+                  onClick={() => { setRole('student'); setErrorMessage(''); }}
+                  className={`py-4 rounded-xl font-black text-[10px] uppercase tracking-widest transition-all ${role === 'student' ? 'bg-primary text-white shadow-xl scale-105' : 'text-dim hover:text-primary hover:bg-white'}`}
+                >
+                  Student
+                </button>
+                <button 
+                  onClick={() => { setRole('admin'); setErrorMessage(''); }}
+                  className={`py-4 rounded-xl font-black text-[10px] uppercase tracking-widest transition-all ${role === 'admin' ? 'bg-primary text-white shadow-xl scale-105' : 'text-dim hover:text-primary hover:bg-white'}`}
+                >
+                  Administrator
+                </button>
+             </div>
+
+             <form onSubmit={handleSubmit} className="space-y-6">
+                {role === 'student' && (
+                   <div className="space-y-6 animate-fadeIn">
+                      <div>
+                         <label className="text-[10px] font-black text-dim uppercase tracking-widest mb-2 block ml-1">Academic Name</label>
+                         <div className="relative group">
+                            <User className="absolute left-5 top-1/2 -translate-y-1/2 text-dim group-focus-within:text-primary-accent transition-colors" size={18}/>
+                            <input className="input-premium pl-14 py-4" placeholder="e.g. ARYAN SHARMA" value={name} onChange={e => setName(e.target.value)} required/>
+                         </div>
+                      </div>
+                      <div>
+                         <label className="text-[10px] font-black text-dim uppercase tracking-widest mb-2 block ml-1">Contact Protocol</label>
+                         <div className="relative group">
+                            <Phone className="absolute left-5 top-1/2 -translate-y-1/2 text-dim group-focus-within:text-primary-accent transition-colors" size={18}/>
+                            <input className="input-premium pl-14 py-4" placeholder="+91 00000 00000" value={phone} onChange={e => setPhone(e.target.value)} required/>
+                         </div>
+                      </div>
+                   </div>
+                )}
+
+                <div>
+                   <label className="text-[10px] font-black text-dim uppercase tracking-widest mb-2 block ml-1">Logic ID (Email)</label>
+                   <div className="relative group">
+                      <Mail className="absolute left-5 top-1/2 -translate-y-1/2 text-dim group-focus-within:text-primary-accent transition-colors" size={18}/>
+                      <input className="input-premium pl-14 py-4" type="email" placeholder="ADMIN@IDEAL.COM" value={email} onChange={e => setEmail(e.target.value)} required/>
+                   </div>
+                </div>
+
+                <div>
+                   <label className="text-[10px] font-black text-dim uppercase tracking-widest mb-2 block ml-1">Security Token</label>
+                   <div className="relative group">
+                      <Lock className="absolute left-5 top-1/2 -translate-y-1/2 text-dim group-focus-within:text-primary-accent transition-colors" size={18}/>
+                      <input className="input-premium pl-14 py-4 font-bold tracking-widest" type="password" placeholder="••••••••" value={password} onChange={e => setPassword(e.target.value)} required/>
+                   </div>
+                </div>
+
+                {(errorMessage || authError) && (
+                   <div className="p-4 rounded-xl bg-danger/5 border border-danger/20 animate-shake">
+                      <p className="text-[10px] font-black text-danger text-center uppercase tracking-widest mb-1">Access Denied</p>
+                      <p className="text-[10px] font-bold text-danger/80 text-center uppercase tracking-tight">{errorMessage || authError}</p>
+                   </div>
+                )}
+
+                <button type="submit" disabled={loading} className="btn-premium btn-premium-primary w-full py-5 text-xs font-black uppercase tracking-[0.2em] shadow-2xl active:scale-95 group overflow-hidden relative">
+                   <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/10 to-white/0 -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
+                   <div className="relative z-10 flex items-center justify-center gap-3">
+                      {loading ? 'Decrypting...' : 'Initialize Session'}
+                      {!loading && <ShieldCheck size={18}/>}
+                   </div>
+                </button>
+             </form>
+
+             <footer className="mt-12 pt-8 border-t border-slate-100 text-center">
+                <p className="text-[10px] font-bold text-dim uppercase tracking-widest mb-4 opacity-60 italic">Academy Network Protocol v4.0</p>
+                <Link to="/admission" className="text-[10px] font-black text-primary-accent hover:text-primary uppercase tracking-[0.2em] transition-all flex items-center justify-center gap-2 group">
+                   Apply for Clearance <ChevronRight size={14} className="group-hover:translate-x-1 transition-transform" />
+                </Link>
+             </footer>
           </div>
-
-          <form onSubmit={handleSubmit} className="space-y-6">
-             {role === 'student' && (
-                <div className="space-y-6 animate-fadeIn">
-                   <div>
-                      <label className="text-[10px] font-bold text-dim uppercase tracking-[0.2em] mb-2 block">Full&nbsp;&nbsp;&nbsp;Name</label>
-                      <div className="relative group">
-                         <User className="absolute left-4 top-1/2 -translate-y-1/2 text-dim group-focus-within:text-primary transition-colors" size={18}/>
-                         <input className="input-premium pl-12" placeholder="e.g. Aryan Sharma" value={name} onChange={e => setName(e.target.value)} required/>
-                      </div>
-                   </div>
-                   <div>
-                      <label className="text-[10px] font-bold text-dim uppercase tracking-[0.2em] mb-2 block">Contact&nbsp;&nbsp;&nbsp;Number</label>
-                      <div className="relative group">
-                         <Phone className="absolute left-4 top-1/2 -translate-y-1/2 text-dim group-focus-within:text-primary transition-colors" size={18}/>
-                         <input className="input-premium pl-12" placeholder="+91 99887 76655" value={phone} onChange={e => setPhone(e.target.value)} required/>
-                      </div>
-                   </div>
-                </div>
-             )}
-
-             <div>
-                <label className="text-[10px] font-bold text-dim uppercase tracking-[0.2em] mb-2 block">Email&nbsp;&nbsp;&nbsp;Address</label>
-                <div className="relative group">
-                   <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-dim group-focus-within:text-primary transition-colors" size={18}/>
-                   <input className="input-premium pl-12" type="email" placeholder="example@gmail.com" value={email} onChange={e => setEmail(e.target.value)} required/>
-                </div>
-             </div>
-
-             <div>
-                <label className="text-[10px] font-bold text-dim uppercase tracking-[0.2em] mb-2 block">Secure&nbsp;&nbsp;&nbsp;Key</label>
-                <div className="relative group">
-                   <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-dim group-focus-within:text-primary transition-colors" size={18}/>
-                   <input className="input-premium pl-12 font-bold" type="password" placeholder="••••••••" value={password} onChange={e => setPassword(e.target.value)} required/>
-                </div>
-             </div>
-
-             {(errorMessage || authError) && (
-                <div className="p-3 rounded-lg bg-danger/10 border border-danger/20">
-                   <p className="text-xs font-bold text-danger text-center">{errorMessage || authError}</p>
-                </div>
-             )}
-
-             <button type="submit" disabled={loading} className="btn-premium btn-premium-primary w-full py-4 text-sm uppercase tracking-widest shadow-lg">
-                {loading ? 'Verifying...' : 'Initialize Session'}
-                {!loading && <ChevronRight size={18}/>}
-             </button>
-          </form>
-
-          <footer className="mt-8 pt-8 border-t border-subtle text-center">
-             <p className="text-xs font-medium text-dim inline-block mr-2">New student?</p>
-             <Link to="/admission" className="text-xs font-bold text-primary hover:underline underline-offset-4 transition-all">Apply for Online Access</Link>
-          </footer>
         </div>
       </div>
     </div>

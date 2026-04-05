@@ -154,6 +154,23 @@ export const AuthProvider = ({ children }) => {
     return false;
   };
 
+  const approveStudent = async (id) => {
+    const token = localStorage.getItem('token');
+    try {
+      const res = await fetch(`${API_URL}/students/${id}/approve`, {
+        method: 'PATCH',
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      if (res.ok) {
+        fetchStudents();
+        return true;
+      }
+    } catch (err) {
+      console.error("Approve student failed", err);
+    }
+    return false;
+  };
+
   const logout = () => {
     setUser(null);
     localStorage.removeItem('token');
@@ -163,7 +180,7 @@ export const AuthProvider = ({ children }) => {
   return (
     <AuthContext.Provider value={{
       user, login, logout, fetchStudents, students, deleteStudent,
-      updateStudent, resetStudentPassword, changeAdminPassword,
+      approveStudent, updateStudent, resetStudentPassword, changeAdminPassword,
       loading, error
     }}>
       {!loading && children}

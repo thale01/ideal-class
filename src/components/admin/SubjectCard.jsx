@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Edit2, Trash2, ChevronRight, BookOpen } from 'lucide-react';
+import { Edit2, Trash2, ChevronRight, FileText, Play } from 'lucide-react';
 
 const SubjectCard = ({ subject, onEdit, onDelete }) => {
   const navigate = useNavigate();
@@ -8,49 +8,60 @@ const SubjectCard = ({ subject, onEdit, onDelete }) => {
   return (
     <div 
       onClick={() => navigate(`/admin/subject/${subject._id}`)}
-      className="group bg-white border border-slate-200 rounded-2xl p-6 hover:shadow-xl hover:border-slate-300 transition-all cursor-pointer relative overflow-hidden flex flex-col justify-between h-[220px]"
+      className="card-premium group cursor-pointer relative flex flex-col justify-between h-[300px] p-8 hover:border-primary-accent/40 bg-surface/50 transition-all duration-500 hover:-translate-y-2"
     >
-      <div className="absolute top-0 right-0 w-24 h-24 bg-slate-50 rounded-bl-[48px] -mr-8 -mt-8 transition-all group-hover:bg-slate-100/50"></div>
+      <div className="absolute top-0 right-0 w-32 h-32 bg-primary-glow rounded-bl-[64px] -mr-16 -mt-16 transition-all duration-700 group-hover:scale-150"></div>
       
-      <div>
-        <div className="flex items-start justify-between relative z-10 mb-4">
-          <div className="w-14 h-14 rounded-2xl bg-white border border-slate-100 flex items-center justify-center text-3xl shadow-sm">
-            {subject.icon || '📚'}
+      <div className="relative z-10 flex flex-col items-center text-center">
+        <div className="w-16 h-16 rounded-2xl bg-alt border border-subtle flex items-center justify-center text-4xl shadow-sm group-hover:scale-110 group-hover:bg-surface group-hover:border-primary-accent transition-all duration-500 mb-6">
+          {subject.icon || '📚'}
+        </div>
+        
+        <h3 className="text-xl font-black text-bright uppercase tracking-tight italic transition-colors leading-tight mb-2">{subject.name}</h3>
+        <p className="badge-premium badge-primary text-[8px] px-3 py-1 font-black">{subject.category || 'Standard Board'}</p>
+      </div>
+
+      <div className="relative z-10 pt-6 border-t border-subtle flex items-center justify-between">
+        <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2 group/stat">
+             <div className="w-8 h-8 rounded-lg bg-alt flex items-center justify-center text-dim group-hover/stat:text-primary transition-colors">
+                <FileText size={14} />
+             </div>
+             <div className="flex flex-col">
+                <span className="text-sm font-black text-bright leading-none mb-0.5">{subject.resources?.notes?.length || 0}</span>
+                <span className="text-[7px] font-black text-dim uppercase tracking-widest leading-none">Files</span>
+             </div>
           </div>
-          <div className="flex gap-1">
+          <div className="w-px h-6 bg-subtle"></div>
+          <div className="flex items-center gap-2 group/stat">
+             <div className="w-8 h-8 rounded-lg bg-alt flex items-center justify-center text-dim group-hover/stat:text-danger transition-colors">
+                <Play size={14} />
+             </div>
+             <div className="flex flex-col">
+                <span className="text-sm font-black text-bright leading-none mb-0.5">{subject.resources?.videos?.length || 0}</span>
+                <span className="text-[7px] font-black text-dim uppercase tracking-widest leading-none">Vids</span>
+             </div>
+          </div>
+        </div>
+        
+        <div className="flex gap-2">
             <button 
               onClick={(e) => { e.stopPropagation(); onEdit(subject); }}
-              className="p-2 rounded-xl text-slate-400 hover:text-black hover:bg-slate-50 transition-all opacity-0 group-hover:opacity-100"
+              className="w-10 h-10 rounded-xl bg-alt text-dim hover:text-primary-accent hover:bg-surface border border-transparent hover:border-subtle transition-all duration-300 flex items-center justify-center lg:opacity-0 lg:group-hover:opacity-100"
             >
               <Edit2 size={16} />
             </button>
             <button 
-              onClick={(e) => { e.stopPropagation(); onDelete(subject._id); }}
-              className="p-2 rounded-xl text-slate-400 hover:text-red-500 hover:bg-red-50 transition-all opacity-0 group-hover:opacity-100"
+              onClick={(e) => { 
+                e.stopPropagation(); 
+                if (window.confirm('IRREVERSIBLE ACTION: Wipe this module and all nested files?')) {
+                  onDelete(subject._id); 
+                }
+              }}
+              className="w-10 h-10 rounded-xl bg-alt text-danger/80 hover:text-danger hover:bg-surface border border-transparent hover:border-subtle transition-all duration-300 flex items-center justify-center lg:opacity-0 lg:group-hover:opacity-100 shadow-sm"
             >
               <Trash2 size={16} />
             </button>
-          </div>
-        </div>
-
-        <h3 className="text-lg font-black text-slate-900 uppercase tracking-tight leading-tight group-hover:text-blue-600 transition-colors">{subject.name}</h3>
-        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1.5">{subject.category || 'Standard Board'}</p>
-      </div>
-
-      <div className="flex items-center justify-between mt-6 pt-4 border-t border-slate-50 relative z-10">
-        <div className="flex items-center gap-4">
-          <div className="flex flex-col">
-            <span className="text-[10px] font-black text-slate-900">{subject.resources?.notes?.length || 0}</span>
-            <span className="text-[8px] font-bold text-slate-400 uppercase tracking-tighter">Notes</span>
-          </div>
-          <div className="w-[1px] h-6 bg-slate-100"></div>
-          <div className="flex flex-col">
-            <span className="text-[10px] font-black text-slate-900">{subject.resources?.videos?.length || 0}</span>
-            <span className="text-[8px] font-bold text-slate-400 uppercase tracking-tighter">Videos</span>
-          </div>
-        </div>
-        <div className="flex items-center gap-1 text-[10px] font-black text-slate-900 uppercase tracking-widest group-hover:translate-x-1 transition-transform">
-          Manage <ChevronRight size={14} />
         </div>
       </div>
     </div>

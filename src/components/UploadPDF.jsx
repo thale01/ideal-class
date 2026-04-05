@@ -20,19 +20,20 @@ const UploadPDF = ({ onSubmit, subjectIcon, subjectName }) => {
         Bulk Notes Entry
       </h3>
 
-      <form onSubmit={handleSubmit} className="space-y-6">
-        <div className="flex gap-4">
-           <div className="flex-1">
-              <label className="text-[10px] font-black uppercase text-dim mb-2 block tracking-widest">Active Course</label>
-              <div className="input-premium bg-surface border border-subtle shadow-sm border-subtle text-dim font-black cursor-not-allowed flex items-center gap-3 text-xs">
-                <span className="text-lg">{subjectIcon}</span> {subjectName}
+      <form onSubmit={handleSubmit} className="space-y-10">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+           <div className="space-y-3">
+              <label className="text-[11px] font-black uppercase text-bright mb-1 block tracking-[0.2em] opacity-90">Target Repository</label>
+              <div className="input-premium bg-alt/50 border border-subtle text-dim font-black cursor-not-allowed flex items-center gap-4 py-4 px-5">
+                <span className="text-xl filter grayscale group-hover:grayscale-0 transition-all">{subjectIcon}</span> 
+                <span className="truncate">{subjectName}</span>
               </div>
            </div>
-           <div className="flex-1">
-              <label className="text-[10px] font-black uppercase text-dim mb-2 block tracking-widest">Manual Chapter</label>
+           <div className="space-y-3">
+              <label className="text-[11px] font-black uppercase text-bright mb-1 block tracking-[0.2em] opacity-90">Chapter / Category</label>
               <input 
-                className="input-premium py-4 text-xs" 
-                placeholder="e.g. Chapter 4" 
+                className="input-premium py-4 text-xs italic bg-surface/50 placeholder:text-dim/60" 
+                placeholder="E.G. CHAPTER 04: CALCULUS" 
                 value={data.chapter}
                 onChange={e => setData({...data, chapter: e.target.value})}
               />
@@ -40,21 +41,23 @@ const UploadPDF = ({ onSubmit, subjectIcon, subjectName }) => {
         </div>
 
         {data.files.length <= 1 && (
-           <div className="animate-fadeIn">
-              <label className="text-[10px] font-black uppercase text-dim mb-2 block tracking-widest">Primary Title</label>
+           <div className="animate-fadeIn space-y-3">
+              <label className="text-[11px] font-black uppercase text-bright mb-1 block tracking-[0.2em] opacity-90">Document Identity</label>
               <input 
-                className="input-premium" 
-                placeholder="e.g. Calculus Basics" 
+                className="input-premium py-5 bg-surface/50 placeholder:text-dim/60" 
+                placeholder="E.G. SEMESTER 1 HANDOUT" 
                 value={data.title}
                 onChange={e => setData({...data, title: e.target.value})}
               />
-              <p className="text-[9px] text-dim mt-2 italic font-medium">Leave blank to use filename(s)</p>
+              <p className="text-[10px] text-primary font-black uppercase tracking-widest mt-2 bg-primary/5 py-2 px-4 rounded-lg w-fit">Leave blank to use filename metadata</p>
            </div>
         )}
 
-        <div className="border-2 border-dashed border-subtle rounded-2xl p-8 text-center bg-surface shadow-md hover:bg-surface border border-subtle shadow-lg hover:border-blue-500/50 transition-all relative group">
-           <Upload size={32} className="mx-auto text-dim group-hover:text-blue-400 transition-colors mb-2"/>
-           <span className="text-[10px] font-black text-dim uppercase tracking-widest">Select Files (Single or Multiple)</span>
+        <div className="border-2 border-dashed border-subtle rounded-3xl p-12 text-center bg-alt/30 shadow-lg hover:border-primary transition-all relative group cursor-pointer overflow-hidden pb-14">
+           <div className="absolute inset-x-0 bottom-0 h-1 bg-primary/20 scale-x-0 group-hover:scale-x-100 transition-transform origin-left"></div>
+           <Upload size={40} className="mx-auto text-dim group-hover:text-primary transition-colors mb-4"/>
+           <span className="text-[11px] font-black text-dim uppercase tracking-[0.3em] group-hover:text-bright transition-colors">Select Archive Files</span>
+           <p className="text-[9px] text-dim/50 uppercase font-black mt-2 tracking-widest">Supports multiple PDF ingestion</p>
            <input 
             type="file" 
             accept=".pdf"
@@ -63,19 +66,19 @@ const UploadPDF = ({ onSubmit, subjectIcon, subjectName }) => {
             onChange={e => setData({...data, files: Array.from(e.target.files)})}
            />
            {data.files.length > 0 && (
-              <div className="mt-4 space-y-2">
+              <div className="mt-8 space-y-3">
                  {data.files.map((f, i) => (
-                    <div key={i} className="text-[8px] text-blue-400 font-black bg-blue-500/10 py-2 rounded-xl border border-blue-500/20 px-3 truncate flex justify-between">
+                    <div key={i} className="text-[10px] text-primary font-black bg-primary/10 py-3 rounded-2xl border border-primary/20 px-5 truncate flex justify-between animate-fadeUp">
                        <span>{f.name}</span>
-                       <span className="opacity-50">{(f.size / 1024).toFixed(1)} KB</span>
+                       <span className="opacity-60">{(f.size / 1024).toFixed(1)} KB</span>
                     </div>
                  ))}
               </div>
            )}
         </div>
 
-        <button className="btn-premium w-full py-5 rounded-2xl font-black text-lg transition-all gap-4 shadow-lg justify-center border-none text-bright bg-grad-primary shadow-purple-500/20">
-          <Plus size={24}/> Upload PDF Notes
+        <button className="btn-premium w-full py-6 rounded-2xl font-black text-sm transition-all gap-4 shadow-xl border-none text-white bg-primary hover:bg-blue-600 shadow-primary/20 uppercase tracking-[0.2em]">
+          <Plus size={20}/> Publish Assets to Repository
         </button>
       </form>
     </div>

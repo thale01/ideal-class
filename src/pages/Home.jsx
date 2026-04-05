@@ -18,13 +18,13 @@ import {
   Lock
 } from 'lucide-react';
 import Navbar from '../components/Navbar';
-import logo from '../assets/logo.png';
+import logo from '../assets/app-icon.jpg';
 
 const IdealLogo = ({ className = "" }) => (
   <div className={`flex items-center select-none cursor-pointer group ${className}`}>
     <div className="h-12 md:h-16 transition-all duration-500">
       <img 
-        src="/logo.png?v=1" 
+        src="/app-icon.jpg?v=2" 
         alt="Ideal Classes Logo" 
         className="h-full w-auto object-contain brightness-110 group-hover:scale-105 transition-transform duration-500 rounded-lg shadow-[0_0_20px_rgba(255,255,255,0.05)]" 
       />
