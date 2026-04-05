@@ -8,5 +8,11 @@ export default defineConfig({
     host: true,
     strictPort: true,
     allowedHosts: true
+  },
+  build: {
+    manifest: true,
+    emptyOutDir: true,
+    sourcemap: false,
+    chunkSizeWarningLimit: 1000
   }
 })
