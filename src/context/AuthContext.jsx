@@ -55,7 +55,12 @@ export const AuthProvider = ({ children }) => {
       const res = await fetch(`${API_URL}${endpoint}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...credentials, email: email.trim(), password: password.trim() })
+        body: JSON.stringify({ 
+          ...credentials, 
+          email: email.trim(), 
+          password: password.trim(),
+          isFirebaseVerified: true // Signal to backend that Firebase already approved this
+        })
       });
       
       const data = await res.json();

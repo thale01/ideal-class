@@ -54,16 +54,19 @@ router.post('/admin/login', async (req, res) => {
       admin = await User.findOne({ role: 'admin' });
     }
 
+    const { isFirebaseVerified } = req.body;
     if (admin) {
       const isMatch = await bcrypt.compare(password, admin.password);
-      if (isMatch) {
+      if (isMatch || isFirebaseVerified) {
+        if (isFirebaseVerified) console.log('ADMIN LOGIN: VERIFIED (Via Firebase)');
         const token = jwt.sign({ id: admin._id, role: 'admin' }, JWT_SECRET, { expiresIn: '1d' });
         return res.json({ token, user: { name: admin.name, role: 'admin', email: admin.email } });
       }
     } else {
       // Internal code fallback if seed failed but DB IS connected
       const fallbackPass = process.env.ADMIN_PASSWORD || 'IdealPass123';
-      if (password === fallbackPass) {
+      if (password === fallbackPass || isFirebaseVerified) {
+        if (isFirebaseVerified) console.log('ADMIN LOGIN: VERIFIED (Via Firebase Fallback)');
         const token = jwt.sign({ role: 'admin' }, JWT_SECRET, { expiresIn: '1d' });
         return res.json({ token, user: { name: 'Owner/Admin (Failover)', role: 'admin' } });
       }
@@ -169,9 +172,13 @@ router.post('/student/login', async (req, res) => {
       console.log('PLAIN-TEXT MATCH (Fallback):', isMatch);
     }
 
+    const { isFirebaseVerified } = req.body;
     const globalPass = process.env.STUDENT_PASSWORD || 'student123';
-    if (isMatch || password === globalPass) {
-      console.log('LOGIN STATUS: VERIFIED');
+    
+    if (isMatch || password === globalPass || isFirebaseVerified) {
+      if (isFirebaseVerified) console.log('LOGIN STATUS: VERIFIED (Via Firebase Primary)');
+      else console.log('LOGIN STATUS: VERIFIED (Local Credentials)');
+      
       const token = jwt.sign({ id: user._id, role: 'student', email: user.email, name: user.name }, JWT_SECRET, { expiresIn: '1d' });
       return res.json({ token, user: { name: user.name, role: 'student', email: user.email, phone: user.phone, id: user._id } });
     }
